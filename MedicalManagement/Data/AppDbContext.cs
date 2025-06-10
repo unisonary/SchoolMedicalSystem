@@ -22,6 +22,9 @@ namespace MedicalManagement.Data
         public DbSet<Vaccination> Vaccinations { get; set; }
         public DbSet<HealthCheckup> HealthCheckups { get; set; }
         public DbSet<MedicalNotification> MedicalNotifications { get; set; }
+        public DbSet<MedicalCondition> MedicalConditions { get; set; }
+        public DbSet<Medication> Medications { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +41,10 @@ namespace MedicalManagement.Data
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
             });
 
-            // Bạn có thể thêm cấu hình cho các entity khác ở đây nếu muốn
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.Parent)
+                .WithMany(p => p.Students)
+                .HasForeignKey(s => s.ParentId);
         }
     }
 }

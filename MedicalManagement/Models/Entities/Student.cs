@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MedicalManagement.Models.Entities
@@ -24,5 +25,10 @@ namespace MedicalManagement.Models.Entities
 
         [Column("email")]
         public string Email { get; set; }
+
+        [Column("parent_id")]
+        public int ParentId { get; set; }
+
+        public Parent Parent { get; set; }
     }
 }

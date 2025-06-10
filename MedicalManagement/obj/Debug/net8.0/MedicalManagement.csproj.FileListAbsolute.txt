@@ -64,6 +64,7 @@ D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\MedicalManagement.csproj.CoreCompileInputs.cache
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\MedicalManagement.MvcApplicationPartsAssemblyInfo.cs
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\MedicalManagement.MvcApplicationPartsAssemblyInfo.cache
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\MedicalManagement.sourcelink.json
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\scopedcss\bundle\MedicalManagement.styles.css
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\staticwebassets.build.json
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\staticwebassets.development.json
