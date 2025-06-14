@@ -208,6 +208,167 @@
         }
       }
     },
+    "/api/nurse/health/medications": {
+      "get": {
+        "tags": [
+          "NurseHealth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/health/medication/{id}": {
+      "put": {
+        "tags": [
+          "NurseHealth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/appointments": {
+      "post": {
+        "tags": [
+          "ParentAppointment"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ParentAppointment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/consents/pending": {
+      "get": {
+        "tags": [
+          "ParentConsent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/consents/history": {
+      "get": {
+        "tags": [
+          "ParentConsent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/consents/{id}": {
+      "post": {
+        "tags": [
+          "ParentConsent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentActionDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentActionDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentActionDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/parent/health/students": {
       "get": {
         "tags": [
@@ -261,6 +422,69 @@
         }
       }
     },
+    "/api/parent/health/medical-condition/{id}": {
+      "put": {
+        "tags": [
+          "ParentHealth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalConditionUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalConditionUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalConditionUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ParentHealth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/parent/health/medication": {
       "post": {
         "tags": [
@@ -292,7 +516,19 @@
         }
       }
     },
-    "/api/parent/health/medical-condition/{id}": {
+    "/api/parent/health/medications": {
+      "get": {
+        "tags": [
+          "ParentHealth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/health/medication/{id}": {
       "put": {
         "tags": [
           "ParentHealth"
@@ -312,17 +548,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MedicalConditionCreateDTO"
+                "$ref": "#/components/schemas/MedicationUpdateDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/MedicalConditionCreateDTO"
+                "$ref": "#/components/schemas/MedicationUpdateDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/MedicalConditionCreateDTO"
+                "$ref": "#/components/schemas/MedicationUpdateDTO"
               }
             }
           }
@@ -332,21 +568,36 @@
             "description": "OK"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/parent/student/events": {
+      "get": {
         "tags": [
-          "ParentHealth"
+          "ParentStudentProgress"
         ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+        "responses": {
+          "200": {
+            "description": "OK"
           }
+        }
+      }
+    },
+    "/api/parent/student/checkups": {
+      "get": {
+        "tags": [
+          "ParentStudentProgress"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parent/student/notifications": {
+      "get": {
+        "tags": [
+          "ParentStudentProgress"
         ],
         "responses": {
           "200": {
@@ -733,6 +984,24 @@
   },
   "components": {
     "schemas": {
+      "AppointmentCreateDTO": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AuthResponse": {
         "type": "object",
         "properties": {
@@ -766,6 +1035,20 @@
         },
         "additionalProperties": false
       },
+      "ConsentActionDTO": {
+        "type": "object",
+        "properties": {
+          "consentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ForgotPasswordDTO": {
         "type": "object",
         "properties": {
@@ -782,6 +1065,14 @@
           "checkupId": {
             "type": "integer",
             "format": "int32"
+          },
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentName": {
+            "type": "string",
+            "nullable": true
           },
           "checkupType": {
             "type": "string",
@@ -872,12 +1163,42 @@
         },
         "additionalProperties": false
       },
+      "MedicalConditionUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "conditionType": {
+            "type": "string",
+            "nullable": true
+          },
+          "conditionName": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MedicalEventDTO": {
         "type": "object",
         "properties": {
           "eventId": {
             "type": "integer",
             "format": "int32"
+          },
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentName": {
+            "type": "string",
+            "nullable": true
           },
           "eventType": {
             "type": "string",
@@ -887,13 +1208,13 @@
             "type": "string",
             "nullable": true
           },
-          "severity": {
-            "type": "string",
-            "nullable": true
-          },
           "date": {
             "type": "string",
             "format": "date-time"
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
           },
           "nurseName": {
             "type": "string",
@@ -908,6 +1229,14 @@
           "notificationId": {
             "type": "integer",
             "format": "int32"
+          },
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentName": {
+            "type": "string",
+            "nullable": true
           },
           "title": {
             "type": "string",
@@ -961,6 +1290,57 @@
           "endDate": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedicationUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "medicationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dosage": {
+            "type": "string",
+            "nullable": true
+          },
+          "frequency": {
+            "type": "string",
+            "nullable": true
+          },
+          "instructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NurseMedicationUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "nurseId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1039,6 +1419,9 @@
           "parentId": {
             "type": "integer",
             "format": "int32"
+          },
+          "followUpRequired": {
+            "type": "boolean"
           },
           "parent": {
             "$ref": "#/components/schemas/Parent"

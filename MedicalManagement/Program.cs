@@ -7,6 +7,7 @@ using MedicalManagement.Helpers;
 using MedicalManagement.Services;
 using MedicalManagement.Services.Interfaces;
 using Microsoft.OpenApi.Models;
+using MedicalManagement.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -78,6 +81,14 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+
+// Đăng ký service business logic
+builder.Services.AddScoped<IMedicationService, MedicationService>();
+
+builder.Services.AddScoped<IConsentService, ConsentService>();
+
 
 builder.Services.Configure<SmtpSettings>(
     builder.Configuration.GetSection("SmtpSettings")

@@ -28,7 +28,7 @@ namespace MedicalManagement.Models.Entities
 
         [Column("parent_id")]
         public int ParentId { get; set; }
-
+        public bool FollowUpRequired { get; set; } = false;
         public Parent Parent { get; set; }
     }
 }

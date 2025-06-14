@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MedicalManagement.Models.Entities;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MedicalManagement.Models.Entities;
 
 namespace MedicalManagement.Data
 {
@@ -24,7 +25,8 @@ namespace MedicalManagement.Data
         public DbSet<MedicalNotification> MedicalNotifications { get; set; }
         public DbSet<MedicalCondition> MedicalConditions { get; set; }
         public DbSet<Medication> Medications { get; set; }
-
+        public DbSet<Consent> Consents { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

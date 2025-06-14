@@ -106,6 +106,104 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "NurseHealthController",
+    "Method": "UpdateMedication",
+    "RelativePath": "api/nurse/health/medication/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.NurseMedicationUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseHealthController",
+    "Method": "GetMedications",
+    "RelativePath": "api/nurse/health/medications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ParentAppointmentController",
+    "Method": "CreateAppointment",
+    "RelativePath": "api/parent/appointments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.AppointmentCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ParentAppointmentController",
+    "Method": "GetAppointments",
+    "RelativePath": "api/parent/appointments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentConsentController",
+    "Method": "RespondToConsent",
+    "RelativePath": "api/parent/consents/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.ConsentActionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentConsentController",
+    "Method": "GetHistory",
+    "RelativePath": "api/parent/consents/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentConsentController",
+    "Method": "GetPending",
+    "RelativePath": "api/parent/consents/pending",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.ParentHealthController",
     "Method": "AddMedicalCondition",
     "RelativePath": "api/parent/health/medical-condition",
@@ -146,7 +244,7 @@
       },
       {
         "Name": "dto",
-        "Type": "MedicalManagement.Models.DTOs.MedicalConditionCreateDTO",
+        "Type": "MedicalManagement.Models.DTOs.MedicalConditionUpdateDTO",
         "IsRequired": true
       }
     ],
@@ -186,8 +284,69 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.ParentHealthController",
+    "Method": "UpdateMedication",
+    "RelativePath": "api/parent/health/medication/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.MedicationUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentHealthController",
+    "Method": "GetMedications",
+    "RelativePath": "api/parent/health/medications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentHealthController",
     "Method": "GetMyStudents",
     "RelativePath": "api/parent/health/students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentStudentProgressController",
+    "Method": "GetHealthCheckups",
+    "RelativePath": "api/parent/student/checkups",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentStudentProgressController",
+    "Method": "GetMedicalEvents",
+    "RelativePath": "api/parent/student/events",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentStudentProgressController",
+    "Method": "GetMedicalNotifications",
+    "RelativePath": "api/parent/student/notifications",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
