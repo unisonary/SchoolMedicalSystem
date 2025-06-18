@@ -105,6 +105,9 @@ builder.Services.AddScoped<IHealthCheckupService, HealthCheckupService>();
 
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
+builder.Services.AddScoped<IAdminService, AdminService>();//Admin
+
+
 
 
 builder.Services.Configure<SmtpSettings>(
