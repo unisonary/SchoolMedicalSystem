@@ -174,7 +174,8 @@ namespace MedicalManagement.Controllers
                 Instructions = dto.Instructions,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
-                ProvidedByParent = true
+                ProvidedByParent = true,
+                Status = "Pending"
             };
 
             _context.Medications.Add(med);

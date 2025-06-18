@@ -14,8 +14,14 @@ namespace MedicalManagement.Models.Entities
         [Column("student_id")]
         public int StudentId { get; set; }
 
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
+
         [Column("plan_id")]
         public int PlanId { get; set; }
+
+        [ForeignKey("PlanId")]
+        public MedicalPlan Plan { get; set; }
 
         [Column("checkup_type")]
         public string CheckupType { get; set; }
@@ -41,4 +47,5 @@ namespace MedicalManagement.Models.Entities
         [Column("follow_up_required")]
         public bool FollowUpRequired { get; set; }
     }
+
 }

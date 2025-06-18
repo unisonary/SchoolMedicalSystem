@@ -8,6 +8,7 @@ using MedicalManagement.Services;
 using MedicalManagement.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 using MedicalManagement.Repositories;
+using MedicalManagement.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,10 +85,26 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
 
-// Đăng ký service business logic
 builder.Services.AddScoped<IMedicationService, MedicationService>();
 
 builder.Services.AddScoped<IConsentService, ConsentService>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IMedicalEventService, MedicalEventService>();
+
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+
+builder.Services.AddScoped<ISupplyLogService, SupplyLogService>();
+
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
+builder.Services.AddScoped<IVaccinationService, VaccinationService>();
+
+builder.Services.AddScoped<IHealthCheckupService, HealthCheckupService>();
+
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
 
 
 builder.Services.Configure<SmtpSettings>(
@@ -103,11 +120,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // 👈 Quan trọng!
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+

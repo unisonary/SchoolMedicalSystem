@@ -106,9 +106,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "NurseHealthController",
-    "Method": "UpdateMedication",
-    "RelativePath": "api/nurse/health/medication/{id}",
+    "ContainingType": "MedicalManagement.Controllers.NurseAppointmentController",
+    "Method": "GetAll",
+    "RelativePath": "api/nurse/appointments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseAppointmentController",
+    "Method": "Update",
+    "RelativePath": "api/nurse/appointments/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -120,16 +136,16 @@
       },
       {
         "Name": "dto",
-        "Type": "MedicalManagement.Models.DTOs.NurseMedicationUpdateDTO",
+        "Type": "MedicalManagement.Models.DTOs.AppointmentUpdateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "NurseHealthController",
-    "Method": "GetMedications",
-    "RelativePath": "api/nurse/health/medications",
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "Get",
+    "RelativePath": "api/nurse/checkups",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -137,29 +153,286 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ParentAppointmentController",
-    "Method": "CreateAppointment",
-    "RelativePath": "api/parent/appointments",
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/checkups",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "MedicalManagement.Models.DTOs.AppointmentCreateDTO",
+        "Type": "MedicalManagement.Models.DTOs.HealthCheckupCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ParentAppointmentController",
-    "Method": "GetAppointments",
-    "RelativePath": "api/parent/appointments",
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "Update",
+    "RelativePath": "api/nurse/checkups/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.HealthCheckupUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseInventoryController",
+    "Method": "GetAll",
+    "RelativePath": "api/nurse/inventory",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseInventoryController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/inventory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.InventoryCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseInventoryController",
+    "Method": "Update",
+    "RelativePath": "api/nurse/inventory/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.InventoryUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseInventoryController",
+    "Method": "SoftDelete",
+    "RelativePath": "api/nurse/inventory/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseMedicalEventController",
+    "Method": "GetAll",
+    "RelativePath": "api/nurse/medical-events",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseMedicalEventController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/medical-events",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.MedicalEventCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseMedicalEventController",
+    "Method": "GetById",
+    "RelativePath": "api/nurse/medical-events/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseMedicalEventController",
+    "Method": "Update",
+    "RelativePath": "api/nurse/medical-events/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.MedicalEventUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NurseMedicalEventController",
+    "Method": "SoftDelete",
+    "RelativePath": "api/nurse/medical-events/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseMedicationController",
+    "Method": "GetPendingMedications",
+    "RelativePath": "api/nurse/medications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseMedicationController",
+    "Method": "Verify",
+    "RelativePath": "api/nurse/medications/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.MedicationVerifyDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseSupplyLogController",
+    "Method": "GetAll",
+    "RelativePath": "api/nurse/supply-log",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseSupplyLogController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/supply-log",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.SupplyLogCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseVaccinationController",
+    "Method": "Get",
+    "RelativePath": "api/nurse/vaccinations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseVaccinationController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/vaccinations",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.VaccinationCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseVaccinationController",
+    "Method": "Update",
+    "RelativePath": "api/nurse/vaccinations/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.VaccinationUpdateDTO",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

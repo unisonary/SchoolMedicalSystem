@@ -45,5 +45,9 @@ namespace MedicalManagement.Models.Entities
 
         [Column("status")]
         public string Status { get; set; } = "Active";
+
+        [Column("note")]
+        public string? Note { get; set; }
+
     }
 }

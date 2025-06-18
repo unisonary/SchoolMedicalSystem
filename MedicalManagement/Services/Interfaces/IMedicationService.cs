@@ -9,7 +9,8 @@ namespace MedicalManagement.Services.Interfaces
         Task UpdateByParentAsync(int parentRefId, int id, MedicationUpdateDTO dto);
 
         // Cho Nurse
-        Task<IEnumerable<MedicationReadDTO>> GetForNurseAsync();
-        Task UpdateByNurseAsync(int nurseRefId, int id, NurseMedicationUpdateDTO dto);
+        Task<List<MedicationNurseReadDTO>> GetPendingFromParentAsync();
+        Task VerifyAsync(int medicationId, MedicationVerifyDTO dto, int nurseId);
+
     }
 }

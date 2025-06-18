@@ -43,5 +43,8 @@ namespace MedicalManagement.Models.Entities
 
         [Column("location")]
         public string Location { get; set; }
+
+        [Column("is_active")]
+        public bool IsActive { get; set; } = true;
     }
 }

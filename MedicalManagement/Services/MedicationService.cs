@@ -1,12 +1,22 @@
-﻿using MedicalManagement.Models.DTOs;
+﻿using MedicalManagement.Data;
+using MedicalManagement.Exceptions;
+using MedicalManagement.Models.DTOs;
 using MedicalManagement.Models.Entities;
 using MedicalManagement.Repositories;
 using MedicalManagement.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 public class MedicationService : IMedicationService
 {
     private readonly IMedicationRepository _repo;
-    public MedicationService(IMedicationRepository repo) => _repo = repo;
+    private readonly AppDbContext _context;
+
+    public MedicationService(AppDbContext context, IMedicationRepository repo)
+    {
+        _context = context;
+        _repo = repo;
+    }
+
 
     public async Task<IEnumerable<MedicationReadDTO>> GetForParentAsync(int parentRefId, IEnumerable<int> studentIds)
     {
@@ -33,23 +43,6 @@ public class MedicationService : IMedicationService
         await _repo.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<MedicationReadDTO>> GetForNurseAsync()
-    {
-        var meds = await _repo.GetAllAsync();
-        return meds.Select(MapToDto);
-    }
-
-    public async Task UpdateByNurseAsync(int nurseRefId, int id, NurseMedicationUpdateDTO dto)
-    {
-        var med = await _repo.GetByIdAsync(id)
-                  ?? throw new KeyNotFoundException("Medication not found");
-        // Nurse có thể update status, assign nurseId...
-        med.Status = dto.Status ?? med.Status;
-        med.NurseId = nurseRefId;
-        await _repo.UpdateAsync(med);
-        await _repo.SaveChangesAsync();
-    }
-
     private MedicationReadDTO MapToDto(Medication m) => new MedicationReadDTO
     {
         MedicationId = m.MedicationId,
@@ -62,4 +55,38 @@ public class MedicationService : IMedicationService
         EndDate = m.EndDate,
         Status = m.Status
     };
+
+    public async Task<List<MedicationNurseReadDTO>> GetPendingFromParentAsync()
+    {
+        return await _context.Medications
+            .Where(m => m.ProvidedByParent && m.Status == "Pending")
+            .Include(m => m.Student)
+            .Select(m => new MedicationNurseReadDTO
+            {
+                MedicationId = m.MedicationId,
+                StudentName = m.Student.Name,
+                MedicationName = m.MedicationName,
+                Dosage = m.Dosage,
+                Frequency = m.Frequency,
+                Instructions = m.Instructions,
+                StartDate = m.StartDate,
+                EndDate = m.EndDate,
+                Status = m.Status,
+                Note = m.Note
+            }).ToListAsync();
+    }
+
+    public async Task VerifyAsync(int medicationId, MedicationVerifyDTO dto, int nurseId)
+    {
+        var medication = await _context.Medications.FindAsync(medicationId);
+        if (medication == null || !medication.ProvidedByParent)
+            throw new NotFoundException("Thuốc không tồn tại hoặc không phải do phụ huynh gửi.");
+
+        medication.Status = dto.Status;
+        medication.Note = dto.Note;
+        medication.NurseId = nurseId;
+
+        await _context.SaveChangesAsync();
+    }
+
 }

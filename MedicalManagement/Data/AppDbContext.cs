@@ -10,8 +10,6 @@ namespace MedicalManagement.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<UserAccount> UserAccounts { get; set; }
-
-        // ✅ THÊM các DbSet còn thiếu:
         public DbSet<Student> Students { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Manager> Managers { get; set; }
@@ -27,6 +25,11 @@ namespace MedicalManagement.Data
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Consent> Consents { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<SupplyLog> SupplyLogs { get; set; }
+        public DbSet<MedicalPlan> MedicalPlans { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

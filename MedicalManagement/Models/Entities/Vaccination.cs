@@ -37,5 +37,9 @@ namespace MedicalManagement.Models.Entities
 
         [ForeignKey("NurseId")]
         public SchoolNurse Nurse { get; set; }
+
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
+
     }
 }

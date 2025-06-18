@@ -208,10 +208,19 @@
         }
       }
     },
-    "/api/nurse/health/medications": {
+    "/api/nurse/appointments": {
       "get": {
         "tags": [
-          "NurseHealth"
+          "NurseAppointment"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -220,10 +229,10 @@
         }
       }
     },
-    "/api/nurse/health/medication/{id}": {
+    "/api/nurse/appointments/{id}": {
       "put": {
         "tags": [
-          "NurseHealth"
+          "NurseAppointment"
         ],
         "parameters": [
           {
@@ -240,17 +249,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+                "$ref": "#/components/schemas/AppointmentUpdateDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+                "$ref": "#/components/schemas/AppointmentUpdateDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/NurseMedicationUpdateDTO"
+                "$ref": "#/components/schemas/AppointmentUpdateDTO"
               }
             }
           }
@@ -262,26 +271,161 @@
         }
       }
     },
-    "/api/parent/appointments": {
+    "/api/nurse/checkups": {
+      "get": {
+        "tags": [
+          "NurseHealthCheckup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
-          "ParentAppointment"
+          "NurseHealthCheckup"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AppointmentCreateDTO"
+                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AppointmentCreateDTO"
+                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AppointmentCreateDTO"
+                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/checkups/{id}": {
+      "put": {
+        "tags": [
+          "NurseHealthCheckup"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealthCheckupUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealthCheckupUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealthCheckupUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/inventory": {
+      "get": {
+        "tags": [
+          "NurseInventory"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NurseInventory"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/inventory/{id}": {
+      "put": {
+        "tags": [
+          "NurseInventory"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryUpdateDTO"
               }
             }
           }
@@ -292,10 +436,324 @@
           }
         }
       },
+      "delete": {
+        "tags": [
+          "NurseInventory"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/medical-events": {
       "get": {
         "tags": [
-          "ParentAppointment"
+          "NurseMedicalEvent"
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NurseMedicalEvent"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/medical-events/{id}": {
+      "get": {
+        "tags": [
+          "NurseMedicalEvent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "NurseMedicalEvent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalEventUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "NurseMedicalEvent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/medications": {
+      "get": {
+        "tags": [
+          "NurseMedication"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/medications/{id}": {
+      "put": {
+        "tags": [
+          "NurseMedication"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationVerifyDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationVerifyDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationVerifyDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/supply-log": {
+      "get": {
+        "tags": [
+          "NurseSupplyLog"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NurseSupplyLog"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplyLogCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplyLogCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplyLogCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/vaccinations": {
+      "get": {
+        "tags": [
+          "NurseVaccination"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NurseVaccination"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/vaccinations/{id}": {
+      "put": {
+        "tags": [
+          "NurseVaccination"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaccinationUpdateDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -984,18 +1442,14 @@
   },
   "components": {
     "schemas": {
-      "AppointmentCreateDTO": {
+      "AppointmentUpdateDTO": {
         "type": "object",
         "properties": {
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scheduledDate": {
+          "status": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
-          "reason": {
+          "notes": {
             "type": "string",
             "nullable": true
           }
@@ -1059,6 +1513,39 @@
         },
         "additionalProperties": false
       },
+      "HealthCheckupCreateDTO": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "planId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "checkupType": {
+            "type": "string",
+            "nullable": true
+          },
+          "result": {
+            "type": "string",
+            "nullable": true
+          },
+          "abnormalFindings": {
+            "type": "string",
+            "nullable": true
+          },
+          "recommendations": {
+            "type": "string",
+            "nullable": true
+          },
+          "followUpRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "HealthCheckupDTO": {
         "type": "object",
         "properties": {
@@ -1097,6 +1584,28 @@
         },
         "additionalProperties": false
       },
+      "HealthCheckupUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "nullable": true
+          },
+          "abnormalFindings": {
+            "type": "string",
+            "nullable": true
+          },
+          "recommendations": {
+            "type": "string",
+            "nullable": true
+          },
+          "followUpRequired": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "HealthRecordDTO": {
         "type": "object",
         "properties": {
@@ -1119,6 +1628,51 @@
           "severity": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InventoryCreateDTO": {
+        "type": "object",
+        "properties": {
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemType": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "minimumStockLevel": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InventoryUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minimumStockLevel": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1185,6 +1739,42 @@
         },
         "additionalProperties": false
       },
+      "MedicalEventCreateDTO": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventType": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "treatmentGiven": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentNotified": {
+            "type": "boolean"
+          },
+          "followUpRequired": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "MedicalEventDTO": {
         "type": "object",
         "properties": {
@@ -1217,6 +1807,38 @@
             "nullable": true
           },
           "nurseName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedicalEventUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          },
+          "treatmentGiven": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentNotified": {
+            "type": "boolean"
+          },
+          "followUpRequired": {
+            "type": "boolean"
+          },
+          "location": {
             "type": "string",
             "nullable": true
           }
@@ -1326,19 +1948,14 @@
         },
         "additionalProperties": false
       },
-      "NurseMedicationUpdateDTO": {
+      "MedicationVerifyDTO": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "nullable": true
           },
-          "nurseId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "notes": {
+          "note": {
             "type": "string",
             "nullable": true
           }
@@ -1429,6 +2046,28 @@
         },
         "additionalProperties": false
       },
+      "SupplyLogCreateDTO": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceEventId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "UserDTO": {
         "type": "object",
         "properties": {
@@ -1446,6 +2085,41 @@
           },
           "token": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VaccinationCreateDTO": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "planId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vaccineName": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reaction": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextDoseDue": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -1470,6 +2144,21 @@
             "type": "string",
             "nullable": true
           },
+          "reaction": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextDoseDue": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VaccinationUpdateDTO": {
+        "type": "object",
+        "properties": {
           "reaction": {
             "type": "string",
             "nullable": true
