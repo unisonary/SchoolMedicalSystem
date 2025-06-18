@@ -9,5 +9,7 @@ namespace MedicalManagement.Services.Interfaces
         Task<bool> CreateUserAsync(CreateUserDTO dto);
         Task<List<object>> GetUsersByRoleAsync(string role);
         Task<bool> ResetPasswordAsync(ResetUserPasswordDTO dto);
+        Task<List<string>> ImportUsersFromExcelAsync(IFormFile file, int createdByAdminId);
+
     }
 }
