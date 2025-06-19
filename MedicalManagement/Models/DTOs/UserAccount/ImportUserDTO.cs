@@ -8,5 +8,8 @@ namespace MedicalManagement.Models.DTOs.UserAccount
         public string Name { get; set; }
         public string Email { get; set; }
         public string ParentPhone { get; set; } // Optional, only for Student
+        public string Gender { get; set; } // Only for Student
+        public DateTime? DateOfBirth { get; set; } // Only for Student
+        public string Class { get; set; } // Only for Student
     }
 }

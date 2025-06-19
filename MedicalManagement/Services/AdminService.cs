@@ -122,7 +122,10 @@ namespace MedicalManagement.Services
                     Role = worksheet.Cells[row, 3].Text.Trim(),
                     Name = worksheet.Cells[row, 4].Text.Trim(),
                     Email = worksheet.Cells[row, 5].Text.Trim(),
-                    ParentPhone = worksheet.Cells[row, 6].Text.Trim()
+                    ParentPhone = worksheet.Cells[row, 6].Text.Trim(),
+                    Gender = worksheet.Cells[row, 7].Text.Trim(),
+                    DateOfBirth = DateTime.TryParse(worksheet.Cells[row, 8].Text.Trim(), out var dob) ? dob : null,
+                    Class = worksheet.Cells[row, 9].Text.Trim()
                 };
 
                 // Kiểm tra đã tồn tại username chưa
@@ -152,6 +155,9 @@ namespace MedicalManagement.Services
                             {
                                 Name = dto.Name,
                                 Email = dto.Email,
+                                Gender = dto.Gender,
+                                DateOfBirth = dto.DateOfBirth,
+                                Class = dto.Class,
                                 ParentId = Parent.ParentId
                             };
                             _context.Students.Add(student);
