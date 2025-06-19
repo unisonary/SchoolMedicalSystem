@@ -159,6 +159,7 @@ D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\MedicalManag
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Azure.Core.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Azure.Identity.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\EPPlus.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Humanizer.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
@@ -187,6 +188,7 @@ D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.Id
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.IO.RecyclableMemoryStream.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.OpenApi.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
@@ -209,6 +211,7 @@ D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\System.Runti
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\System.Security.Permissions.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\System.Windows.Extensions.dll
+D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\System.Xml.XPath.XmlDocument.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
 D:\Project\C#\Medical Management\MedicalManagement\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll

@@ -17,6 +17,27 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "ImportUsersFromExcel",
+    "RelativePath": "api/admin/import-users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "createdBy",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
     "Method": "ResetPassword",
     "RelativePath": "api/admin/reset-password",
     "HttpMethod": "PUT",

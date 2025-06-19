@@ -40,5 +40,16 @@ namespace MedicalManagement.Controllers
                 return NotFound("Không tìm thấy tài khoản");
             return Ok("Mật khẩu đã được đặt lại");
         }
+        //This guy is used to import users from file excel
+        [HttpPost("import-users")]
+        public async Task<IActionResult> ImportUsersFromExcel(IFormFile file, [FromQuery] int createdBy = 1)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Chưa chọn file.");
+
+            var result = await _adminService.ImportUsersFromExcelAsync(file, createdBy);
+            return Ok(result);
+        }
+
     }
 }
