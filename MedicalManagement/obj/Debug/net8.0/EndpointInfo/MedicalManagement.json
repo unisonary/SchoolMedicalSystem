@@ -208,6 +208,141 @@
         }
       }
     },
+    "/api/manager/assignments": {
+      "post": {
+        "tags": [
+          "ManagerAssignment"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignmentDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignmentDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignmentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/plans": {
+      "post": {
+        "tags": [
+          "ManagerMedicalPlan"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ManagerMedicalPlan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/plans/{id}": {
+      "put": {
+        "tags": [
+          "ManagerMedicalPlan"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicalPlanUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ManagerMedicalPlan"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/nurse/appointments": {
       "get": {
         "tags": [
@@ -271,40 +406,22 @@
         }
       }
     },
-    "/api/nurse/checkups": {
+    "/api/nurse/checkups/plan/{planId}": {
       "get": {
         "tags": [
           "NurseHealthCheckup"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "NurseHealthCheckup"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/HealthCheckupCreateDTO"
-              }
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -683,35 +800,16 @@
         "tags": [
           "NurseVaccination"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "NurseVaccination"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VaccinationCreateDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VaccinationCreateDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VaccinationCreateDTO"
-              }
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1452,6 +1550,33 @@
           "notes": {
             "type": "string",
             "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssignmentDTO": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nurseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1513,39 +1638,6 @@
         },
         "additionalProperties": false
       },
-      "HealthCheckupCreateDTO": {
-        "type": "object",
-        "properties": {
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "planId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "checkupType": {
-            "type": "string",
-            "nullable": true
-          },
-          "result": {
-            "type": "string",
-            "nullable": true
-          },
-          "abnormalFindings": {
-            "type": "string",
-            "nullable": true
-          },
-          "recommendations": {
-            "type": "string",
-            "nullable": true
-          },
-          "followUpRequired": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "HealthCheckupDTO": {
         "type": "object",
         "properties": {
@@ -1587,6 +1679,10 @@
       "HealthCheckupUpdateDTO": {
         "type": "object",
         "properties": {
+          "checkupType": {
+            "type": "string",
+            "nullable": true
+          },
           "result": {
             "type": "string",
             "nullable": true
@@ -1882,6 +1978,70 @@
         },
         "additionalProperties": false
       },
+      "MedicalPlanCreateDTO": {
+        "type": "object",
+        "properties": {
+          "planType": {
+            "type": "string",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "targetGrade": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedicalPlanUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "planType": {
+            "type": "string",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "targetGrade": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MedicationCreateDTO": {
         "type": "object",
         "properties": {
@@ -2090,41 +2250,6 @@
         },
         "additionalProperties": false
       },
-      "VaccinationCreateDTO": {
-        "type": "object",
-        "properties": {
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "planId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "vaccineName": {
-            "type": "string",
-            "nullable": true
-          },
-          "batchNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reaction": {
-            "type": "string",
-            "nullable": true
-          },
-          "nextDoseDue": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "VaccinationDTO": {
         "type": "object",
         "properties": {
@@ -2159,6 +2284,14 @@
       "VaccinationUpdateDTO": {
         "type": "object",
         "properties": {
+          "vaccineName": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "reaction": {
             "type": "string",
             "nullable": true

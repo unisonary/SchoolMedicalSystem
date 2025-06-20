@@ -18,10 +18,10 @@ namespace MedicalManagement.Models.Entities
         public int PlanId { get; set; }
 
         [Column("vaccine_name")]
-        public string VaccineName { get; set; }
+        public string? VaccineName { get; set; }
 
         [Column("batch_number")]
-        public string BatchNumber { get; set; }
+        public string? BatchNumber { get; set; }
 
         [Column("date")]
         public DateTime Date { get; set; }
@@ -30,7 +30,7 @@ namespace MedicalManagement.Models.Entities
         public int NurseId { get; set; }
 
         [Column("reaction")]
-        public string Reaction { get; set; }
+        public string? Reaction { get; set; }
 
         [Column("next_dose_due")]
         public DateTime? NextDoseDue { get; set; }

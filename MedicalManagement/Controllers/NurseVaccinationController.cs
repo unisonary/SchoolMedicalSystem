@@ -21,13 +21,10 @@ namespace MedicalManagement.Controllers
         private int GetNurseId() => int.Parse(User.FindFirstValue("reference_id"));
 
         [HttpGet]
-        public async Task<IActionResult> Get() => Ok(await _service.GetAllAsync());
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] VaccinationCreateDTO dto)
+        public async Task<IActionResult> Get([FromQuery] int planId)
         {
-            var id = await _service.CreateAsync(dto, GetNurseId());
-            return Ok(new { message = "Đã ghi nhận tiêm chủng", vaccinationId = id });
+            var result = await _service.GetAllAsync(planId);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

@@ -69,7 +69,7 @@ namespace MedicalManagement.Controllers
                     StudentId = c.StudentId,
                     StudentName = _context.Students.Where(s => s.StudentId == c.StudentId).Select(s => s.Name).FirstOrDefault(),
                     Result = c.Result,
-                    Date = c.Date,
+                    Date = DateTime.MinValue,
                     Recommendations = c.Recommendations,
                 })
                 .ToListAsync();

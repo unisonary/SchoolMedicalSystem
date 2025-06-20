@@ -4,8 +4,7 @@ namespace MedicalManagement.Services.Interfaces
 {
     public interface IHealthCheckupService
     {
-        Task<List<HealthCheckupReadDTO>> GetAllAsync();
-        Task<int> CreateAsync(HealthCheckupCreateDTO dto, int nurseId);
+        Task<List<HealthCheckupReadDTO>> GetByPlanIdAsync(int planId);
         Task UpdateAsync(int id, HealthCheckupUpdateDTO dto, int nurseId);
     }
 

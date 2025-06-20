@@ -4,8 +4,7 @@ namespace MedicalManagement.Services.Interfaces
 {
     public interface IVaccinationService
     {
-        Task<List<VaccinationReadDTO>> GetAllAsync();
-        Task<int> CreateAsync(VaccinationCreateDTO dto, int nurseId);
+        Task<List<VaccinationReadDTO>> GetAllAsync(int? planId = null);
         Task UpdateAsync(int id, VaccinationUpdateDTO dto, int nurseId);
     }
 }

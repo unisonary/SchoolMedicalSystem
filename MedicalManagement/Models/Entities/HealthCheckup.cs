@@ -24,16 +24,16 @@ namespace MedicalManagement.Models.Entities
         public MedicalPlan Plan { get; set; }
 
         [Column("checkup_type")]
-        public string CheckupType { get; set; }
+        public string? CheckupType { get; set; }
 
         [Column("result")]
-        public string Result { get; set; }
+        public string? Result { get; set; }
 
         [Column("abnormal_findings")]
-        public string AbnormalFindings { get; set; }
+        public string? AbnormalFindings { get; set; }
 
         [Column("recommendations")]
-        public string Recommendations { get; set; }
+        public string? Recommendations { get; set; }
 
         [Column("date")]
         public DateTime Date { get; set; }
