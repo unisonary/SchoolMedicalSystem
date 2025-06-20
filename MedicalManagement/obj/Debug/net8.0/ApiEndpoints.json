@@ -1,5 +1,74 @@
 [
   {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "CreateUser",
+    "RelativePath": "api/admin/create-account",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.UserAccount.CreateUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "ImportUsersFromExcel",
+    "RelativePath": "api/admin/import-users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "createdBy",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/admin/reset-password",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.UserAccount.ResetUserPasswordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "GetUsers",
+    "RelativePath": "api/admin/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.AuthController",
     "Method": "ChangePassword",
     "RelativePath": "api/Auth/change-password",
