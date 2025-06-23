@@ -8362,23 +8362,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC-ACER\\.nuget\\packages\\": {},
+    "C:\\Users\\Yiun\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\1.FPT\\Semester_5\\PRN212\\MySelfDOCNET\\MedicalManagement\\MedicalManagement\\MedicalManagement.csproj",
+      "projectUniqueName": "D:\\Project\\C#\\Medical Management\\MedicalManagement\\MedicalManagement.csproj",
       "projectName": "MedicalManagement",
-      "projectPath": "D:\\1.FPT\\Semester_5\\PRN212\\MySelfDOCNET\\MedicalManagement\\MedicalManagement\\MedicalManagement.csproj",
-      "packagesPath": "C:\\Users\\PC-ACER\\.nuget\\packages\\",
-      "outputPath": "D:\\1.FPT\\Semester_5\\PRN212\\MySelfDOCNET\\MedicalManagement\\MedicalManagement\\obj\\",
+      "projectPath": "D:\\Project\\C#\\Medical Management\\MedicalManagement\\MedicalManagement.csproj",
+      "packagesPath": "C:\\Users\\Yiun\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\C#\\Medical Management\\MedicalManagement\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\PC-ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Yiun\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -8405,7 +8405,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -8457,7 +8457,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

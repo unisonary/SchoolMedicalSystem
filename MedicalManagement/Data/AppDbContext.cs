@@ -28,6 +28,9 @@ namespace MedicalManagement.Data
         public DbSet<Inventory> Inventory { get; set; }
         public DbSet<SupplyLog> SupplyLogs { get; set; }
         public DbSet<MedicalPlan> MedicalPlans { get; set; }
+        public DbSet<HealthDocument> HealthDocuments { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
+
 
 
 
