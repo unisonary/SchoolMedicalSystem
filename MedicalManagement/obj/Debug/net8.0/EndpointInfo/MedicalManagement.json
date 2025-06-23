@@ -2019,6 +2019,10 @@
           "content": {
             "type": "string",
             "nullable": true
+          },
+          "imageURL": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2163,6 +2167,10 @@
             "nullable": true
           },
           "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
             "type": "string",
             "nullable": true
           }

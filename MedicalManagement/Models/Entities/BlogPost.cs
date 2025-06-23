@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +16,9 @@ namespace MedicalManagement.Models.Entities
 
         [Column("content")]
         public string Content { get; set; }
+        [Column("image_url")]
+        public string? ImageUrl { get; set; }  // Null Acceptance
+
 
         [Column("created_date")]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
