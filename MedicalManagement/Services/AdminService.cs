@@ -219,5 +219,34 @@ namespace MedicalManagement.Services
 
             return result;
         }
+        public async Task<bool> UpdateUserAsync(UpdateUserDTO dto)
+        {
+            var user = await _context.UserAccounts.FindAsync(dto.UserId);
+            if (user == null) return false;
+
+            user.Username = dto.Username;
+            user.Role = dto.Role;
+            user.IsActive = dto.IsActive;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeactivateUserAsync(int userId)
+        {
+            var user = await _context.UserAccounts.FindAsync(userId);
+            if (user == null) return false;
+
+            user.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<object>> SearchUsersAsync(string query)
+        {
+            return await _context.UserAccounts
+                .Where(u => u.Username.Contains(query))
+                .ToListAsync<object>();
+        }
     }
 }

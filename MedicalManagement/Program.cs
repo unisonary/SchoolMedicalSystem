@@ -108,6 +108,8 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IMedicalPlanService, MedicalPlanService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IContentService, ContentService>();
+
 
 
 

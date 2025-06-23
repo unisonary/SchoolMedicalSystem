@@ -2,7 +2,7 @@
 using MedicalManagement.Services.Interfaces;
 using MedicalManagement.Models.DTOs.UserAccount;
 using System.Threading.Tasks;
-
+///This is the class that for managing accounts
 namespace MedicalManagement.Controllers
 {
     [Route("api/admin")]
@@ -49,6 +49,29 @@ namespace MedicalManagement.Controllers
 
             var result = await _adminService.ImportUsersFromExcelAsync(file, createdBy);
             return Ok(result);
+        }
+        // Cập nhật người dùng
+        [HttpPut("update-user")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO dto)
+        {
+            var success = await _adminService.UpdateUserAsync(dto);
+            return success ? Ok("Cập nhật thành công") : NotFound("Không tìm thấy người dùng");
+        }
+
+        // Vô hiệu hóa tài khoản
+        [HttpPut("deactivate/{userId}")]
+        public async Task<IActionResult> DeactivateUser(int userId)
+        {
+            var success = await _adminService.DeactivateUserAsync(userId);
+            return success ? Ok("Đã vô hiệu hóa tài khoản") : NotFound("Không tìm thấy người dùng");
+        }
+
+        // Tìm kiếm người dùng theo username
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string query)
+        {
+            var users = await _adminService.SearchUsersAsync(query);
+            return Ok(users);
         }
 
     }
