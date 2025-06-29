@@ -61,7 +61,7 @@ namespace MedicalManagement.Services
 
         public async Task SoftDeleteAsync(int id)
         {
-            var item = await _context.Inventory.FindAsync(id);
+            var item = await _context.Inventories.FindAsync(id);
             if (item == null || !item.IsActive)
                 throw new NotFoundException("Không tìm thấy vật tư để xoá.");
 

@@ -1,1 +1,12 @@
-{"Version":1,"Hash":"tqvH40d4PrDRcBqQuV0WPIiwEEf+x1xpb26a0hsIUv8=","Source":"MedicalManagement","BasePath":"_content/MedicalManagement","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "tqvH40d4PrDRcBqQuV0WPIiwEEf+x1xpb26a0hsIUv8=",
+  "Source": "MedicalManagement",
+  "BasePath": "_content/MedicalManagement",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

@@ -83,18 +83,22 @@ namespace MedicalManagement.Controllers
             var studentIds = await GetStudentIdsFromParentTokenAsync();
 
             var list = await _context.MedicalNotifications
-                .Where(n => studentIds.Contains(n.StudentId) && n.RecipientType == "Parent")
+                .Where(n => n.StudentId.HasValue && studentIds.Contains(n.StudentId.Value) && n.RecipientType == "Parent")
                 .Select(n => new MedicalNotificationDTO
                 {
                     NotificationId = n.NotificationId,
-                    StudentId = n.StudentId,
-                    StudentName = _context.Students.Where(s => s.StudentId == n.StudentId).Select(s => s.Name).FirstOrDefault(),
+                    StudentId = n.StudentId.Value,
+                    StudentName = _context.Students
+                        .Where(s => s.StudentId == n.StudentId.Value)
+                        .Select(s => s.Name)
+                        .FirstOrDefault(),
                     Title = n.Title,
                     Content = n.Content,
                     Date = n.Date,
                     IsRead = n.IsRead
                 })
                 .ToListAsync();
+
 
             return Ok(list);
         }

@@ -93,5 +93,34 @@ namespace MedicalManagement.Controllers
         {
             return _context.Students.Any(e => e.StudentId == id);
         }
+
+        [HttpPost("{id}/upload-avatar")]
+        public async Task<IActionResult> UploadAvatar(int id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Ảnh không hợp lệ");
+
+            var student = await _context.Students.FindAsync(id);
+            if (student == null) return NotFound("Không tìm thấy học sinh");
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            student.Avatar = ms.ToArray();
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Upload ảnh đại diện thành công." });
+        }
+
+        [HttpGet("{id}/avatar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAvatar(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null || student.Avatar == null)
+                return NotFound();
+
+            return File(student.Avatar, "image/jpeg"); 
+        }
+
     }
 }

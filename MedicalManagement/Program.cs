@@ -9,8 +9,23 @@ using MedicalManagement.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 using MedicalManagement.Repositories;
 using MedicalManagement.Middlewares;
+using Hangfire;
+using Hangfire.SqlServer;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+// CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") // FE port của bạn
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // Add services to the container.
 
@@ -57,7 +72,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MedicalManagement API", Version = "v1" });
 
-    // ✅ Thêm hỗ trợ JWT Bearer Token
+    // Thêm hỗ trợ JWT Bearer Token
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
@@ -109,7 +124,16 @@ builder.Services.AddScoped<IMedicalPlanService, MedicalPlanService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 
->>>>>>> 91e4efe5c121746a3f184e20c68a78385e2311da
+builder.Services.AddScoped<IInventoryAlertService, InventoryAlertService>();
+
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddHangfireServer();
+
+builder.Services.AddScoped<IReportService, ReportService>();
+
+
 
 
 builder.Services.Configure<SmtpSettings>(
@@ -119,6 +143,8 @@ builder.Services.AddTransient<EmailService>();
 
 var app = builder.Build();
 
+app.UseCors("AllowFrontend");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -127,10 +153,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
+
+
+// Test chạy ngay khi app khởi động
+BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());
+
+
+RecurringJob.AddOrUpdate<IInventoryAlertService>(
+    "daily-inventory-alert",
+    service => service.GenerateDailyInventoryAlertsAsync(),
+    Cron.Daily(7, 0));
 
 app.MapControllers();
 

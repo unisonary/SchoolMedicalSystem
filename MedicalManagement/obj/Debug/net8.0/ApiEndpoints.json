@@ -86,22 +86,6 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.AuthController",
-    "Method": "ForgotPassword",
-    "RelativePath": "api/Auth/forgot-password",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "MedicalManagement.Models.DTOs.ForgotPasswordDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MedicalManagement.Controllers.AuthController",
     "Method": "ForgotPasswordOtp",
     "RelativePath": "api/Auth/forgot-password-otp",
     "HttpMethod": "POST",
@@ -144,15 +128,15 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.AuthController",
-    "Method": "ResetPassword",
-    "RelativePath": "api/Auth/reset-password",
+    "Method": "VerifyOtpOnly",
+    "RelativePath": "api/Auth/verify-otp-only",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "MedicalManagement.Models.DTOs.ResetPasswordDTO",
+        "Type": "MedicalManagement.Models.DTOs.VerifyOtpOnlyDTO",
         "IsRequired": true
       }
     ],
@@ -186,6 +170,22 @@
         "Name": "dto",
         "Type": "MedicalManagement.Models.DTOs.AssignmentDTO",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.InventoryAlertController",
+    "Method": "GetFilteredAlerts",
+    "RelativePath": "api/manager/inventory-alerts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "alertType",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -248,6 +248,102 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "GetHealthCheckupReport",
+    "RelativePath": "api/manager/reports/health-checkup",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.HealthCheckupReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "ExportHealthCheckupReport",
+    "RelativePath": "api/manager/reports/health-checkup/export",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.HealthCheckupReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "GetInventoryReport",
+    "RelativePath": "api/manager/reports/inventory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.InventoryReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "ExportInventoryReport",
+    "RelativePath": "api/manager/reports/inventory/export",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.InventoryReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "GetVaccinationReport",
+    "RelativePath": "api/manager/reports/vaccination",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.VaccinationReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "ExportVaccinationReport",
+    "RelativePath": "api/manager/reports/vaccination/export",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.VaccinationReportFilterDTO",
         "IsRequired": true
       }
     ],
@@ -859,6 +955,43 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.StudentController",
+    "Method": "GetAvatar",
+    "RelativePath": "api/Student/{id}/avatar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.StudentController",
+    "Method": "UploadAvatar",
+    "RelativePath": "api/Student/{id}/upload-avatar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

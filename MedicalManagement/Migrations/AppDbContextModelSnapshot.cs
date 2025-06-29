@@ -132,36 +132,54 @@ namespace MedicalManagement.Migrations
                 {
                     b.Property<int>("AppointmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("appointment_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("appointment_date");
 
-                    b.Property<int?>("NurseId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_date");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("notes");
+
+                    b.Property<int>("NurseId")
+                        .HasColumnType("int")
+                        .HasColumnName("nurse_id");
 
                     b.Property<int>("ParentId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("parent_id");
 
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("reason");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("student_id");
 
                     b.HasKey("AppointmentId");
 
-                    b.ToTable("Appointments");
+                    b.HasIndex("NurseId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Appointment");
                 });
 
             modelBuilder.Entity("MedicalManagement.Models.Entities.HealthCheckup", b =>
@@ -174,12 +192,10 @@ namespace MedicalManagement.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CheckupId"));
 
                     b.Property<string>("AbnormalFindings")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("abnormal_findings");
 
                     b.Property<string>("CheckupType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("checkup_type");
 
@@ -200,12 +216,10 @@ namespace MedicalManagement.Migrations
                         .HasColumnName("plan_id");
 
                     b.Property<string>("Recommendations")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("recommendations");
 
                     b.Property<string>("Result")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("result");
 
@@ -216,6 +230,10 @@ namespace MedicalManagement.Migrations
                     b.HasKey("CheckupId");
 
                     b.HasIndex("NurseId");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Health_Checkup");
                 });
@@ -468,7 +486,7 @@ namespace MedicalManagement.Migrations
                         .HasColumnType("int")
                         .HasColumnName("sender_id");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int?>("StudentId")
                         .HasColumnType("int")
                         .HasColumnName("student_id");
 
@@ -480,6 +498,61 @@ namespace MedicalManagement.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("Medical_Notification");
+                });
+
+            modelBuilder.Entity("MedicalManagement.Models.Entities.MedicalPlan", b =>
+                {
+                    b.Property<int>("PlanId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("plan_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlanId"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_date");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("end_date");
+
+                    b.Property<int>("ManagerId")
+                        .HasColumnType("int")
+                        .HasColumnName("manager_id");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("plan_name");
+
+                    b.Property<string>("PlanType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("plan_type");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("start_date");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("TargetGrade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("target_grade");
+
+                    b.HasKey("PlanId");
+
+                    b.ToTable("Medical_Plan");
                 });
 
             modelBuilder.Entity("MedicalManagement.Models.Entities.Medication", b =>
@@ -622,6 +695,10 @@ namespace MedicalManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("avatar");
+
                     b.Property<string>("Class")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -635,9 +712,6 @@ namespace MedicalManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("email");
-
-                    b.Property<bool>("FollowUpRequired")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -658,6 +732,54 @@ namespace MedicalManagement.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Student");
+                });
+
+            modelBuilder.Entity("MedicalManagement.Models.Entities.SupplyLog", b =>
+                {
+                    b.Property<int>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("log_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogId"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("action");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int")
+                        .HasColumnName("item_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("reason");
+
+                    b.Property<int>("ReferenceEventId")
+                        .HasColumnType("int")
+                        .HasColumnName("reference_event_id");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("LogId");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("ReferenceEventId");
+
+                    b.ToTable("Supply_Log");
                 });
 
             modelBuilder.Entity("MedicalManagement.Models.Entities.UserAccount", b =>
@@ -722,7 +844,6 @@ namespace MedicalManagement.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VaccinationId"));
 
                     b.Property<string>("BatchNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("batch_number");
 
@@ -743,7 +864,6 @@ namespace MedicalManagement.Migrations
                         .HasColumnName("plan_id");
 
                     b.Property<string>("Reaction")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("reaction");
 
@@ -752,13 +872,14 @@ namespace MedicalManagement.Migrations
                         .HasColumnName("student_id");
 
                     b.Property<string>("VaccineName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("vaccine_name");
 
                     b.HasKey("VaccinationId");
 
                     b.HasIndex("NurseId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Vaccination");
                 });
@@ -792,6 +913,33 @@ namespace MedicalManagement.Migrations
                     b.ToTable("School_Nurse");
                 });
 
+            modelBuilder.Entity("MedicalManagement.Models.Entities.Appointment", b =>
+                {
+                    b.HasOne("SchoolNurse", "Nurse")
+                        .WithMany()
+                        .HasForeignKey("NurseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalManagement.Models.Entities.Parent", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalManagement.Models.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Nurse");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("MedicalManagement.Models.Entities.HealthCheckup", b =>
                 {
                     b.HasOne("SchoolNurse", "Nurse")
@@ -800,7 +948,23 @@ namespace MedicalManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MedicalManagement.Models.Entities.MedicalPlan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalManagement.Models.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Nurse");
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("MedicalManagement.Models.Entities.HealthRecord", b =>
@@ -853,6 +1017,25 @@ namespace MedicalManagement.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("MedicalManagement.Models.Entities.SupplyLog", b =>
+                {
+                    b.HasOne("MedicalManagement.Models.Entities.Inventory", "InventoryItem")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicalManagement.Models.Entities.MedicalEvent", "MedicalEvent")
+                        .WithMany()
+                        .HasForeignKey("ReferenceEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InventoryItem");
+
+                    b.Navigation("MedicalEvent");
+                });
+
             modelBuilder.Entity("MedicalManagement.Models.Entities.Vaccination", b =>
                 {
                     b.HasOne("SchoolNurse", "Nurse")
@@ -861,7 +1044,15 @@ namespace MedicalManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MedicalManagement.Models.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Nurse");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("MedicalManagement.Models.Entities.Parent", b =>

@@ -28,7 +28,10 @@ namespace MedicalManagement.Models.Entities
 
         [Column("parent_id")]
         public int ParentId { get; set; }
-        public bool FollowUpRequired { get; set; } = false;
+
+        [Column("avatar")]
+        public byte[]? Avatar { get; set; }
+
         public Parent Parent { get; set; }
     }
 }

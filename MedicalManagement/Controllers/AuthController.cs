@@ -54,20 +54,6 @@ namespace MedicalManagement.Controllers
             }
         }
 
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
-        {
-            var result = await _authService.ForgotPasswordAsync(dto);
-            return Ok(new { message = result });
-        }
-
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
-        {
-            var result = await _authService.ResetPasswordAsync(dto.Token, dto.NewPassword);
-            return Ok(new { message = result });
-        }
-
         [HttpPost("forgot-password-otp")]
         public async Task<IActionResult> ForgotPasswordOtp([FromBody] ForgotPasswordDTO dto)
         {
@@ -75,12 +61,30 @@ namespace MedicalManagement.Controllers
             return Ok(new { message = result });
         }
 
+        [HttpPost("verify-otp-only")]
+        public async Task<IActionResult> VerifyOtpOnly([FromBody] VerifyOtpOnlyDTO dto)
+        {
+            try
+            {
+                var isValid = await _authService.VerifyOtpOnlyAsync(dto.Email, dto.Otp);
+                if (!isValid)
+                    return BadRequest(new { error = "OTP không hợp lệ hoặc đã hết hạn." });
+
+                return Ok(new { message = "OTP hợp lệ." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
         [HttpPost("verify-reset-password")]
         public async Task<IActionResult> VerifyOtpReset([FromBody] VerifyOtpResetDTO dto)
         {
             try
             {
-                var result = await _authService.VerifyOtpResetPasswordAsync(dto.Username, dto.Otp, dto.NewPassword);
+                var result = await _authService.VerifyOtpResetPasswordAsync(dto.Email, dto.Otp, dto.NewPassword);
                 return Ok(new { message = result });
             }
             catch (Exception ex)

@@ -25,7 +25,8 @@ namespace MedicalManagement.Data
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Consent> Consents { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+
         public DbSet<SupplyLog> SupplyLogs { get; set; }
         public DbSet<MedicalPlan> MedicalPlans { get; set; }
 

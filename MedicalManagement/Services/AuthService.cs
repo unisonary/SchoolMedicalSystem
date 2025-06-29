@@ -49,134 +49,86 @@ namespace MedicalManagement.Services
 
         public async Task<AuthResponse> LoginAsync(LoginDTO loginDto)
         {
-            var user = await _context.UserAccounts
-                .FirstOrDefaultAsync(u => u.Username == loginDto.Username && u.IsActive);
+            // Lấy tất cả tài khoản còn hoạt động
+            var users = await _context.UserAccounts
+                .Where(u => u.IsActive)
+                .ToListAsync();
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            // Tìm user khớp username hoặc email
+            UserAccount matchedUser = null;
+
+            foreach (var user in users)
+            {
+                var email = await GetEmailByUser(user);
+                if (user.Username == loginDto.UsernameOrEmail || email == loginDto.UsernameOrEmail)
+                {
+                    matchedUser = user;
+                    break;
+                }
+            }
+
+            if (matchedUser == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, matchedUser.Password))
             {
                 return new AuthResponse
                 {
                     Success = false,
-                    Message = "Username or password is incorrect"
+                    Message = "Email/Username hoặc mật khẩu không đúng."
                 };
             }
 
-            var token = _jwtHelper.GenerateToken(user);
+            // Tạo JWT token
+            var token = _jwtHelper.GenerateToken(matchedUser);
 
             return new AuthResponse
             {
                 Success = true,
-                Message = "Login successful",
+                Message = "Đăng nhập thành công.",
                 User = new UserDTO
                 {
-                    UserId = user.UserId,
-                    Username = user.Username,
-                    Role = user.Role,
+                    UserId = matchedUser.UserId,
+                    Username = matchedUser.Username,
+                    Role = matchedUser.Role,
                     Token = token
                 },
-                IsFirstLogin = user.IsFirstLogin
+                IsFirstLogin = matchedUser.IsFirstLogin
             };
         }
-
-        public async Task<string> ForgotPasswordAsync(ForgotPasswordDTO dto)
-        {
-            var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Username == dto.Username && u.IsActive);
-            if (user == null)
-                throw new Exception("Không tìm thấy người dùng.");
-
-            // 🔍 Lấy email theo role
-            string emailTo = null;
-            switch (user.Role)
-            {
-                case "Student":
-                    emailTo = await _context.Students
-                        .Where(s => s.StudentId == user.ReferenceId)
-                        .Select(s => s.Email)
-                        .FirstOrDefaultAsync();
-                    break;
-                case "Parent":
-                    emailTo = await _context.Parents
-                        .Where(p => p.ParentId == user.ReferenceId)
-                        .Select(p => p.Email)
-                        .FirstOrDefaultAsync();
-                    break;
-                case "Manager":
-                    emailTo = await _context.Managers
-                        .Where(m => m.ManagerId == user.ReferenceId)
-                        .Select(m => m.Email)
-                        .FirstOrDefaultAsync();
-                    break;
-                case "Nurse":
-                    emailTo = await _context.SchoolNurses
-                        .Where(n => n.NurseId == user.ReferenceId)
-                        .Select(n => n.Email)
-                        .FirstOrDefaultAsync();
-                    break;
-                case "Admin":
-                    emailTo = await _context.Admins
-                        .Where(a => a.AdminId == user.ReferenceId)
-                        .Select(a => a.Email)
-                        .FirstOrDefaultAsync();
-                    break;
-            }
-
-            if (string.IsNullOrEmpty(emailTo))
-                throw new Exception("Không tìm thấy email người dùng.");
-
-            var token = _jwtHelper.GenerateToken(user);
-            var resetLink = $"https://yourapp.com/reset-password?token={token}";
-
-            await _emailService.SendEmailAsync(
-                toEmail: emailTo,
-                subject: "Khôi phục mật khẩu",
-                body: $"Nhấn vào link để đặt lại mật khẩu: {resetLink}"
-            );
-
-            return "Đã gửi hướng dẫn khôi phục mật khẩu qua email.";
-        }
-
-        public async Task<string> ResetPasswordAsync(string token, string newPassword)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var username = jwtToken.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-
-            var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
-            if (user == null)
-                throw new Exception("Token không hợp lệ hoặc người dùng không tồn tại.");
-
-            if (!Regex.IsMatch(newPassword, @"^(?=.*[A-Z])(?=.*[\W_]).{8,}$"))
-                throw new Exception("Mật khẩu mới phải ≥8 ký tự, có chữ in hoa và ký tự đặc biệt.");
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await _context.SaveChangesAsync();
-
-            return "Đặt lại mật khẩu thành công.";
-        }
-
-        // ✅ 4. ForgotPassword gửi OTP 6 chữ số
         public async Task<string> ForgotPasswordOtpAsync(ForgotPasswordDTO dto)
         {
-            var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Username == dto.Username && u.IsActive);
-            if (user == null)
-                throw new Exception("Không tìm thấy người dùng.");
+            var userList = await _context.UserAccounts.Where(u => u.IsActive).ToListAsync();
 
-            string emailTo = await GetEmailByUser(user);
+            UserAccount matchedUser = null;
+
+            foreach (var user in userList)
+            {
+                var email = await GetEmailByUser(user);
+                if (email == dto.Email)
+                {
+                    matchedUser = user;
+                    break;
+                }
+            }
+
+            if (matchedUser == null)
+                throw new Exception("Không tìm thấy người dùng với email này.");
+
+            string emailTo = await GetEmailByUser(matchedUser);
             if (string.IsNullOrEmpty(emailTo))
                 throw new Exception("Không tìm thấy email người dùng.");
 
-            // Tạo mã OTP 6 số
+            // OTP logic như cũ
             var otp = new Random().Next(100000, 999999).ToString();
             var expiresAt = DateTime.UtcNow.AddMinutes(5);
 
             _context.PasswordResetOtps.Add(new PasswordResetOtp
             {
-                UserId = user.UserId,
+                UserId = matchedUser.UserId,
                 Otp = otp,
                 ExpiresAt = expiresAt,
                 IsUsed = false,
                 CreatedAt = DateTime.UtcNow
             });
+
             await _context.SaveChangesAsync();
 
             await _emailService.SendEmailAsync(
@@ -188,12 +140,49 @@ namespace MedicalManagement.Services
             return "Mã OTP đã được gửi đến email của bạn.";
         }
 
-        // ✅ 5. Xác thực OTP và đặt lại mật khẩu
-        public async Task<string> VerifyOtpResetPasswordAsync(string username, string otp, string newPassword)
+        public async Task<bool> VerifyOtpOnlyAsync(string email, string otp)
         {
-            var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+            var user = await GetUserAccountByEmail(email);
             if (user == null)
-                throw new Exception("Không tìm thấy người dùng.");
+                throw new Exception("Không tìm thấy người dùng với email này.");
+
+            var isValid = await _context.PasswordResetOtps.AnyAsync(p =>
+                p.UserId == user.UserId &&
+                p.Otp == otp &&
+                p.IsUsed == false &&
+                p.ExpiresAt > DateTime.UtcNow);
+
+            return isValid;
+        }
+
+
+        private async Task<UserAccount> GetUserAccountByEmail(string email)
+        {
+            var users = await _context.UserAccounts
+                .Where(u => u.IsActive)
+                .ToListAsync();
+
+            foreach (var user in users)
+            {
+                var userEmail = await GetEmailByUser(user);
+                if (userEmail == email)
+                {
+                    return user;
+                }
+            }
+
+            return null;
+        }
+
+
+
+
+        // ✅ 5. Xác thực OTP và đặt lại mật khẩu
+        public async Task<string> VerifyOtpResetPasswordAsync(string email, string otp, string newPassword)
+        {
+            var user = await GetUserAccountByEmail(email);
+            if (user == null)
+                throw new Exception("Không tìm thấy người dùng với email này.");
 
             var otpValid = await _context.PasswordResetOtps.FirstOrDefaultAsync(p =>
                 p.UserId == user.UserId &&
@@ -207,13 +196,13 @@ namespace MedicalManagement.Services
             if (!PasswordValidator.IsStrong(newPassword))
                 throw new Exception("Mật khẩu mới phải ≥8 ký tự, có chữ in hoa và ký tự đặc biệt.");
 
-
             user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             otpValid.IsUsed = true;
             await _context.SaveChangesAsync();
 
             return "Đặt lại mật khẩu thành công.";
         }
+
 
         // ✅ 6. Hàm lấy email theo role dùng chung
         private async Task<string> GetEmailByUser(UserAccount user)
@@ -227,6 +216,11 @@ namespace MedicalManagement.Services
                 "Admin" => await _context.Admins.Where(a => a.AdminId == user.ReferenceId).Select(a => a.Email).FirstOrDefaultAsync(),
                 _ => null
             };
+        }
+
+        Task<UserAccount> IAuthService.GetUserAccountByEmail(string email)
+        {
+            return GetUserAccountByEmail(email);
         }
     }
 }

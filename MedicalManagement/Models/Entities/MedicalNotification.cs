@@ -18,7 +18,7 @@ namespace MedicalManagement.Models.Entities
         public string RecipientType { get; set; }
 
         [Column("student_id")]
-        public int StudentId { get; set; }
+        public int? StudentId { get; set; }
 
         [Column("title")]
         public string Title { get; set; }
