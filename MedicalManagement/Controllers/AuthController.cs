@@ -20,6 +20,7 @@ namespace MedicalManagement.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginDTO loginDto)
         {
             var response = await _authService.LoginAsync(loginDto);

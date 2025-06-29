@@ -119,12 +119,12 @@ builder.Services.AddScoped<IVaccinationService, VaccinationService>();
 builder.Services.AddScoped<IHealthCheckupService, HealthCheckupService>();
 
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
-
 builder.Services.AddScoped<IMedicalPlanService, MedicalPlanService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 
 builder.Services.AddScoped<IInventoryAlertService, InventoryAlertService>();
+builder.Services.AddScoped<IContentService, ContentService>();
 
 builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -132,6 +132,7 @@ builder.Services.AddHangfire(config =>
 builder.Services.AddHangfireServer();
 
 builder.Services.AddScoped<IReportService, ReportService>();
+
 
 
 
