@@ -133,6 +133,7 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddScoped<IReportService, ReportService>();
 
+builder.Services.AddScoped<IParentStudentService, ParentStudentService>();
 
 
 

@@ -1025,6 +1025,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedicalManagement.Controllers.ParentStudentProgressController",
+    "Method": "MarkNotificationAsRead",
+    "RelativePath": "api/parent/student/notifications/{id}/read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.StudentController",
     "Method": "GetAllStudents",
     "RelativePath": "api/Student",

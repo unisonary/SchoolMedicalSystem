@@ -11,13 +11,13 @@ export interface VerifyResetDTO {
 }
 
 export interface AuthResponse {
-  success: boolean;
-  message: string;
+  token: string;
+  isFirstLogin: boolean;
   user: {
     userId: number;
-    username: string;
     role: string;
-    token: string;
+    reference_id: number;
+    // thêm các trường khác nếu có (ví dụ: email, name, v.v.)
   };
-  isFirstLogin: boolean;
 }
+

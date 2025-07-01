@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using MedicalManagement.Models.Entities;
 
 [Table("Consent")]
 public class Consent
@@ -29,4 +30,6 @@ public class Consent
 
     [Column("requested_date")]
     public DateTime RequestedDate { get; set; }
+
+    public Student Student { get; set; }
 }

@@ -46,5 +46,9 @@ namespace MedicalManagement.Models.Entities
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
+
+        public Student Student { get; set; }
+
+        public SchoolNurse SchoolNurse { get; set; }
     }
 }

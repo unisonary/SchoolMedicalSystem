@@ -1,5 +1,6 @@
 ﻿using MedicalManagement.Data;
 using MedicalManagement.Models.DTOs;
+using MedicalManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,95 +13,30 @@ namespace MedicalManagement.Controllers
     [Authorize(Roles = "Parent")]
     public class ParentStudentProgressController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IParentStudentService _service;
 
-        public ParentStudentProgressController(AppDbContext context)
+        public ParentStudentProgressController(IParentStudentService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        private async Task<List<int>> GetStudentIdsFromParentTokenAsync()
-        {
-
-            var username = User.FindFirstValue(ClaimTypes.Name);
-            var user = await _context.UserAccounts
-                .FirstOrDefaultAsync(u => u.Username == username && u.Role == "Parent");
-
-            if (user == null) return new List<int>();
-
-            return await _context.Students
-                .Where(s => s.ParentId == user.ReferenceId)
-                .Select(s => s.StudentId)
-                .ToListAsync();
-        }
+        private string GetUsername() => User.FindFirstValue(ClaimTypes.Name);
 
         [HttpGet("events")]
-        public async Task<IActionResult> GetMedicalEvents()
-        {
-            var studentIds = await GetStudentIdsFromParentTokenAsync();
-
-            var list = await _context.MedicalEvents
-                .Where(e => studentIds.Contains(e.StudentId))
-                .Select(e => new MedicalEventDTO
-                {
-                    EventId = e.EventId,
-                    StudentId = e.StudentId,
-                    StudentName = _context.Students.Where(s => s.StudentId == e.StudentId).Select(s => s.Name).FirstOrDefault(),
-                    EventType = e.EventType,
-                    Description = e.Description,
-                    Date = e.Date,
-                    NurseName = _context.SchoolNurses.Where(n => n.NurseId == e.NurseId).Select(n => n.Name).FirstOrDefault()
-                })
-                .ToListAsync();
-
-            return Ok(list);
-        }
+        public async Task<IActionResult> GetMedicalEvents() => Ok(await _service.GetMedicalEventsAsync(GetUsername()));
 
         [HttpGet("checkups")]
-        public async Task<IActionResult> GetHealthCheckups()
-        {
-            var studentIds = await GetStudentIdsFromParentTokenAsync();
-
-            var list = await _context.HealthCheckups
-                .Where(c => studentIds.Contains(c.StudentId))
-                .Select(c => new HealthCheckupDTO
-                {
-                    CheckupId = c.CheckupId,
-                    StudentId = c.StudentId,
-                    StudentName = _context.Students.Where(s => s.StudentId == c.StudentId).Select(s => s.Name).FirstOrDefault(),
-                    Result = c.Result,
-                    Date = DateTime.MinValue,
-                    Recommendations = c.Recommendations,
-                })
-                .ToListAsync();
-
-            return Ok(list);
-        }
+        public async Task<IActionResult> GetHealthCheckups() => Ok(await _service.GetHealthCheckupsAsync(GetUsername()));
 
         [HttpGet("notifications")]
-        public async Task<IActionResult> GetMedicalNotifications()
+        public async Task<IActionResult> GetMedicalNotifications() => Ok(await _service.GetMedicalNotificationsAsync(GetUsername()));
+
+        [HttpPut("notifications/{id}/read")]
+        public async Task<IActionResult> MarkNotificationAsRead(int id)
         {
-            var studentIds = await GetStudentIdsFromParentTokenAsync();
-
-            var list = await _context.MedicalNotifications
-                .Where(n => n.StudentId.HasValue && studentIds.Contains(n.StudentId.Value) && n.RecipientType == "Parent")
-                .Select(n => new MedicalNotificationDTO
-                {
-                    NotificationId = n.NotificationId,
-                    StudentId = n.StudentId.Value,
-                    StudentName = _context.Students
-                        .Where(s => s.StudentId == n.StudentId.Value)
-                        .Select(s => s.Name)
-                        .FirstOrDefault(),
-                    Title = n.Title,
-                    Content = n.Content,
-                    Date = n.Date,
-                    IsRead = n.IsRead
-                })
-                .ToListAsync();
-
-
-            return Ok(list);
+            var success = await _service.MarkNotificationAsReadAsync(GetUsername(), id);
+            return success ? Ok(new { message = "Đã đánh dấu là đã đọc." }) : NotFound(new { message = "Không tìm thấy thông báo." });
         }
     }
+
 }

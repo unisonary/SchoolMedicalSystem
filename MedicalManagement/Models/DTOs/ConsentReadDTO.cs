@@ -8,5 +8,6 @@
         public string ConsentStatus { get; set; }
         public DateTime? ConsentDate { get; set; }
         public string? Notes { get; set; }
+        public string StudentName { get; set; } = string.Empty;
     }
 }

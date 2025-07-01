@@ -22,7 +22,7 @@ public class MedicationService : IMedicationService
     {
         var meds = await _repo.GetByStudentIdsAsync(studentIds);
         return meds
-            .Where(m => m.ProvidedByParent && m.Status == "Active")
+            .Where(m => m.ProvidedByParent)
             .Select(MapToDto);
     }
 
@@ -47,6 +47,7 @@ public class MedicationService : IMedicationService
     {
         MedicationId = m.MedicationId,
         StudentId = m.StudentId,
+        //StudentName = m.Student?.Name ?? "", // đảm bảo Include
         MedicationName = m.MedicationName,
         Dosage = m.Dosage,
         Frequency = m.Frequency,

@@ -37,5 +37,7 @@ namespace MedicalManagement.Models.Entities
 
         [Column("priority")]
         public string Priority { get; set; }
+
+        public Student Student { get; set; }
     }
 }

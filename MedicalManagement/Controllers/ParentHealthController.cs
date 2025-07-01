@@ -175,7 +175,7 @@ namespace MedicalManagement.Controllers
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 ProvidedByParent = true,
-                Status = "Pending"
+                Status = "Active"
             };
 
             _context.Medications.Add(med);

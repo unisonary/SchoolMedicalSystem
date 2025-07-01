@@ -6,9 +6,10 @@ import LoginPage from "@/pages/Login/LoginPage";
 import ForgotPasswordPage from "@/pages/Login/ForgotPasswordPage";
 import ProtectedRouteByRole from "@/auth/ProtectedRouteByRole";
 import "react-toastify/dist/ReactToastify.css";
+import ParentDashboard from "@/pages/Parent/ParentDashboard"; // ✅ đường dẫn thật
+
 
 // Dummy dashboard components (sau có thể import thật)
-const ParentDashboard = () => <div>Trang Phụ huynh</div>;
 const StudentDashboard = () => <div>Trang Học sinh</div>;
 const NurseDashboard = () => <div>Trang Y tá</div>;
 const ManagerDashboard = () => <div>Trang Quản lý</div>;

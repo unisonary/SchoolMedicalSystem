@@ -1,14 +1,43 @@
+// src/auth/useAuthStore.ts
 import { create } from "zustand";
-import { AuthResponse } from "@/types/authTypes"; // dùng lại kiểu trả về từ login
+import { AuthResponse } from "@/types/authTypes";
 
-export const useAuthStore = create<{
+interface AuthStore {
   user: AuthResponse["user"] | null;
+  token: string | null;
   isFirstLogin: boolean;
-  login: (userData: AuthResponse) => void;
+  login: (data: AuthResponse) => void;
   logout: () => void;
-}>((set) => ({
-  user: null,
+}
+
+// Khởi tạo từ localStorage nếu có
+const storedToken = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
+
+export const useAuthStore = create<AuthStore>((set) => ({
+  user: storedUser ? JSON.parse(storedUser) : null,
+  token: storedToken,
   isFirstLogin: false,
-  login: (userData) => set({ user: userData.user, isFirstLogin: userData.isFirstLogin }),
-  logout: () => set({ user: null, isFirstLogin: false }),
+
+  login: (data) => {
+    localStorage.setItem("token", data.user.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    set({
+      user: data.user,
+      token: data.user.token,
+      isFirstLogin: data.isFirstLogin,
+    });
+  },
+
+  logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    set({
+      user: null,
+      token: null,
+      isFirstLogin: false,
+    });
+  },
 }));

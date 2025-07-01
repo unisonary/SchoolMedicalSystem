@@ -19,6 +19,7 @@ namespace MedicalManagement.Services
         {
             var consents = await _context.Consents
                 .Where(c => c.ParentId == parentId && c.ConsentStatus == "Pending")
+                .Include(c => c.Student)
                 .ToListAsync();
 
             return consents.Select(c => new ConsentReadDTO
@@ -28,7 +29,8 @@ namespace MedicalManagement.Services
                 ReferenceId = c.ReferenceId,
                 ConsentStatus = c.ConsentStatus,
                 ConsentDate = c.ConsentDate,
-                Notes = c.Notes
+                Notes = c.Notes,
+                StudentName = c.Student.Name // 👈 Now accessible
             }).ToList();
         }
 
@@ -36,6 +38,7 @@ namespace MedicalManagement.Services
         {
             var consents = await _context.Consents
                 .Where(c => c.ParentId == parentId && c.ConsentStatus != "Pending")
+                .Include(c => c.Student)
                 .OrderByDescending(c => c.ConsentDate)
                 .ToListAsync();
 
@@ -46,7 +49,8 @@ namespace MedicalManagement.Services
                 ReferenceId = c.ReferenceId,
                 ConsentStatus = c.ConsentStatus,
                 ConsentDate = c.ConsentDate,
-                Notes = c.Notes
+                Notes = c.Notes,
+                StudentName = c.Student.Name
             }).ToList();
         }
 

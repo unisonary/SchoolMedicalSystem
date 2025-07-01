@@ -330,3 +330,17 @@ D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\MedicalManagement.genruntimeconfig.cache
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\ref\MedicalManagement.dll
 D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\Enums.NET.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\ExtendedNumerics.BigDecimal.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\MathNet.Numerics.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\NPOI.Core.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\NPOI.OOXML.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\NPOI.OpenXml4Net.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\NPOI.OpenXmlFormats.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\ICSharpCode.SharpZipLib.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\SixLabors.ImageSharp.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\System.Security.Cryptography.Xml.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\ZString.dll
+D:\1.FPT\Semester_5\PRN212\MySelfDOCNET\MedicalManagement\MedicalManagement\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
