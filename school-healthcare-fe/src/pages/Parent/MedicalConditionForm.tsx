@@ -1,6 +1,8 @@
+// MedicalConditionForm.tsx - Cải thiện giao diện
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
+import { Save, X } from "lucide-react";
 
 interface MedicalConditionFormProps {
   studentId: number;
@@ -19,7 +21,6 @@ interface MedicalCondition {
   studentName: string;
 }
 
-// Lưu và hiển thị cùng là tiếng Việt
 const conditionTypeOptions = [
   "Dị ứng",
   "Bệnh mãn tính",
@@ -85,63 +86,97 @@ const MedicalConditionForm = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow"
-    >
-      {/* Loại tình trạng */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Loại tình trạng */}
+    <div className="space-y-2">
+      <label className="block text-sm font-semibold text-gray-700">
+        Loại tình trạng <span className="text-red-500">*</span>
+      </label>
       <select
         required
-        className="border rounded p-2"
+        className="w-full p-3 border-2 border-gray-200 rounded-xl bg-white text-black placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
         value={form.conditionType}
         onChange={(e) => setForm({ ...form, conditionType: e.target.value })}
       >
         <option value="">-- Chọn loại tình trạng --</option>
         {conditionTypeOptions.map((type) => (
-          <option key={type} value={type}>
-            {type}
-          </option>
+          <option key={type} value={type}>{type}</option>
         ))}
       </select>
+    </div>
 
+    {/* Tên tình trạng */}
+    <div className="space-y-2">
+      <label className="block text-sm font-semibold text-gray-700">
+        Tên tình trạng <span className="text-red-500">*</span>
+      </label>
       <input
         type="text"
         required
-        placeholder="Tên tình trạng"
-        className="border rounded p-2"
+        placeholder="Ví dụ: Hen suyễn, Cận thị..."
+        className="w-full p-3 border-2 border-gray-200 rounded-xl bg-white text-black placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
         value={form.conditionName}
         onChange={(e) => setForm({ ...form, conditionName: e.target.value })}
       />
+    </div>
 
-      {/* Mức độ */}
+    {/* Mức độ */}
+    <div className="space-y-2">
+      <label className="block text-sm font-semibold text-gray-700">
+        Mức độ nghiêm trọng <span className="text-red-500">*</span>
+      </label>
       <select
         required
-        className="border rounded p-2"
+        className="w-full p-3 border-2 border-gray-200 rounded-xl bg-white text-black placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
         value={form.severity}
         onChange={(e) => setForm({ ...form, severity: e.target.value })}
       >
         <option value="">-- Chọn mức độ --</option>
         {severityOptions.map((level) => (
-          <option key={level} value={level}>
-            {level}
-          </option>
+          <option key={level} value={level}>{level}</option>
         ))}
       </select>
+    </div>
 
+    {/* Mô tả */}
+    <div className="space-y-2 md:col-span-2">
+      <label className="block text-sm font-semibold text-gray-700">
+        Mô tả chi tiết
+      </label>
       <textarea
-        placeholder="Mô tả chi tiết"
-        className="col-span-1 md:col-span-2 border rounded p-2"
+        placeholder="Ghi chú thêm về tình trạng sức khỏe, triệu chứng, cách xử lý..."
+        className="w-full p-3 border-2 border-gray-200 rounded-xl bg-white text-black placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+        rows={4}
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />
+    </div>
+  </div>
 
+  {/* Buttons */}
+  <div className="flex space-x-4">
+    <button
+      type="submit"
+      className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-lg"
+    >
+      <Save size={20} />
+      <span>{editingData ? "Cập nhật" : "Thêm mới"}</span>
+    </button>
+
+    {editingData && (
       <button
-        type="submit"
-        className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded col-span-1 md:col-span-2"
+        type="button"
+        onClick={clearEditing}
+        className="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-xl transition-all"
       >
-        {editingData ? "Cập nhật" : "Thêm mới"}
+        <X size={20} />
+        <span>Hủy</span>
       </button>
-    </form>
+    )}
+  </div>
+</form>
+
   );
 };
 
