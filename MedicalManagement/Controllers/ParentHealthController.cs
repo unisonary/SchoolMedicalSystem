@@ -187,7 +187,12 @@ namespace MedicalManagement.Controllers
         [HttpGet("medications")]
         public async Task<IActionResult> GetMedications()
         {
-            var parentId = int.Parse(User.FindFirstValue("UserId"));
+            var userIdClaim = User.FindFirstValue("UserId");
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("Token không chứa UserId");
+
+            var parentId = int.Parse(userIdClaim);
+
             var studentIds = await GetStudentIdsFromParentTokenAsync();
             var list = await _svc.GetForParentAsync(parentId, studentIds);
             return Ok(list);

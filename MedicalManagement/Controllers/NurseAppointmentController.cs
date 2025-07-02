@@ -28,6 +28,14 @@ namespace MedicalManagement.Controllers
             return Ok(data);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AppointmentCreateDTO dto)
+        {
+            await _service.CreateAsync(dto, GetNurseId());
+            return Ok(new { message = "Tạo lịch hẹn thành công." });
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] AppointmentUpdateDTO dto)
         {

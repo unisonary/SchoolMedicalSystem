@@ -1,0 +1,100 @@
+﻿using MedicalManagement.Data;
+using MedicalManagement.Models.DTOs;
+using MedicalManagement.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace MedicalManagement.Services
+{
+    public class UserProfileService : IUserProfileService
+    {
+        private readonly AppDbContext _context;
+
+        public UserProfileService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<UserProfileDTO> GetUserProfileAsync(int userId)
+        {
+            var account = await _context.UserAccounts.FindAsync(userId);
+            if (account == null) throw new Exception("User not found");
+
+            return account.Role switch
+            {
+                "Parent" => new UserProfileDTO
+                {
+                    Role = "Parent",
+                    Profile = await _context.Parents
+                        .Where(p => p.ParentId == account.ReferenceId)
+                        .Select(p => new ParentProfileDTO
+                        {
+                            Name = p.Name,
+                            Phone = p.Phone,
+                            Email = p.Email
+                        })
+                        .FirstOrDefaultAsync()
+                },
+
+                "Student" => new UserProfileDTO
+                {
+                    Role = "Student",
+                    Profile = await _context.Students
+                        .Where(s => s.StudentId == account.ReferenceId)
+                        .Select(s => new StudentProfileDTO
+                        {
+                            Name = s.Name,
+                            Gender = s.Gender,
+                            DateOfBirth = s.DateOfBirth,
+                            Class = s.Class,
+                            Email = s.Email
+                        })
+                        .FirstOrDefaultAsync()
+                },
+
+                "School_Nurse" => new UserProfileDTO
+                {
+                    Role = "School_Nurse",
+                    Profile = await _context.SchoolNurses
+                        .Where(n => n.NurseId == account.ReferenceId)
+                        .Select(n => new SchoolNurseProfileDTO
+                        {
+                            Name = n.Name,
+                            Email = n.Email,
+                            Specialization = n.Specialization
+                        })
+                        .FirstOrDefaultAsync()
+                },
+
+                "Manager" => new UserProfileDTO
+                {
+                    Role = "Manager",
+                    Profile = await _context.Managers
+                        .Where(m => m.ManagerId == account.ReferenceId)
+                        .Select(m => new ManagerProfileDTO
+                        {
+                            Name = m.Name,
+                            Email = m.Email,
+                            Department = m.Department,
+                            Position = m.Position
+                        })
+                        .FirstOrDefaultAsync()
+                },
+
+                "Admin" => new UserProfileDTO
+                {
+                    Role = "Admin",
+                    Profile = await _context.Admins
+                        .Where(a => a.AdminId == account.ReferenceId)
+                        .Select(a => new AdminProfileDTO
+                        {
+                            Name = a.Name,
+                            Email = a.Email
+                        })
+                        .FirstOrDefaultAsync()
+                },
+
+                _ => throw new Exception("Invalid role")
+            };
+        }
+    }
+}

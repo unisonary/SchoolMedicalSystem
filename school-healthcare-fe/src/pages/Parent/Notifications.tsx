@@ -13,7 +13,7 @@ interface Notification {
   priority: string;
 }
 
-const Notifications = () => {
+const Notifications = ({ onRead }: { onRead?: () => void }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const fetchData = async () => {
@@ -29,6 +29,7 @@ const Notifications = () => {
     try {
       await axios.put(`/parent/student/notifications/${id}/read`);
       fetchData();
+      onRead?.(); // callback cập nhật lại badge
     } catch {
       toast.error("Không thể cập nhật trạng thái đã đọc.");
     }
@@ -38,37 +39,61 @@ const Notifications = () => {
     fetchData();
   }, []);
 
+  const unread = notifications.filter((n) => !n.isRead);
+  const read = notifications.filter((n) => n.isRead);
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-blue-700">📢 Thông báo y tế</h2>
-      {notifications.length === 0 ? (
-        <p className="italic text-gray-500">Không có thông báo nào.</p>
-      ) : (
-        <ul className="space-y-3">
-          {notifications.map((n) => (
-            <li key={n.notificationId} className="border rounded p-3 shadow-sm bg-gray-50">
-              <div className="flex justify-between items-center">
+    <div className="p-6 space-y-10">
+      <div className="text-center mb-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">📢 Thông báo y tế</h2>
+        <p className="text-gray-600">Cập nhật những thông báo quan trọng liên quan đến sức khỏe học sinh</p>
+      </div>
+
+      {/* Chưa đọc */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-blue-600">📬 Thông báo chưa đọc</h3>
+        {unread.length === 0 ? (
+          <p className="italic text-gray-500">Không có thông báo mới.</p>
+        ) : (
+          unread.map((n) => (
+            <div key={n.notificationId} className="border border-blue-200 rounded-xl p-4 bg-white shadow-sm hover:bg-blue-50 transition">
+              <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-semibold">{n.title}</p>
+                  <h4 className="text-lg font-semibold text-gray-800">{n.title}</h4>
                   <p className="text-sm text-gray-600">{n.content}</p>
-                  <p className="text-xs text-gray-500">
-                    {n.studentName} - {new Date(n.date).toLocaleDateString()} -{" "}
-                    {n.isRead ? "✅ Đã đọc" : "❗ Chưa đọc"}
+                  <p className="text-xs text-gray-500 mt-1">
+                    👤 {n.studentName} | 📅 {new Date(n.date).toLocaleDateString()} | 🧾 Ưu tiên: {n.priority}
                   </p>
                 </div>
-                {!n.isRead && (
-                  <button
-                    onClick={() => markAsRead(n.notificationId)}
-                    className="text-sm bg-blue-600 text-white px-3 py-1 rounded"
-                  >
-                    Đánh dấu đã đọc
-                  </button>
-                )}
+                <button
+                  onClick={() => markAsRead(n.notificationId)}
+                  className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition"
+                >
+                  Đánh dấu đã đọc
+                </button>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Đã đọc */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-gray-600">📖 Thông báo đã đọc</h3>
+        {read.length === 0 ? (
+          <p className="italic text-gray-500">Chưa có thông báo nào đã đọc.</p>
+        ) : (
+          read.map((n) => (
+            <div key={n.notificationId} className="border border-gray-200 rounded-xl p-4 bg-gray-50 shadow-sm">
+              <h4 className="text-lg font-semibold text-gray-700">{n.title}</h4>
+              <p className="text-sm text-gray-600">{n.content}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                👤 {n.studentName} | 📅 {new Date(n.date).toLocaleDateString()} | 🧾 Ưu tiên: {n.priority}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

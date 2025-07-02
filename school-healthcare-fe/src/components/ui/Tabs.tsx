@@ -2,7 +2,7 @@ import { useState, ReactNode } from "react";
 
 export interface Tab {
   key: string;
-  label: string;
+  label: React.ReactNode; 
   content: ReactNode;
 }
 

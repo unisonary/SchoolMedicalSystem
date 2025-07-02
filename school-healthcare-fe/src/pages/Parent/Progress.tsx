@@ -30,36 +30,62 @@ const Progress = () => {
   }, []);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-lg font-semibold text-blue-700 mb-2">📌 Sự kiện y tế</h2>
-        {events.length === 0 ? (
-          <p className="italic text-gray-500">Không có sự kiện y tế nào.</p>
-        ) : (
-          <ul className="list-disc list-inside space-y-1">
-            {events.map((e) => (
-              <li key={e.eventId}>
-                <strong>{e.studentName}</strong> - {e.eventType}: {e.description} ({new Date(e.date).toLocaleDateString()})
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="p-6 space-y-10">
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">📈 Theo dõi sức khỏe</h2>
+        <p className="text-gray-600">Tổng hợp sự kiện y tế và kết quả khám sức khỏe của học sinh</p>
       </div>
 
-      <div>
-        <h2 className="text-lg font-semibold text-blue-700 mb-2">📋 Kết quả khám sức khỏe</h2>
-        {checkups.length === 0 ? (
-          <p className="italic text-gray-500">Chưa có dữ liệu khám sức khỏe.</p>
-        ) : (
-          <ul className="list-disc list-inside space-y-1">
-            {checkups.map((c) => (
-              <li key={c.checkupId}>
-                <strong>{c.studentName}</strong> - {c.result} ({new Date(c.date).toLocaleDateString()})<br />
-                <span className="text-sm text-gray-600">Ghi chú: {c.recommendations}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Medical Events */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-blue-600">📌 Sự kiện y tế</h3>
+        <div className="bg-white border border-blue-100 rounded-xl p-6 shadow-sm space-y-4">
+          {events.length === 0 ? (
+            <p className="italic text-gray-500">Không có sự kiện y tế nào.</p>
+          ) : (
+            events.map((e) => (
+              <div
+                key={e.eventId}
+                className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition space-y-1"
+              >
+                <p className="text-gray-800">
+                  <strong>{e.studentName}</strong> - {e.eventType}
+                </p>
+                <p className="text-sm text-gray-600">{e.description}</p>
+                <div className="text-sm text-gray-500 flex justify-between mt-1">
+                  <span>👩‍⚕️ Y tá: {e.nurseName}</span>
+                  <span>🕒 {new Date(e.date).toLocaleDateString()}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Health Checkups */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-blue-600">📋 Kết quả khám sức khỏe</h3>
+        <div className="bg-white border border-blue-100 rounded-xl p-6 shadow-sm space-y-4">
+          {checkups.length === 0 ? (
+            <p className="italic text-gray-500">Chưa có dữ liệu khám sức khỏe.</p>
+          ) : (
+            checkups.map((c) => (
+              <div
+                key={c.checkupId}
+                className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition space-y-1"
+              >
+                <p className="text-gray-800">
+                  <strong>{c.studentName}</strong> - {c.result}
+                </p>
+                <p className="text-sm text-gray-600">Ghi chú: {c.recommendations}</p>
+                <div className="text-sm text-gray-500 flex justify-between mt-1">
+                  <span>📅 {new Date(c.date).toLocaleDateString()}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

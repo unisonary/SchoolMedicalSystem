@@ -541,6 +541,22 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.NurseAppointmentController",
+    "Method": "Create",
+    "RelativePath": "api/nurse/appointments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.AppointmentCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseAppointmentController",
     "Method": "Update",
     "RelativePath": "api/nurse/appointments/{id}",
     "HttpMethod": "PUT",
@@ -1285,5 +1301,15 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.UserProfileController",
+    "Method": "GetProfile",
+    "RelativePath": "api/UserProfile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

@@ -176,7 +176,7 @@ const MedicalConditionForm = ({
     )}
   </div>
 </form>
-
+  
   );
 };
 

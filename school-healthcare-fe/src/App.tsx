@@ -7,6 +7,8 @@ import ForgotPasswordPage from "@/pages/Login/ForgotPasswordPage";
 import ProtectedRouteByRole from "@/auth/ProtectedRouteByRole";
 import "react-toastify/dist/ReactToastify.css";
 import ParentDashboard from "@/pages/Parent/ParentDashboard"; // ✅ đường dẫn thật
+import UserProfile from "./pages/Profile/UserProfile";
+import ChangePasswordPage from "./pages/Login/ChangePasswordPage";
 
 
 // Dummy dashboard components (sau có thể import thật)
@@ -82,6 +84,12 @@ function App() {
           }
         />
 
+        <Route path="/parent/profile" element={<UserProfile />} />
+
+        <Route path="/login/change-password" element={<ChangePasswordPage />} />
+
+
+        
         {/* Route không tồn tại → chuyển về login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
