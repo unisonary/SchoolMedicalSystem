@@ -7,5 +7,6 @@ namespace MedicalManagement.Services.Interfaces
         Task<List<ConsentReadDTO>> GetPendingConsentsAsync(int parentId);
         Task<List<ConsentReadDTO>> GetConsentHistoryAsync(int parentId);
         Task RespondToConsentAsync(int consentId, int parentId, ConsentActionDTO dto);
+
     }
 }

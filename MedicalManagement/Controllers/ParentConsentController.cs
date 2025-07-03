@@ -48,7 +48,12 @@ namespace MedicalManagement.Controllers
             try
             {
                 await _service.RespondToConsentAsync(id, parentId, dto);
-                return Ok(new { message = "Phản hồi xác nhận thành công." });
+
+                string responseMessage = dto.ConsentStatus == "Approved"
+                    ? "Đã chấp nhận yêu cầu. Đã tạo dữ liệu y tế ban đầu cho kế hoạch."
+                    : "Đã từ chối yêu cầu xác nhận.";
+
+                return Ok(new { message = responseMessage });
             }
             catch (UnauthorizedAccessException)
             {
@@ -63,6 +68,7 @@ namespace MedicalManagement.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
 
     }
 }

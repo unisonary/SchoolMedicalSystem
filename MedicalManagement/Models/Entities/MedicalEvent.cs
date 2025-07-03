@@ -49,6 +49,5 @@ namespace MedicalManagement.Models.Entities
 
         public Student Student { get; set; }
 
-        public SchoolNurse SchoolNurse { get; set; }
     }
 }

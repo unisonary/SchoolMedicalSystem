@@ -607,6 +607,29 @@
         }
       }
     },
+    "/api/manager/assignments/consented-students/{planId}": {
+      "get": {
+        "tags": [
+          "ManagerAssignment"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/manager/assignments": {
       "post": {
         "tags": [
@@ -2766,12 +2789,6 @@
           "treatmentGiven": {
             "type": "string",
             "nullable": true
-          },
-          "parentNotified": {
-            "type": "boolean"
-          },
-          "followUpRequired": {
-            "type": "boolean"
           },
           "location": {
             "type": "string",

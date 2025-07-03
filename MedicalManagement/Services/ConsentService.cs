@@ -1,4 +1,5 @@
 ﻿using MedicalManagement.Data;
+using MedicalManagement.Exceptions;
 using MedicalManagement.Models.DTOs;
 using MedicalManagement.Models.Entities;
 using MedicalManagement.Services.Interfaces;
@@ -72,6 +73,9 @@ namespace MedicalManagement.Services
 
             await _context.SaveChangesAsync();
         }
+
+
+
 
     }
 }

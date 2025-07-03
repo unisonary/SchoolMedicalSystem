@@ -349,6 +349,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedicalManagement.Controllers.ManagerAssignmentController",
+    "Method": "GetConsentedStudents",
+    "RelativePath": "api/manager/assignments/consented-students/{planId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "planId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.InventoryAlertController",
     "Method": "GetFilteredAlerts",
     "RelativePath": "api/manager/inventory-alerts",

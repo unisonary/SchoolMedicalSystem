@@ -93,6 +93,31 @@ namespace MedicalManagement.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<ConsentedStudentDTO>> GetConsentedStudentsAsync(int planId)
+        {
+            var plan = await _context.MedicalPlans.FindAsync(planId);
+            if (plan == null)
+                throw new NotFoundException("Không tìm thấy kế hoạch.");
+
+            var consentedStudents = await _context.Consents
+                .Where(c => c.ReferenceId == planId
+                            && c.ConsentType == plan.PlanType
+                            && c.ConsentStatus == "Approved")
+                .Join(_context.Students,
+                      c => c.StudentId,
+                      s => s.StudentId,
+                      (c, s) => new ConsentedStudentDTO
+                      {
+                          StudentId = s.StudentId,
+                          Name = s.Name,
+                          Class = s.Class,
+                          ParentId = s.ParentId
+                      })
+                .ToListAsync();
+
+            return consentedStudents;
+        }
+
     }
 }
 

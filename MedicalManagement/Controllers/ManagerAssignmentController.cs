@@ -1,4 +1,6 @@
-﻿using MedicalManagement.Models.DTOs;
+﻿using MedicalManagement.Exceptions;
+using MedicalManagement.Models.DTOs;
+using MedicalManagement.Services;
 using MedicalManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,24 @@ namespace MedicalManagement.Controllers
         public ManagerAssignmentController(IAssignmentService service)
         {
             _service = service;
+        }
+
+        [HttpGet("consented-students/{planId}")]
+        public async Task<IActionResult> GetConsentedStudents(int planId)
+        {
+            try
+            {
+                var result = await _service.GetConsentedStudentsAsync(planId);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", detail = ex.Message });
+            }
         }
 
         [HttpPost]

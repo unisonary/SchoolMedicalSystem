@@ -60,7 +60,7 @@ public class MedicationService : IMedicationService
     public async Task<List<MedicationNurseReadDTO>> GetPendingFromParentAsync()
     {
         return await _context.Medications
-            .Where(m => m.ProvidedByParent && m.Status == "Pending")
+            .Where(m => m.ProvidedByParent && m.Status == "Active")
             .Include(m => m.Student)
             .Select(m => new MedicationNurseReadDTO
             {

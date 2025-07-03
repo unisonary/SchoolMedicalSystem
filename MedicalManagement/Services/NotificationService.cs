@@ -33,7 +33,8 @@ namespace MedicalManagement.Services
                 RecipientType = "Parent",
                 Date = DateTime.Now,
                 IsRead = false,
-                SenderId = senderUserId
+                SenderId = senderUserId,
+                Priority = "Normal"
             };
 
             _context.MedicalNotifications.Add(noti);

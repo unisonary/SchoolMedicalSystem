@@ -67,65 +67,70 @@ namespace MedicalManagement.Services
 
         public async Task<int> CreateAsync(MedicalEventCreateDTO dto, int nurseId)
         {
-            try
-            {
-                // Kiểm tra học sinh tồn tại
-                var student = await _context.Students.FindAsync(dto.StudentId);
-                if (student == null)
-                    throw new NotFoundException("Học sinh không tồn tại.");
+            var student = await _context.Students.FindAsync(dto.StudentId);
+            if (student == null)
+                throw new NotFoundException("Học sinh không tồn tại.");
 
-                // Tạo sự kiện y tế mới
-                var newEvent = new MedicalEvent
+            var newEvent = new MedicalEvent
+            {
+                StudentId = dto.StudentId,
+                EventType = dto.EventType,
+                Description = dto.Description,
+                Severity = dto.Severity,
+                TreatmentGiven = dto.TreatmentGiven,
+                ParentNotified = dto.ParentNotified,
+                FollowUpRequired = dto.FollowUpRequired,
+                Location = dto.Location,
+                Date = DateTime.Now,
+                NurseId = nurseId,
+                IsActive = true
+            };
+
+            _context.MedicalEvents.Add(newEvent);
+
+            if (dto.ParentNotified && dto.FollowUpRequired)
+                throw new BadRequestException("Chỉ được chọn hoặc 'ParentNotified' hoặc 'FollowUpRequired', không cùng lúc.");
+
+
+            // Nếu cần gửi thông báo đơn giản cho phụ huynh
+            if (dto.ParentNotified)
+            {
+                await _notification.SendToParentAsync(
+                    dto.StudentId,
+                    "Thông báo sự kiện y tế",
+                    $"Học sinh {student.Name} gặp sự kiện y tế: {dto.EventType}.",
+                    "MedicalEvent"
+                );
+            }
+
+            // Nếu cần tư vấn → tạo lịch hẹn + thông báo
+            else if (dto.FollowUpRequired)
+            {
+                var appointment = new Appointment
                 {
                     StudentId = dto.StudentId,
-                    EventType = dto.EventType,
-                    Description = dto.Description,
-                    Severity = dto.Severity,
-                    TreatmentGiven = dto.TreatmentGiven,
-                    ParentNotified = dto.ParentNotified,
-                    FollowUpRequired = dto.FollowUpRequired,
-                    Location = dto.Location,
-                    Date = DateTime.Now,
+                    ParentId = student.ParentId,
                     NurseId = nurseId,
-                    IsActive = true
+                    AppointmentDate = DateTime.Now.AddDays(1),
+                    Reason = $"Tư vấn sau sự kiện y tế: {dto.EventType}",
+                    Status = "Pending",
+                    CreatedDate = DateTime.Now
                 };
 
-                _context.MedicalEvents.Add(newEvent);
+                _context.Appointments.Add(appointment);
 
-                // Nếu cần gửi thông báo cho phụ huynh
-                if (dto.FollowUpRequired)
-                {
-                    var appointment = new Appointment
-                    {
-                        StudentId = dto.StudentId,
-                        ParentId = student.ParentId,
-                        NurseId = nurseId,
-                        AppointmentDate = DateTime.Now.AddDays(1),
-                        Reason = $"Tư vấn sau sự kiện y tế: {dto.EventType}",
-                        Status = "Pending",
-                        CreatedDate = DateTime.Now
-                    };
-
-                    _context.Appointments.Add(appointment);
-
-                    await _notification.SendToParentAsync(
-                        dto.StudentId,
-                        "Lịch tư vấn sau sự kiện y tế",
-                        $"Học sinh {student.Name} cần được tư vấn sau sự kiện {dto.EventType}. Vui lòng kiểm tra lịch hẹn.",
-                        "Appointment"
-                    );
-                }
-
-
-                await _context.SaveChangesAsync();
-                return newEvent.EventId;
+                await _notification.SendToParentAsync(
+                    dto.StudentId,
+                    "Lịch tư vấn sau sự kiện y tế",
+                    $"Học sinh {student.Name} cần được tư vấn sau sự kiện {dto.EventType}. Vui lòng kiểm tra lịch hẹn.",
+                    "Appointment"
+                );
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Lỗi: {ex}");
-                throw; 
-            }
+
+            await _context.SaveChangesAsync();
+            return newEvent.EventId;
         }
+
 
         public async Task UpdateAsync(int id, MedicalEventUpdateDTO dto)
         {
@@ -137,8 +142,6 @@ namespace MedicalManagement.Services
             ev.Description = dto.Description;
             ev.Severity = dto.Severity;
             ev.TreatmentGiven = dto.TreatmentGiven;
-            ev.ParentNotified = dto.ParentNotified;
-            ev.FollowUpRequired = dto.FollowUpRequired;
             ev.Location = dto.Location;
 
             await _context.SaveChangesAsync();
