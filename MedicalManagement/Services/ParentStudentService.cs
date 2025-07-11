@@ -101,6 +101,24 @@ namespace MedicalManagement.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<int> MarkAllNotificationsAsReadAsync(string username)
+        {
+            var studentIds = await GetStudentIdsFromUsernameAsync(username);
+
+            var unreadNotifications = await _context.MedicalNotifications
+                .Where(n => n.StudentId.HasValue && studentIds.Contains(n.StudentId.Value) && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var n in unreadNotifications)
+            {
+                n.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+            return unreadNotifications.Count;
+        }
+
     }
 
 }

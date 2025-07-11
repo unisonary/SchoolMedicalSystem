@@ -9,10 +9,11 @@ namespace MedicalManagement.Services.Interfaces
         Task<List<HealthCheckupReportDTO>> GetHealthCheckupReportAsync(HealthCheckupReportFilterDTO filter);
 
         Task<List<InventoryReportDTO>> GetInventoryReportAsync(InventoryReportFilterDTO filter);
-
+        Task<List<ParticipationReportDTO>> GetParticipationReportAsync(ParticipationReportFilterDTO filter);
         Task<byte[]> ExportVaccinationReportToExcel(VaccinationReportFilterDTO filter);
         Task<byte[]> ExportHealthCheckupReportToExcelAsync(HealthCheckupReportFilterDTO filter);
         Task<byte[]> ExportInventoryReportToExcelAsync(InventoryReportFilterDTO filter);
+        Task<byte[]> ExportParticipationReportToExcelAsync(ParticipationReportFilterDTO filter);
 
     }
 

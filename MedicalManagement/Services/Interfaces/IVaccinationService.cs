@@ -6,5 +6,6 @@ namespace MedicalManagement.Services.Interfaces
     {
         Task<List<VaccinationReadDTO>> GetAllAsync(int? planId = null);
         Task UpdateAsync(int id, VaccinationUpdateDTO dto, int nurseId);
+        Task<List<VaccinationReadDTO>> GetByPlanIdAndNurseAsync(int planId, int nurseId);
     }
 }

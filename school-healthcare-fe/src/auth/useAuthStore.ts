@@ -1,5 +1,6 @@
 // src/auth/useAuthStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { AuthResponse } from "@/types/authTypes";
 
 interface AuthStore {
@@ -10,34 +11,36 @@ interface AuthStore {
   logout: () => void;
 }
 
-// Khởi tạo từ localStorage nếu có
-const storedToken = localStorage.getItem("token");
-const storedUser = localStorage.getItem("user");
-
-export const useAuthStore = create<AuthStore>((set) => ({
-  user: storedUser ? JSON.parse(storedUser) : null,
-  token: storedToken,
-  isFirstLogin: false,
-
-  login: (data) => {
-    localStorage.setItem("token", data.user.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    set({
-      user: data.user,
-      token: data.user.token,
-      isFirstLogin: data.isFirstLogin,
-    });
-  },
-
-  logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
-    set({
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
       user: null,
       token: null,
       isFirstLogin: false,
-    });
-  },
-}));
+
+      login: (data) => {
+        set({
+          user: data.user,
+          token: data.user.token,
+          isFirstLogin: data.isFirstLogin,
+        });
+      },
+
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          isFirstLogin: false,
+        });
+      },
+    }),
+    {
+      name: "auth-storage", // Tên key trong localStorage
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        isFirstLogin: state.isFirstLogin,
+      }),
+    }
+  )
+);

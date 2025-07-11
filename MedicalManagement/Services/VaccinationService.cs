@@ -41,6 +41,27 @@ namespace MedicalManagement.Services
                 .ToListAsync();
         }
 
+        public async Task<List<VaccinationReadDTO>> GetByPlanIdAndNurseAsync(int planId, int nurseId)
+        {
+            return await _context.Vaccinations
+                .Where(v => v.PlanId == planId && v.NurseId == nurseId)
+                .Include(v => v.Student)
+                .Select(v => new VaccinationReadDTO
+                {
+                    VaccinationId = v.VaccinationId,
+                    StudentName = v.Student.Name,
+                    VaccineName = v.VaccineName ?? "",
+                    BatchNumber = v.BatchNumber ?? "",
+                    Date = v.Date == DateTime.MinValue ? null : v.Date,
+                    Reaction = v.Reaction ?? "",
+                    NextDoseDue = v.NextDoseDue
+                })
+                .ToListAsync();
+        }
+
+
+
+
         public async Task UpdateAsync(int id, VaccinationUpdateDTO dto, int nurseId)
         {
             var vac = await _context.Vaccinations.FindAsync(id);

@@ -68,7 +68,8 @@ namespace MedicalManagement.Services
                     RecipientType = "Manager",
                     Date = DateTime.Now,
                     IsRead = false,
-                    SenderId = manager.UserId
+                    SenderId = manager.UserId,
+                    Priority = "Medium"
                 });
             }
 
@@ -85,11 +86,14 @@ namespace MedicalManagement.Services
                     RecipientType = "Manager",
                     Date = DateTime.Now,
                     IsRead = false,
-                    SenderId = manager.UserId
+                    SenderId = manager.UserId,
+                    Priority = "Medium"
                 });
             }
 
             await _context.SaveChangesAsync();
+
+            Console.WriteLine($"Low stock alerts: {lowStockAlerts.Count}, Expiry alerts: {expiryAlerts.Count}");
         }
 
     }

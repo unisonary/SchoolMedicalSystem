@@ -27,6 +27,15 @@ namespace MedicalManagement.Controllers
             return Ok(result);
         }
 
+        [HttpGet("by-plan/{planId}")]
+        public async Task<IActionResult> GetByPlanAndNurse(int planId)
+        {
+            int nurseId = GetNurseId();
+            var result = await _service.GetByPlanIdAndNurseAsync(planId, nurseId);
+            return Ok(result);
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] VaccinationUpdateDTO dto)
         {

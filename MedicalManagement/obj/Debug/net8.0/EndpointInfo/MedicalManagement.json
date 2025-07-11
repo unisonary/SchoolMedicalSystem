@@ -607,6 +607,18 @@
         }
       }
     },
+    "/api/manager/assignments/consented-students/all": {
+      "get": {
+        "tags": [
+          "ManagerAssignment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/manager/assignments/consented-students/{planId}": {
       "get": {
         "tags": [
@@ -622,6 +634,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurses": {
+      "get": {
+        "tags": [
+          "ManagerAssignment"
         ],
         "responses": {
           "200": {
@@ -654,6 +678,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/plans/classes": {
+      "get": {
+        "tags": [
+          "ManagerMedicalPlan"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -757,6 +793,118 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/notifications": {
+      "get": {
+        "tags": [
+          "ManagerNotification"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/notifications/{id}/read": {
+      "put": {
+        "tags": [
+          "ManagerNotification"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/notifications/mark-all-read": {
+      "put": {
+        "tags": [
+          "ManagerNotification"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/reports/participation": {
+      "post": {
+        "tags": [
+          "ManagerReport"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipationReportFilterDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipationReportFilterDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipationReportFilterDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/reports/participation/export": {
+      "post": {
+        "tags": [
+          "ManagerReport"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/manager/reports/vaccines/names": {
+      "get": {
+        "tags": [
+          "ManagerReport"
         ],
         "responses": {
           "200": {
@@ -1066,6 +1214,29 @@
         }
       }
     },
+    "/api/nurse/checkups/by-plan/{planId}": {
+      "get": {
+        "tags": [
+          "NurseHealthCheckup"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/nurse/checkups/{id}": {
       "put": {
         "tags": [
@@ -1342,6 +1513,45 @@
         "tags": [
           "NurseMedication"
         ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "Active"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NurseMedication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationCreateDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1441,6 +1651,29 @@
           {
             "name": "planId",
             "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/vaccinations/by-plan/{planId}": {
+      "get": {
+        "tags": [
+          "NurseVaccination"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1822,6 +2055,39 @@
         }
       }
     },
+    "/api/parent/student/notifications/mark-all-read": {
+      "put": {
+        "tags": [
+          "ParentStudentProgress"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/consents/respond": {
+      "get": {
+        "tags": [
+          "PublicConsent"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Student": {
       "get": {
         "tags": [
@@ -1997,6 +2263,27 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Student/search": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2760,6 +3047,10 @@
             "type": "string",
             "format": "date-time"
           },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
           "severity": {
             "type": "string",
             "nullable": true
@@ -3006,6 +3297,17 @@
             "items": {
               "$ref": "#/components/schemas/Student"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParticipationReportFilterDTO": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

@@ -9,12 +9,14 @@ import "react-toastify/dist/ReactToastify.css";
 import ParentDashboard from "@/pages/Parent/ParentDashboard"; // ✅ đường dẫn thật
 import UserProfile from "./pages/Profile/UserProfile";
 import ChangePasswordPage from "./pages/Login/ChangePasswordPage";
+import NurseDashboard from "./pages/Nurse/NurseDashboard";
+import ManagerDashboard from "./pages/Manager/ManagerDashboard";
 
 
 // Dummy dashboard components (sau có thể import thật)
 const StudentDashboard = () => <div>Trang Học sinh</div>;
-const NurseDashboard = () => <div>Trang Y tá</div>;
-const ManagerDashboard = () => <div>Trang Quản lý</div>;
+// const NurseDashboard = () => <div>Trang Y tá</div>;
+// const ManagerDashboard = () => <div>Trang Quản lý</div>;
 const AdminDashboard = () => <div>Trang Admin</div>;
 
 function App() {
@@ -71,7 +73,7 @@ function App() {
           path="/manager/dashboard"
           element={
             <ProtectedRouteByRole role="Manager">
-              <ManagerDashboard />
+              <ManagerDashboard/>
             </ProtectedRouteByRole>
           }
         />
@@ -85,6 +87,11 @@ function App() {
         />
 
         <Route path="/parent/profile" element={<UserProfile />} />
+
+        <Route path="/nurse/profile" element={<UserProfile />} />
+
+        <Route path="/manager/profile" element={<UserProfile />} />
+
 
         <Route path="/login/change-password" element={<ChangePasswordPage />} />
 

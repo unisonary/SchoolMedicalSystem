@@ -21,6 +21,6 @@ namespace MedicalManagement.Services.Interfaces
 
         Task<bool> VerifyOtpOnlyAsync(string email, string otp);
 
-
+        Task<string> GetEmailByUser(UserAccount user);
     }
 }

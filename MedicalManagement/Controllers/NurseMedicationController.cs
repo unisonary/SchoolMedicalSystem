@@ -18,12 +18,27 @@ namespace MedicalManagement.Controllers
             _service = service;
         }
 
+
+
         [HttpGet]
-        public async Task<IActionResult> GetPendingMedications()
+        public async Task<IActionResult> GetMedicationsByStatus([FromQuery] string status = "Active")
         {
-            var list = await _service.GetPendingFromParentAsync();
+            var list = await _service.GetFromParentByStatusAsync(status);
             return Ok(list);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddMedication([FromBody] MedicationCreateDTO dto)
+        {
+            var nurseId = int.TryParse(User.FindFirstValue("reference_id"), out var id) ? id : 0;
+            if (nurseId == 0)
+                return Unauthorized("Không tìm được thông tin y tá.");
+
+            await _service.CreateByNurseAsync(dto, nurseId);
+            return Ok(new { message = "Đã thêm thuốc cho học sinh." });
+        }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Verify(int id, [FromBody] MedicationVerifyDTO dto)

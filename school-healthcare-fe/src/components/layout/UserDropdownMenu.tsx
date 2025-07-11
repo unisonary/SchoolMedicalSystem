@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/auth/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { User, Activity, Pill, FileCheck, TrendingUp, Bell, Lock, LogOut, ChevronDown } from "lucide-react";
+import { User, Activity, Pill, FileCheck, TrendingUp, Bell, Lock, LogOut, ChevronDown, BarChart2, Users, ClipboardCheck } from "lucide-react";
 
 const UserDropdownMenu = () => {
   const { user, logout } = useAuthStore();
@@ -22,6 +22,9 @@ const UserDropdownMenu = () => {
   };
 
   const isParent = user?.role === "Parent";
+  const isNurse = user?.role === "Nurse" || user?.role === "School_Nurse";
+  const isManager = user?.role === "Manager";
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -105,6 +108,162 @@ const UserDropdownMenu = () => {
         bgHover: "hover:bg-pink-50"
       }
     ] : []),
+    ...(isNurse ? [
+      {
+        icon: User,
+        label: "Hồ sơ của tôi",
+        action: () => {
+          navigate("/nurse/profile");
+          setOpen(false);
+        },
+        color: "text-blue-600",
+        bgHover: "hover:bg-blue-50"
+      },
+      {
+        icon: Activity,
+        label: "Sự kiện y tế",
+        action: () => {
+          navigate("/nurse/dashboard");
+          localStorage.setItem("nurse-tab", "events");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-blue-600",
+        bgHover: "hover:bg-blue-50"
+      },
+      {
+        icon: Pill,
+        label: "Gửi thuốc",
+        action: () => {
+          localStorage.setItem("nurse-tab", "medications");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-green-600",
+        bgHover: "hover:bg-green-50"
+      },
+      {
+        icon: FileCheck,
+        label: "Kho vật tư",
+        action: () => {
+          localStorage.setItem("nurse-tab", "inventory");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-purple-600",
+        bgHover: "hover:bg-purple-50"
+      },
+      {
+        icon: TrendingUp,
+        label: "Xuất vật tư",
+        action: () => {
+          localStorage.setItem("nurse-tab", "supplylog");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-orange-600",
+        bgHover: "hover:bg-orange-50"
+      },
+      {
+        icon: Activity,
+        label: "Khám sức khỏe định kỳ",
+        action: () => {
+          localStorage.setItem("nurse-tab", "checkup");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-cyan-600",
+        bgHover: "hover:bg-cyan-50"
+      },
+      {
+        icon: Bell,
+        label: "Tiêm chủng",
+        action: () => {
+          localStorage.setItem("nurse-tab", "vaccination");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-pink-600",
+        bgHover: "hover:bg-pink-50"
+      },
+      {
+        icon: FileCheck,
+        label: "Lịch hẹn tư vấn",
+        action: () => {
+          localStorage.setItem("nurse-tab", "appointments");
+          navigate("/nurse/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-lime-600",
+        bgHover: "hover:bg-lime-50"
+      }
+    ] : []),
+    ...(isManager ? [
+      {
+        icon: User,
+        label: "Hồ sơ của tôi",
+        action: () => {
+          navigate("/manager/profile");
+          setOpen(false);
+        },
+        color: "text-blue-600",
+        bgHover: "hover:bg-blue-50"
+      },
+      {
+        icon: ClipboardCheck,
+        label: "Kế hoạch y tế",
+        action: () => {
+          localStorage.setItem("manager-tab", "plans");
+          navigate("/manager/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-cyan-600",
+        bgHover: "hover:bg-cyan-50"
+      },
+      {
+        icon: Users,
+        label: "Phân công y tế",
+        action: () => {
+          localStorage.setItem("manager-tab", "assignments");
+          navigate("/manager/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-green-600",
+        bgHover: "hover:bg-green-50"
+      },
+      {
+        icon: BarChart2,
+        label: "Báo cáo",
+        action: () => {
+          localStorage.setItem("manager-tab", "reports");
+          navigate("/manager/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-indigo-600",
+        bgHover: "hover:bg-indigo-50"
+      },
+      {
+        icon: Bell,
+        label: "Thông báo",
+        action: () => {
+          localStorage.setItem("manager-tab", "notifications");
+          navigate("/manager/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-orange-600",
+        bgHover: "hover:bg-orange-50"
+      }
+    ] : []),    
     {
       icon: Lock,
       label: "Đổi mật khẩu",

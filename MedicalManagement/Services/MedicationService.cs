@@ -57,10 +57,10 @@ public class MedicationService : IMedicationService
         Status = m.Status
     };
 
-    public async Task<List<MedicationNurseReadDTO>> GetPendingFromParentAsync()
+    public async Task<List<MedicationNurseReadDTO>> GetFromParentByStatusAsync(string status = "Active")
     {
         return await _context.Medications
-            .Where(m => m.ProvidedByParent && m.Status == "Active")
+            .Where(m => m.ProvidedByParent && m.Status == status)
             .Include(m => m.Student)
             .Select(m => new MedicationNurseReadDTO
             {
@@ -77,6 +77,7 @@ public class MedicationService : IMedicationService
             }).ToListAsync();
     }
 
+
     public async Task VerifyAsync(int medicationId, MedicationVerifyDTO dto, int nurseId)
     {
         var medication = await _context.Medications.FindAsync(medicationId);
@@ -87,6 +88,28 @@ public class MedicationService : IMedicationService
         medication.Note = dto.Note;
         medication.NurseId = nurseId;
 
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task CreateByNurseAsync(MedicationCreateDTO dto, int nurseId)
+    {
+        // Optional: validate studentId exists
+
+        var med = new Medication
+        {
+            StudentId = dto.StudentId,
+            MedicationName = dto.MedicationName,
+            Dosage = dto.Dosage,
+            Frequency = dto.Frequency,
+            Instructions = dto.Instructions,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+            NurseId = nurseId,
+            ProvidedByParent = true,
+            Status = "Active"
+        };
+
+        _context.Medications.Add(med);
         await _context.SaveChangesAsync();
     }
 

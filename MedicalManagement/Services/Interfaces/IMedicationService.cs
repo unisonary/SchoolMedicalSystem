@@ -9,8 +9,9 @@ namespace MedicalManagement.Services.Interfaces
         Task UpdateByParentAsync(int parentRefId, int id, MedicationUpdateDTO dto);
 
         // Cho Nurse
-        Task<List<MedicationNurseReadDTO>> GetPendingFromParentAsync();
+        Task<List<MedicationNurseReadDTO>> GetFromParentByStatusAsync(string status = "Active");
         Task VerifyAsync(int medicationId, MedicationVerifyDTO dto, int nurseId);
+        Task CreateByNurseAsync(MedicationCreateDTO dto, int nurseId);
 
     }
 }

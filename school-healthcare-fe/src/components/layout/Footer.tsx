@@ -56,7 +56,7 @@ const Footer = () => {
                   <div className="flex items-center space-x-3">
                     <span className="text-orange-300">🌐</span>
                     <a 
-                      href="https://daihoc.fpt.edu.vn/" 
+                      href="https://fschool.fpt.edu.vn/" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-blue-200 hover:text-white transition-colors duration-200 underline decoration-blue-300"

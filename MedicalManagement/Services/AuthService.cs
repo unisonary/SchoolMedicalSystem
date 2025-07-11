@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MedicalManagement.Data;
 using MedicalManagement.Helpers;
 using MedicalManagement.Models.DTOs;
@@ -205,7 +204,7 @@ namespace MedicalManagement.Services
 
 
         // ✅ 6. Hàm lấy email theo role dùng chung
-        private async Task<string> GetEmailByUser(UserAccount user)
+        public async Task<string> GetEmailByUser(UserAccount user)
         {
             return user.Role switch
             {

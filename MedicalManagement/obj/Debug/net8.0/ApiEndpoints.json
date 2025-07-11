@@ -365,6 +365,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedicalManagement.Controllers.ManagerAssignmentController",
+    "Method": "GetAllConsentedStudents",
+    "RelativePath": "api/manager/assignments/consented-students/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.InventoryAlertController",
     "Method": "GetFilteredAlerts",
     "RelativePath": "api/manager/inventory-alerts",
@@ -378,6 +388,42 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerNotificationController",
+    "Method": "GetNotifications",
+    "RelativePath": "api/manager/notifications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerNotificationController",
+    "Method": "MarkAsRead",
+    "RelativePath": "api/manager/notifications/{id}/read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerNotificationController",
+    "Method": "MarkAllAsRead",
+    "RelativePath": "api/manager/notifications/mark-all-read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -441,6 +487,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerMedicalPlanController",
+    "Method": "GetClasses",
+    "RelativePath": "api/manager/plans/classes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -509,6 +565,38 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "GetParticipationReport",
+    "RelativePath": "api/manager/reports/participation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "MedicalManagement.Models.DTOs.ParticipationReportFilterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "ExportParticipationReportToExcel",
+    "RelativePath": "api/manager/reports/participation/export",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "planId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
     "Method": "GetVaccinationReport",
     "RelativePath": "api/manager/reports/vaccination",
     "HttpMethod": "POST",
@@ -537,6 +625,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerReportController",
+    "Method": "GetVaccineNames",
+    "RelativePath": "api/manager/reports/vaccines/names",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -608,6 +706,22 @@
       {
         "Name": "dto",
         "Type": "MedicalManagement.Models.DTOs.HealthCheckupUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "GetByPlanAndNurse",
+    "RelativePath": "api/nurse/checkups/by-plan/{planId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "planId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -773,12 +887,34 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.NurseMedicationController",
-    "Method": "GetPendingMedications",
+    "Method": "GetMedicationsByStatus",
     "RelativePath": "api/nurse/medications",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseMedicationController",
+    "Method": "AddMedication",
+    "RelativePath": "api/nurse/medications",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.MedicationCreateDTO",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -863,6 +999,32 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseVaccinationController",
+    "Method": "GetByPlanAndNurse",
+    "RelativePath": "api/nurse/vaccinations/by-plan/{planId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "planId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ManagerAssignmentController",
+    "Method": "GetNurses",
+    "RelativePath": "api/nurses",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -1068,6 +1230,32 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.ParentStudentProgressController",
+    "Method": "MarkAllNotificationsAsRead",
+    "RelativePath": "api/parent/student/notifications/mark-all-read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicConsentController",
+    "Method": "RespondFromEmail",
+    "RelativePath": "api/public/consents/respond",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -1317,6 +1505,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.StudentController",
+    "Method": "SearchStudentsByName",
+    "RelativePath": "api/Student/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "MedicalManagement.Controllers.UserProfileController",

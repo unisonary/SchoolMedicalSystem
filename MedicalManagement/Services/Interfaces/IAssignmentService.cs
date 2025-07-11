@@ -6,5 +6,7 @@ namespace MedicalManagement.Services.Interfaces
     {
         Task AssignNurseAsync(AssignmentDTO dto);
         Task<List<ConsentedStudentDTO>> GetConsentedStudentsAsync(int planId);
+
+        Task<List<ConsentedStudentDTO>> GetAllConsentedStudentsAsync();
     }
 }

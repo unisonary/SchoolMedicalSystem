@@ -161,7 +161,7 @@ const LoginPage = () => {
       {/* Footer */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center">
         <p className="text-white/80 text-sm">
-          © 2024 Hệ thống Quản lý Y tế Học đường
+          © 2025 Hệ thống Quản lý Y tế Học đường
         </p>
       </div>
     </div>

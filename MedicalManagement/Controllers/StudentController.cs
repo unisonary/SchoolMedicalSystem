@@ -5,12 +5,14 @@ using MedicalManagement.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Globalization;
+using System.Text;
 
 namespace MedicalManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Student,Admin,Manager")]
+    [Authorize(Roles = "Student,Admin,Manager, Nurse")]
     public class StudentController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -38,6 +40,53 @@ namespace MedicalManagement.Controllers
             }
             return student;
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchStudentsByName([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest(new { message = "Thiếu tên để tìm kiếm." });
+
+            string normalizedInput = RemoveDiacritics(name.ToLower());
+
+            var students = await _context.Students
+                .Include(s => s.Parent)
+                .ToListAsync(); // Lấy tất cả học sinh trước
+
+            var result = students
+                .Where(s => RemoveDiacritics(s.Name.ToLower()).Contains(normalizedInput))
+                .Select(s => new
+                {
+                    studentId = s.StudentId,
+                    name = s.Name,
+                    className = s.Class,
+                    parentName = s.Parent != null ? s.Parent.Name : "(Không rõ)",
+                    parentPhone = s.Parent.Phone
+                })
+                .ToList();
+
+            return Ok(result);
+        }
+
+
+        // Utility function: remove dấu tiếng Việt
+        private string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
 
         // POST: api/Student
         [HttpPost]

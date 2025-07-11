@@ -37,6 +37,14 @@ namespace MedicalManagement.Controllers
             var success = await _service.MarkNotificationAsReadAsync(GetUsername(), id);
             return success ? Ok(new { message = "Đã đánh dấu là đã đọc." }) : NotFound(new { message = "Không tìm thấy thông báo." });
         }
+
+        [HttpPut("notifications/mark-all-read")]
+        public async Task<IActionResult> MarkAllNotificationsAsRead()
+        {
+            var count = await _service.MarkAllNotificationsAsReadAsync(GetUsername());
+            return Ok(new { message = $"Đã đánh dấu {count} thông báo là đã đọc." });
+        }
+
     }
 
 }

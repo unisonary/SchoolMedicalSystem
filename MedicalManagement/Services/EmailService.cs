@@ -20,7 +20,7 @@ namespace MedicalManagement.Helpers
             message.To.Add(toEmail);
             message.Subject = subject;
             message.Body = body;
-            message.IsBodyHtml = false;
+            message.IsBodyHtml = true;
 
             using (var client = new SmtpClient(_settings.Host, _settings.Port))
             {

@@ -42,6 +42,9 @@ var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Key"];
 var issuer = jwtSettings["Issuer"];
 var audience = jwtSettings["Audience"];
+var emailJwtSecret = builder.Configuration["JwtSettings:EmailConsentSecret"];
+
+builder.Services.AddSingleton(new EmailJwtHelper(emailJwtSecret));
 
 // Configure authentication with JWT
 builder.Services.AddAuthentication(options =>
@@ -163,7 +166,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-
+app.UseHangfireServer();
 
 // Test chạy ngay khi app khởi động
 BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());

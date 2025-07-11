@@ -29,9 +29,20 @@ const Notifications = ({ onRead }: { onRead?: () => void }) => {
     try {
       await axios.put(`/parent/student/notifications/${id}/read`);
       fetchData();
-      onRead?.(); // callback cập nhật lại badge
+      onRead?.();
     } catch {
       toast.error("Không thể cập nhật trạng thái đã đọc.");
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await axios.put(`/parent/student/notifications/mark-all-read`);
+      toast.success("Đã đánh dấu tất cả là đã đọc.");
+      fetchData();
+      onRead?.();
+    } catch {
+      toast.error("Không thể đánh dấu tất cả là đã đọc.");
     }
   };
 
@@ -51,12 +62,26 @@ const Notifications = ({ onRead }: { onRead?: () => void }) => {
 
       {/* Chưa đọc */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-blue-600">📬 Thông báo chưa đọc</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-semibold text-blue-600">📬 Thông báo chưa đọc</h3>
+          {unread.length > 0 && (
+            <button
+              onClick={markAllAsRead}
+              className="text-sm px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium shadow transition"
+            >
+              ✅ Đánh dấu tất cả là đã đọc
+            </button>
+          )}
+        </div>
+
         {unread.length === 0 ? (
           <p className="italic text-gray-500">Không có thông báo mới.</p>
         ) : (
           unread.map((n) => (
-            <div key={n.notificationId} className="border border-blue-200 rounded-xl p-4 bg-white shadow-sm hover:bg-blue-50 transition">
+            <div
+              key={n.notificationId}
+              className="border border-blue-200 rounded-xl p-4 bg-white shadow-sm hover:bg-blue-50 transition"
+            >
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="text-lg font-semibold text-gray-800">{n.title}</h4>
@@ -84,7 +109,10 @@ const Notifications = ({ onRead }: { onRead?: () => void }) => {
           <p className="italic text-gray-500">Chưa có thông báo nào đã đọc.</p>
         ) : (
           read.map((n) => (
-            <div key={n.notificationId} className="border border-gray-200 rounded-xl p-4 bg-gray-50 shadow-sm">
+            <div
+              key={n.notificationId}
+              className="border border-gray-200 rounded-xl p-4 bg-gray-50 shadow-sm"
+            >
               <h4 className="text-lg font-semibold text-gray-700">{n.title}</h4>
               <p className="text-sm text-gray-600">{n.content}</p>
               <p className="text-xs text-gray-500 mt-1">

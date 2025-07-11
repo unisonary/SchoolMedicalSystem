@@ -8,6 +8,8 @@ namespace MedicalManagement.Services.Interfaces
         Task<List<HealthCheckupDTO>> GetHealthCheckupsAsync(string username);
         Task<List<MedicalNotificationDTO>> GetMedicalNotificationsAsync(string username);
         Task<bool> MarkNotificationAsReadAsync(string username, int notificationId);
+        Task<int> MarkAllNotificationsAsReadAsync(string username);
+
     }
 
 }

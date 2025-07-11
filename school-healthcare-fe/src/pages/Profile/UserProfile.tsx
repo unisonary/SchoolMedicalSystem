@@ -12,6 +12,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     if (!user) {
@@ -177,7 +178,7 @@ const UserProfile = () => {
                   </div>
                   <div className="text-white">
                     <h1 className="text-2xl font-bold mb-1">
-                      {profileData.profile?.full_name || 'Chưa cập nhật'}
+                    {profileData.profile?.full_name || profileData.profile?.name || 'Chưa cập nhật'}
                     </h1>
                     <div className="flex items-center space-x-2">
                       <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
@@ -231,7 +232,11 @@ const UserProfile = () => {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(profileData.profile || {}).map(([key, value]) => {
+            {Object.entries(profileData.profile || {})
+              .filter(([key, value]) =>
+                key !== "created_at" && value !== null && value !== undefined && value !== ""
+              )
+              .map(([key, value]) => {
                 const FieldIcon = getFieldIcon(key);
                 const fieldName = formatFieldName(key);
                 const fieldValue = value !== null && value !== undefined ? String(value) : "—";
@@ -275,8 +280,8 @@ const UserProfile = () => {
                     <span className="text-sm font-medium text-gray-700">Tham gia</span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    {profileData.profile?.created_at ? 
-                      new Date(profileData.profile.created_at).toLocaleDateString('vi-VN') : 
+                    {profileData.createdAt ? 
+                      new Date(profileData.createdAt).toLocaleDateString('vi-VN') : 
                       'Không xác định'
                     }
                   </p>

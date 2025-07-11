@@ -35,6 +35,24 @@ namespace MedicalManagement.Services
                 }).ToListAsync();
         }
 
+        public async Task<List<HealthCheckupReadDTO>> GetByPlanIdAndNurseAsync(int planId, int nurseId)
+        {
+            return await _context.HealthCheckups
+                .Where(h => h.PlanId == planId && h.NurseId == nurseId)
+                .Include(h => h.Student)
+                .Select(h => new HealthCheckupReadDTO
+                {
+                    CheckupId = h.CheckupId,
+                    StudentName = h.Student.Name ?? "(Không rõ)",
+                    CheckupType = h.CheckupType ?? "",
+                    Result = h.Result ?? "",
+                    AbnormalFindings = h.AbnormalFindings ?? "",
+                    Recommendations = h.Recommendations ?? "",
+                    Date = h.Date
+                }).ToListAsync();
+        }
+
+
         public async Task UpdateAsync(int id, HealthCheckupUpdateDTO dto, int nurseId)
         {
             var checkup = await _context.HealthCheckups.FindAsync(id)

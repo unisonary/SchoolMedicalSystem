@@ -1,10 +1,12 @@
-// MedicalConditions.tsx - Cải thiện giao diện
+// MedicalConditions.tsx - Cải thiện giao diện với Modal xác nhận xoá
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import { Pencil, Trash, Plus, Heart } from "lucide-react";
 import MedicalConditionForm from "./MedicalConditionForm";
 import Tabs from "@/components/ui/Tabs";
+import Modal from "@/components/ui/Modal";
+import { Button } from "@/components/ui/button";
 
 interface MedicalCondition {
   conditionId: number;
@@ -29,15 +31,20 @@ const MedicalConditions = () => {
   const [, setSelectedStudentId] = useState<number | null>(null);
   const [editing, setEditing] = useState<MedicalCondition | null>(null);
   const [loading, setLoading] = useState(true);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Bạn có chắc muốn xoá?")) return;
+  const handleDelete = async () => {
+    if (!confirmDeleteId) return;
     try {
-      await axios.delete(`/parent/health/medical-condition/${id}`);
+      await axios.delete(`/parent/health/medical-condition/${confirmDeleteId}`);
       toast.success("Đã xoá thành công.");
       fetchConditions();
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Không thể xoá.");
+    } finally {
+      setShowDeleteModal(false);
+      setConfirmDeleteId(null);
     }
   };
 
@@ -116,7 +123,6 @@ const MedicalConditions = () => {
       ),
       content: (
         <div className="p-6 space-y-8">
-          {/* Form Section */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-xl border-2 border-blue-100">
             <div className="flex items-center space-x-3 mb-4">
               <Plus className="w-6 h-6 text-blue-600" />
@@ -135,7 +141,6 @@ const MedicalConditions = () => {
             />
           </div>
 
-          {/* List Section */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
               <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
@@ -193,7 +198,10 @@ const MedicalConditions = () => {
                                 <Pencil size={18} />
                               </button>
                               <button 
-                                onClick={() => handleDelete(c.conditionId)} 
+                                onClick={() => {
+                                  setConfirmDeleteId(c.conditionId);
+                                  setShowDeleteModal(true);
+                                }} 
                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                 title="Xóa"
                               >
@@ -224,6 +232,30 @@ const MedicalConditions = () => {
         setEditing(null);
         setSelectedStudentId(parseInt(key));
       }} />
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => { setShowDeleteModal(false); setConfirmDeleteId(null); }}
+        title="Xác nhận xoá tình trạng y tế"
+      >
+        <div className="space-y-4">
+          <p>Bạn có chắc chắn muốn xoá tình trạng y tế này không?</p>
+          <div className="flex justify-end gap-3">
+            <Button
+              onClick={() => { setShowDeleteModal(false); setConfirmDeleteId(null); }}
+              className="bg-gray-300 text-black hover:bg-gray-400"
+            >
+              Hủy
+            </Button>
+            <Button
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Xác nhận xoá
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
