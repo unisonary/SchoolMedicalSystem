@@ -11,6 +11,7 @@ using MedicalManagement.Repositories;
 using MedicalManagement.Middlewares;
 using Hangfire;
 using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Http.Features;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -141,6 +142,11 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IParentStudentService, ParentStudentService>();
 
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.BufferBody = true; // đảm bảo ASP.NET đọc vào MemoryStream
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // tăng giới hạn nếu cần
+});
 
 
 builder.Services.Configure<SmtpSettings>(

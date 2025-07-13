@@ -11,13 +11,14 @@ import UserProfile from "./pages/Profile/UserProfile";
 import ChangePasswordPage from "./pages/Login/ChangePasswordPage";
 import NurseDashboard from "./pages/Nurse/NurseDashboard";
 import ManagerDashboard from "./pages/Manager/ManagerDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 
 // Dummy dashboard components (sau có thể import thật)
 const StudentDashboard = () => <div>Trang Học sinh</div>;
 // const NurseDashboard = () => <div>Trang Y tá</div>;
 // const ManagerDashboard = () => <div>Trang Quản lý</div>;
-const AdminDashboard = () => <div>Trang Admin</div>;
+// const AdminDashboard = () => <div>Trang Admin</div>;
 
 function App() {
   const user = useAuthStore((state) => state.user);
@@ -81,7 +82,7 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRouteByRole role="Admin">
-              <AdminDashboard />
+              <AdminDashboard/>
             </ProtectedRouteByRole>
           }
         />

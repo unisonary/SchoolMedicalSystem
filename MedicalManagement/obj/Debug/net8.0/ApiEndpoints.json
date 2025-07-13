@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "GetAllParents",
+    "RelativePath": "api/admin/all-parents",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.AdminContentController",
     "Method": "GetBlogs",
     "RelativePath": "api/admin/blogs",
@@ -204,6 +214,22 @@
     "Parameters": [
       {
         "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "SearchParentsByName",
+    "RelativePath": "api/admin/search-parents",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
         "Type": "System.String",
         "IsRequired": false
       }

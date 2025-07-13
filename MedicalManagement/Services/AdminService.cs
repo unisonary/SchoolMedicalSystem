@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using MedicalManagement.Helpers;
 
 
 namespace MedicalManagement.Services
@@ -23,48 +24,84 @@ namespace MedicalManagement.Services
 
         public async Task<bool> CreateUserAsync(CreateUserDTO dto)
         {
-            // Tạo thông tin trong bảng phụ trước (Student, Parent,...)
             int referenceId = 0;
+
             switch (dto.Role)
             {
                 case "Student":
-                    var student = new Student { Name = dto.Name, Email = dto.Email };
+                    if (string.IsNullOrEmpty(dto.Gender) || dto.DateOfBirth == null || string.IsNullOrEmpty(dto.Class))
+                        return false;
+
+                    var student = new Student
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email,
+                        Gender = dto.Gender,
+                        DateOfBirth = dto.DateOfBirth.Value,
+                        Class = dto.Class,
+                        ParentId = dto.ParentId.Value
+                    };
                     _context.Students.Add(student);
                     await _context.SaveChangesAsync();
                     referenceId = student.StudentId;
                     break;
+
                 case "Parent":
-                    var parent = new Parent { Name = dto.Name, Email = dto.Email };
+                    var parent = new Parent
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email,
+                        Phone = dto.Phone
+                    };
                     _context.Parents.Add(parent);
                     await _context.SaveChangesAsync();
                     referenceId = parent.ParentId;
                     break;
+
                 case "Nurse":
-                    var nurse = new SchoolNurse { Name = dto.Name, Email = dto.Email };
+                    var nurse = new SchoolNurse
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email,
+                        Specialization = dto.Specialization
+                    };
                     _context.SchoolNurses.Add(nurse);
                     await _context.SaveChangesAsync();
                     referenceId = nurse.NurseId;
                     break;
+
                 case "Manager":
-                    var manager = new Manager { Name = dto.Name, Email = dto.Email };
+                    var manager = new Manager
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email,
+                        Department = dto.Department,
+                        Position = dto.Position
+                    };
                     _context.Managers.Add(manager);
                     await _context.SaveChangesAsync();
                     referenceId = manager.ManagerId;
                     break;
+
                 case "Admin":
-                    var admin = new Admin { Name = dto.Name, Email = dto.Email };
+                    var admin = new Admin
+                    {
+                        Name = dto.Name,
+                        Email = dto.Email
+                    };
                     _context.Admins.Add(admin);
                     await _context.SaveChangesAsync();
                     referenceId = admin.AdminId;
                     break;
+
                 default:
                     return false;
             }
 
-            // Mã hóa mật khẩu
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            // Mặc định mật khẩu là 123456 nếu không nhập
+            string password = string.IsNullOrEmpty(dto.Password) ? "123456" : dto.Password;
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
-            // Tạo tài khoản
             var user = new UserAccount
             {
                 Username = dto.Username,
@@ -93,6 +130,10 @@ namespace MedicalManagement.Services
         {
             var user = await _context.UserAccounts.FindAsync(dto.UserId);
             if (user == null) return false;
+
+            // Kiểm tra mật khẩu mạnh
+            if (!PasswordValidator.IsStrong(dto.NewPassword))
+                throw new ArgumentException("Mật khẩu phải có ít nhất 8 ký tự, 1 chữ in hoa và 1 ký tự đặc biệt.");
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             user.IsFirstLogin = true;
