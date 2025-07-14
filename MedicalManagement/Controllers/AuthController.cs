@@ -55,6 +55,27 @@ namespace MedicalManagement.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("first-login-change-password")]
+        public async Task<IActionResult> FirstLoginChangePassword([FromBody] FirstLoginChangePasswordDTO dto)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("UserId").Value);
+                var success = await _authService.ChangePasswordFirstLoginAsync(userId, dto);
+
+                if (!success)
+                    return NotFound(new { message = "Không tìm thấy người dùng hoặc đã đổi mật khẩu rồi." });
+
+                return Ok(new { message = "Đổi mật khẩu thành công. Vui lòng đăng nhập lại." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
         [HttpPost("forgot-password-otp")]
         public async Task<IActionResult> ForgotPasswordOtp([FromBody] ForgotPasswordDTO dto)
         {

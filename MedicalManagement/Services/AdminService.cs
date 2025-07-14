@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using MedicalManagement.Helpers;
+using System.Globalization;
+using ClosedXML.Excel;
 
 
 namespace MedicalManagement.Services
@@ -47,6 +49,10 @@ namespace MedicalManagement.Services
                     break;
 
                 case "Parent":
+                    var existingParent = await _context.Parents.FirstOrDefaultAsync(p => p.Phone == dto.Phone);
+                    if (existingParent != null)
+                        throw new InvalidOperationException($"Phụ huynh với số điện thoại {dto.Phone} đã tồn tại.");
+
                     var parent = new Parent
                     {
                         Name = dto.Name,
@@ -57,6 +63,7 @@ namespace MedicalManagement.Services
                     await _context.SaveChangesAsync();
                     referenceId = parent.ParentId;
                     break;
+
 
                 case "Nurse":
                     var nurse = new SchoolNurse
@@ -140,126 +147,6 @@ namespace MedicalManagement.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<List<string>> ImportUsersFromExcelAsync(IFormFile file, int createdByAdminId)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-
-            var result = new List<string>();
-
-            using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            using var package = new ExcelPackage(stream);
-            var worksheet = package.Workbook.Worksheets[0];
-
-            var rowCount = worksheet.Dimension.Rows;
-
-            for (int row = 2; row <= rowCount; row++) // dòng 1 là header
-            {
-                var dto = new ImportUserDTO
-                {
-                    Username = worksheet.Cells[row, 1].Text.Trim(),
-                    Password = worksheet.Cells[row, 2].Text.Trim(),
-                    Role = worksheet.Cells[row, 3].Text.Trim(),
-                    Name = worksheet.Cells[row, 4].Text.Trim(),
-                    Email = worksheet.Cells[row, 5].Text.Trim(),
-                    ParentPhone = worksheet.Cells[row, 6].Text.Trim(),
-                    Gender = worksheet.Cells[row, 7].Text.Trim(),
-                    DateOfBirth = DateTime.TryParse(worksheet.Cells[row, 8].Text.Trim(), out var dob) ? dob : null,
-                    Class = worksheet.Cells[row, 9].Text.Trim()
-                };
-
-                // Kiểm tra đã tồn tại username chưa
-                if (_context.UserAccounts.Any(u => u.Username == dto.Username))
-                {
-                    result.Add($"Dòng {row}: Username '{dto.Username}' đã tồn tại.");
-                    continue;
-                }
-
-                try
-                {
-                    int refId = 0;
-                    switch (dto.Role)
-                    {
-                        case "Student":
-                            // Tìm parent theo ParentPhone
-                            var Parent = await _context.Parents
-                                .FirstOrDefaultAsync(p => p.Phone == dto.ParentPhone);
-
-                            if (Parent == null)
-                            {
-                                result.Add($"Dòng {row}: ❌ Không tìm thấy phụ huynh với số điện thoại '{dto.ParentPhone}'");
-                                continue;
-                            }
-
-                            var student = new Student
-                            {
-                                Name = dto.Name,
-                                Email = dto.Email,
-                                Gender = dto.Gender,
-                                DateOfBirth = dto.DateOfBirth,
-                                Class = dto.Class,
-                                ParentId = Parent.ParentId
-                            };
-                            _context.Students.Add(student);
-                            await _context.SaveChangesAsync();
-                            refId = student.StudentId;
-                            break;
-                        case "Parent":
-                            var parent = new Parent { Name = dto.Name, Email = dto.Email, Phone = dto.ParentPhone };
-                            result.Add($"Dòng {row}: Cell(6) = '{worksheet.Cells[row, 6].Text}'");//Debugging
-                            result.Add($"Dòng {row}: Sẽ tạo parent với phone = '{dto.ParentPhone}'");//Debugging
-                            _context.Parents.Add(parent);
-                            await _context.SaveChangesAsync();
-                            refId = parent.ParentId;
-                            break;
-                        case "Nurse":
-                            var nurse = new SchoolNurse { Name = dto.Name, Email = dto.Email };
-                            _context.SchoolNurses.Add(nurse);
-                            await _context.SaveChangesAsync();
-                            refId = nurse.NurseId;
-                            break;
-                        case "Manager":
-                            var manager = new Manager { Name = dto.Name, Email = dto.Email };
-                            _context.Managers.Add(manager);
-                            await _context.SaveChangesAsync();
-                            refId = manager.ManagerId;
-                            break;
-                        case "Admin":
-                            var admin = new Admin { Name = dto.Name, Email = dto.Email };
-                            _context.Admins.Add(admin);
-                            await _context.SaveChangesAsync();
-                            refId = admin.AdminId;
-                            break;
-                        default:
-                            result.Add($"Dòng {row}: Role '{dto.Role}' không hợp lệ.");
-                            continue;
-                    }
-
-                    string hashedPw = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-                    var user = new UserAccount
-                    {
-                        Username = dto.Username,
-                        Password = hashedPw,
-                        Role = dto.Role,
-                        ReferenceId = refId,
-                        CreatedBy = createdByAdminId,
-                        IsActive = true,
-                        IsFirstLogin = true
-                    };
-
-                    _context.UserAccounts.Add(user);
-                    await _context.SaveChangesAsync();
-                    result.Add($"Dòng {row}: Thành công.");
-                }
-                catch (Exception ex)
-                {
-                    result.Add($"Dòng {row}: Lỗi - {ex.Message}");
-                }
-            }
-
-            return result;
-        }
         public async Task<bool> UpdateUserAsync(UpdateUserDTO dto)
         {
             var user = await _context.UserAccounts.FindAsync(dto.UserId);
@@ -289,5 +176,155 @@ namespace MedicalManagement.Services
                 .Where(u => u.Username.Contains(query))
                 .ToListAsync<object>();
         }
+        public async Task<List<string>> ImportUsersFromExcelWithClosedXmlAsync(IFormFile file, int createdByAdminId)
+        {
+            var result = new List<string>();
+
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+            using var workbook = new XLWorkbook(stream);
+            var worksheet = workbook.Worksheet(1);
+
+            var rowCount = worksheet.LastRowUsed().RowNumber();
+
+            for (int row = 2; row <= rowCount; row++)
+            {
+                ImportUserDTO? dto = null;
+                try
+                {
+                    // Bước 1: Đọc dữ liệu từ file Excel
+                    dto = new ImportUserDTO
+                    {
+                        Username = worksheet.Cell(row, 1).GetValue<string>().Trim(),
+                        Password = worksheet.Cell(row, 2).GetValue<string>().Trim(),
+                        Role = worksheet.Cell(row, 3).GetValue<string>().Trim(),
+                        Name = worksheet.Cell(row, 4).GetValue<string>().Trim(),
+                        Email = worksheet.Cell(row, 5).GetValue<string>().Trim(),
+                        ParentPhone = worksheet.Cell(row, 6).GetValue<string>().Trim(),
+                        Gender = worksheet.Cell(row, 7).GetValue<string>().Trim(),
+                        DateOfBirth = DateTime.TryParse(worksheet.Cell(row, 8).GetValue<string>(), out var dob) ? dob : null,
+                        Class = worksheet.Cell(row, 9).GetValue<string>().Trim()
+                    };
+
+                    // Bước 2: Kiểm tra trùng username
+                    if (_context.UserAccounts.Any(u => u.Username == dto.Username))
+                    {
+                        result.Add($"Dòng {row}: ❌ Username '{dto.Username}' đã tồn tại.");
+                        continue;
+                    }
+
+                    // Bước 3: Tạo entity theo Role
+                    int refId = 0;
+                    switch (dto.Role)
+                    {
+                        case "Parent":
+                            var parent = new Parent
+                            {
+                                Name = dto.Name,
+                                Email = dto.Email,
+                                Phone = dto.ParentPhone
+                            };
+                            _context.Parents.Add(parent);
+                            await _context.SaveChangesAsync();
+                            refId = parent.ParentId;
+                            break;
+
+                        case "Student":
+                            var parentMatch = await _context.Parents.FirstOrDefaultAsync(p => p.Phone == dto.ParentPhone);
+                            if (parentMatch == null)
+                            {
+                                result.Add($"Dòng {row}: ❌ Không tìm thấy phụ huynh với số điện thoại '{dto.ParentPhone}'");
+                                continue;
+                            }
+
+                            var student = new Student
+                            {
+                                Name = dto.Name,
+                                Email = dto.Email,
+                                Gender = dto.Gender,
+                                DateOfBirth = dto.DateOfBirth,
+                                Class = dto.Class,
+                                ParentId = parentMatch.ParentId
+                            };
+                            _context.Students.Add(student);
+                            await _context.SaveChangesAsync();
+                            refId = student.StudentId;
+                            break;
+
+                        case "Nurse":
+                            var nurse = new SchoolNurse
+                            {
+                                Name = dto.Name,
+                                Email = dto.Email
+                            };
+                            _context.SchoolNurses.Add(nurse);
+                            await _context.SaveChangesAsync();
+                            refId = nurse.NurseId;
+                            break;
+
+                        case "Manager":
+                            var manager = new Manager
+                            {
+                                Name = dto.Name,
+                                Email = dto.Email
+                            };
+                            _context.Managers.Add(manager);
+                            await _context.SaveChangesAsync();
+                            refId = manager.ManagerId;
+                            break;
+
+                        case "Admin":
+                            var admin = new Admin
+                            {
+                                Name = dto.Name,
+                                Email = dto.Email
+                            };
+                            _context.Admins.Add(admin);
+                            await _context.SaveChangesAsync();
+                            refId = admin.AdminId;
+                            break;
+
+                        default:
+                            result.Add($"Dòng {row}: ❌ Role '{dto.Role}' không hợp lệ.");
+                            continue;
+                    }
+
+                    // Bước 4: Tạo UserAccount
+                    var userAccount = new UserAccount
+                    {
+                        Username = dto.Username,
+                        Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                        Role = dto.Role,
+                        ReferenceId = refId,
+                        CreatedBy = createdByAdminId,
+                        IsActive = true,
+                        IsFirstLogin = true
+                    };
+
+                    _context.UserAccounts.Add(userAccount);
+                    await _context.SaveChangesAsync();
+
+                    result.Add($"Dòng {row}: ✅ Thành công.");
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    var innerMsg = dbEx.InnerException?.Message ?? dbEx.Message;
+                    result.Add($"Dòng {row}: ❌ Lỗi khi lưu DB - {innerMsg}");
+                    if (dto != null)
+                    {
+                        result.Add($"→ Dữ liệu: Username = {dto.Username}, Role = {dto.Role}, Email = {dto.Email}, Phone = {dto.ParentPhone}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.Add($"Dòng {row}: ❌ Lỗi không xác định - {ex.Message}");
+                }
+            }
+
+            return result;
+        }
+
+
+
     }
 }

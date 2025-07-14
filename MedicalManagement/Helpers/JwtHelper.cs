@@ -42,5 +42,11 @@
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public static int GetUserIdFromClaims(ClaimsPrincipal user)
+        {
+            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "UserId");
+            return userIdClaim != null ? int.Parse(userIdClaim.Value) : 0;
+        }
+
     }
 }

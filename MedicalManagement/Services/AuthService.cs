@@ -45,6 +45,26 @@ namespace MedicalManagement.Services
             return true;
         }
 
+        public async Task<bool> ChangePasswordFirstLoginAsync(int userId, FirstLoginChangePasswordDTO dto)
+        {
+            var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive);
+            if (user == null) return false;
+
+            // Kiểm tra nếu không phải first login thì không cho đổi bằng API này
+            if (!user.IsFirstLogin)
+                throw new Exception("Tài khoản này không yêu cầu đổi mật khẩu lần đầu.");
+
+            if (!PasswordValidator.IsStrong(dto.NewPassword))
+                throw new Exception("Mật khẩu mới phải ≥8 ký tự, có chữ in hoa và ký tự đặc biệt.");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.IsFirstLogin = false;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
 
         public async Task<AuthResponse> LoginAsync(LoginDTO loginDto)
         {

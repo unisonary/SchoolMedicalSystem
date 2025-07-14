@@ -29,27 +29,6 @@ namespace MedicalManagement.Controllers
             return user?.ReferenceId;
         }
 
-        [HttpGet("records")]
-        public async Task<ActionResult<IEnumerable<HealthRecordDTO>>> GetHealthRecords()
-        {
-            var studentId = await GetStudentIdFromTokenAsync();
-            if (studentId == null) return Unauthorized();
-
-            var records = await _context.HealthRecords
-                .Include(r => r.Nurse)
-                .Where(r => r.StudentId == studentId)
-                .Select(r => new HealthRecordDTO
-                {
-                    RecordId = r.RecordId,
-                    Date = r.Date,
-                    Description = r.Description,
-                    NurseName = r.Nurse.Name,
-                    Severity = r.Severity
-                }).ToListAsync();
-
-            return Ok(records);
-        }
-
         [HttpGet("events")]
         public async Task<ActionResult<IEnumerable<MedicalEventDTO>>> GetMedicalEvents()
         {
@@ -117,26 +96,5 @@ namespace MedicalManagement.Controllers
             return Ok(checkups);
         }
 
-
-        [HttpGet("notifications")]
-        public async Task<ActionResult<IEnumerable<MedicalNotificationDTO>>> GetNotifications()
-        {
-            var studentId = await GetStudentIdFromTokenAsync();
-            if (studentId == null) return Unauthorized();
-
-            var notis = await _context.MedicalNotifications
-                .Where(n => n.StudentId == studentId && n.RecipientType == "Student")
-                .Select(n => new MedicalNotificationDTO
-                {
-                    NotificationId = n.NotificationId,
-                    Title = n.Title,
-                    Content = n.Content,
-                    NotificationType = n.NotificationType,
-                    Date = n.Date,
-                    IsRead = n.IsRead
-                }).ToListAsync();
-
-            return Ok(notis);
-        }
     }
 }

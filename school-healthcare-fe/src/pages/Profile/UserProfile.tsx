@@ -262,7 +262,9 @@ const UserProfile = () => {
                         />
                       ) : (
                         <div className="text-gray-800 font-medium">
-                          {fieldValue}
+                          {key === 'date_of_birth'
+                            ? new Date(value as string).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                            : fieldValue}
                         </div>
                       )}
                     </div>

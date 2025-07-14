@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/auth/useAuthStore";
 
@@ -29,11 +29,10 @@ const AdminImportExcel = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const createdBy = user?.userId || 1;
 
     try {
       setLoading(true);
-      const response = await axios.post(`/admin/import-users?createdBy=${createdBy}`, formData, {
+      const response = await axios.post(`/admin/import-users`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setResult(response.data);

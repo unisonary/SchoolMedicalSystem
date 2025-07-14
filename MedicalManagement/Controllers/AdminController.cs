@@ -6,9 +6,12 @@ using MedicalManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
+using MedicalManagement.Helpers;
+using Microsoft.AspNetCore.Authorization;
 ///This is the class that for managing accounts
 namespace MedicalManagement.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/admin")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -21,6 +24,19 @@ namespace MedicalManagement.Controllers
         {
             _adminService = adminService;
             _context = context;
+        }
+
+        [HttpGet("classes")]
+        public async Task<IActionResult> GetClasses()
+        {
+            var classes = await _context.Students
+                .Where(s => s.Class != null)
+                .Select(s => s.Class)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            return Ok(classes);
         }
 
         [HttpGet("all-parents")]
@@ -119,16 +135,20 @@ namespace MedicalManagement.Controllers
             }
         }
 
+
         //This guy is used to import users from file excel
         [HttpPost("import-users")]
-        public async Task<IActionResult> ImportUsersFromExcel(IFormFile file, [FromQuery] int createdBy = 1)
+        public async Task<IActionResult> ImportUsersFromExcel(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Chưa chọn file.");
 
-            var result = await _adminService.ImportUsersFromExcelAsync(file, createdBy);
+            var createdBy = JwtHelper.GetUserIdFromClaims(User); 
+            var result = await _adminService.ImportUsersFromExcelWithClosedXmlAsync(file, createdBy);
             return Ok(result);
         }
+
+
         // Cập nhật người dùng
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO dto)

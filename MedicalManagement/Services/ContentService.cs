@@ -30,7 +30,8 @@ namespace MedicalManagement.Services
             _context.HealthDocuments.Add(new HealthDocument
             {
                 Title = dto.Title,
-                Content = dto.Content
+                Content = dto.Content,
+                ImageUrl = dto.ImageUrl
             });
             await _context.SaveChangesAsync();
         }
@@ -42,9 +43,11 @@ namespace MedicalManagement.Services
 
             doc.Title = dto.Title;
             doc.Content = dto.Content;
+            doc.ImageUrl = dto.ImageUrl; // Thêm dòng này
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<bool> DeleteDocumentAsync(int id)
         {
@@ -68,7 +71,8 @@ namespace MedicalManagement.Services
             _context.BlogPosts.Add(new BlogPost
             {
                 Title = dto.Title,
-                Content = dto.Content
+                Content = dto.Content,
+                ImageUrl = dto.ImageUrl
             });
             await _context.SaveChangesAsync();
         }
@@ -80,6 +84,7 @@ namespace MedicalManagement.Services
 
             blog.Title = dto.Title;
             blog.Content = dto.Content;
+            blog.ImageUrl = dto.ImageUrl;
             await _context.SaveChangesAsync();
             return true;
         }

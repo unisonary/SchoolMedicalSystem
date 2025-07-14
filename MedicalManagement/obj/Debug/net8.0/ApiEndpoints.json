@@ -74,6 +74,16 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.AdminController",
+    "Method": "GetClasses",
+    "RelativePath": "api/admin/classes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AdminController",
     "Method": "CreateUser",
     "RelativePath": "api/admin/create-account",
     "HttpMethod": "POST",
@@ -179,11 +189,6 @@
         "Name": "file",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
-      },
-      {
-        "Name": "createdBy",
-        "Type": "System.Int32",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -279,6 +284,22 @@
       {
         "Name": "dto",
         "Type": "MedicalManagement.Models.DTOs.ChangePasswordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.AuthController",
+    "Method": "FirstLoginChangePassword",
+    "RelativePath": "api/Auth/first-login-change-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MedicalManagement.Models.DTOs.FirstLoginChangePasswordDTO",
         "IsRequired": true
       }
     ],

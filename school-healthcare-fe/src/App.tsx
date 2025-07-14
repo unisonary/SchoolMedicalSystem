@@ -12,10 +12,12 @@ import ChangePasswordPage from "./pages/Login/ChangePasswordPage";
 import NurseDashboard from "./pages/Nurse/NurseDashboard";
 import ManagerDashboard from "./pages/Manager/ManagerDashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import FirstLoginChangePage from "./pages/Login/FirstLoginChangePage";
+import StudentDashboard from "./pages/Student/StudentDashboard";
 
 
 // Dummy dashboard components (sau có thể import thật)
-const StudentDashboard = () => <div>Trang Học sinh</div>;
+// const StudentDashboard = () => <div>Trang Học sinh</div>;
 // const NurseDashboard = () => <div>Trang Y tá</div>;
 // const ManagerDashboard = () => <div>Trang Quản lý</div>;
 // const AdminDashboard = () => <div>Trang Admin</div>;
@@ -86,6 +88,7 @@ function App() {
             </ProtectedRouteByRole>
           }
         />
+        <Route path="/student/profile" element={<UserProfile />} />
 
         <Route path="/parent/profile" element={<UserProfile />} />
 
@@ -93,9 +96,13 @@ function App() {
 
         <Route path="/manager/profile" element={<UserProfile />} />
 
+        <Route path="/admin/profile" element={<UserProfile />} />
+
+
 
         <Route path="/login/change-password" element={<ChangePasswordPage />} />
 
+        <Route path="/first-login-change" element={<FirstLoginChangePage />} />
 
         
         {/* Route không tồn tại → chuyển về login */}

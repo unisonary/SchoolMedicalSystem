@@ -22,7 +22,12 @@ const LoginPage = () => {
       setAuth(res);
       localStorage.setItem("token", res.user.token);
       toast.success("Đăng nhập thành công!");
-      navigate(`/${res.user.role.toLowerCase()}/dashboard`);
+      
+      if (res.isFirstLogin) {
+        navigate("/first-login-change");
+      } else {
+        navigate(`/${res.user.role.toLowerCase()}/dashboard`);
+      }
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Đăng nhập thất bại");
     } finally {

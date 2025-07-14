@@ -14,6 +14,8 @@ namespace MedicalManagement.Services.Interfaces
         //Task<string> ForgotPasswordAsync(ForgotPasswordDTO dto);
         //Task<string> ResetPasswordAsync(string token, string newPassword);
 
+        Task<bool> ChangePasswordFirstLoginAsync(int userId, FirstLoginChangePasswordDTO dto);
+
         Task<string> ForgotPasswordOtpAsync(ForgotPasswordDTO dto);
         Task<string> VerifyOtpResetPasswordAsync(string username, string otp, string newPassword);
 

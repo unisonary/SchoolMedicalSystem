@@ -58,6 +58,10 @@
               "target": "Package",
               "version": "[0.105.0, )"
             },
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
             "EPPlus": {
               "target": "Package",
               "version": "[5.8.3, )"

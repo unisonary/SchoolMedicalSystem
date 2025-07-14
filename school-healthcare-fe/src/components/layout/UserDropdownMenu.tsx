@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/auth/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { User, Activity, Pill, FileCheck, TrendingUp, Bell, Lock, LogOut, ChevronDown, BarChart2, Users, ClipboardCheck } from "lucide-react";
+import { User, Activity, Pill, FileCheck, TrendingUp, Bell, Lock, LogOut, ChevronDown, BarChart2, Users, ClipboardCheck, FileText, Syringe, Heart } from "lucide-react";
 
 const UserDropdownMenu = () => {
   const { user, logout } = useAuthStore();
@@ -24,6 +24,8 @@ const UserDropdownMenu = () => {
   const isParent = user?.role === "Parent";
   const isNurse = user?.role === "Nurse" || user?.role === "School_Nurse";
   const isManager = user?.role === "Manager";
+  const isAdmin = user?.role === "Admin";
+  const isStudent = user?.role === "Student";
 
 
   // Close dropdown when clicking outside
@@ -61,6 +63,54 @@ const UserDropdownMenu = () => {
   }, [open]);
 
   const menuItems = [
+    ...(isStudent ? [
+      {
+        icon: User,
+        label: "Hồ sơ của tôi",
+        action: () => {
+          navigate("/student/profile");
+          setOpen(false);
+        },
+        color: "text-blue-600",
+        bgHover: "hover:bg-blue-50"
+      },
+      {
+        icon: Activity,
+        label: "Sự kiện y tế",
+        action: () => {
+          localStorage.setItem("student-tab", "events");
+          navigate("/student/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-red-500",
+        bgHover: "hover:bg-red-50"
+      },
+      {
+        icon: Syringe,
+        label: "Tiêm chủng",
+        action: () => {
+          localStorage.setItem("student-tab", "vaccinations");
+          navigate("/student/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-sky-500",
+        bgHover: "hover:bg-sky-50"
+      },
+      {
+        icon: Heart,
+        label: "Khám sức khỏe",
+        action: () => {
+          localStorage.setItem("student-tab", "checkups");
+          navigate("/student/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-orange-500",
+        bgHover: "hover:bg-orange-50"
+      }
+    ] : []),    
     ...(isParent ? [
       {
         icon: User,
@@ -263,7 +313,80 @@ const UserDropdownMenu = () => {
         color: "text-orange-600",
         bgHover: "hover:bg-orange-50"
       }
-    ] : []),    
+    ] : []),   
+    ...(isAdmin ? [
+      {
+        icon: User,
+        label: "Hồ sơ của tôi",
+        action: () => {
+          navigate("/admin/profile");
+          setOpen(false);
+        },
+        color: "text-blue-600",
+        bgHover: "hover:bg-blue-50"
+      },
+      {
+        icon: Users,
+        label: "Quản lý tài khoản",
+        action: () => {
+          localStorage.setItem("admin-tab", "accounts");
+          navigate("/admin/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-green-600",
+        bgHover: "hover:bg-green-50"
+      },
+      {
+        icon: Lock,
+        label: "Đặt lại mật khẩu",
+        action: () => {
+          localStorage.setItem("admin-tab", "reset");
+          navigate("/admin/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-pink-600",
+        bgHover: "hover:bg-pink-50"
+      },
+      {
+        icon: FileCheck,
+        label: "Import Users",
+        action: () => {
+          localStorage.setItem("admin-tab", "import");
+          navigate("/admin/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-yellow-600",
+        bgHover: "hover:bg-yellow-50"
+      },
+      {
+        icon: FileText,
+        label: "Tài liệu sức khoẻ",
+        action: () => {
+          localStorage.setItem("admin-tab", "documents");
+          navigate("/admin/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-emerald-600",
+        bgHover: "hover:bg-emerald-50"
+      },
+      {
+        icon: ClipboardCheck,
+        label: "Blog sức khoẻ",
+        action: () => {
+          localStorage.setItem("admin-tab", "blogs");
+          navigate("/admin/dashboard");
+          window.dispatchEvent(new Event("storage"));
+          setOpen(false);
+        },
+        color: "text-purple-600",
+        bgHover: "hover:bg-purple-50"
+      }
+    ] : []),
+        
     {
       icon: Lock,
       label: "Đổi mật khẩu",

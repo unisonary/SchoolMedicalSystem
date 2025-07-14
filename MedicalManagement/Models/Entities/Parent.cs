@@ -11,14 +11,21 @@ namespace MedicalManagement.Models.Entities
         [Column("parent_id")]
         public int ParentId { get; set; }
 
+        [Required]
         [Column("name")]
         public string Name { get; set; }
 
+        [Required]
+        [Phone]
         [Column("phone")]
         public string Phone { get; set; }
 
+        [Required]
+        [EmailAddress]
         [Column("email")]
         public string Email { get; set; }
+
         public ICollection<Student> Students { get; set; }
     }
+
 }

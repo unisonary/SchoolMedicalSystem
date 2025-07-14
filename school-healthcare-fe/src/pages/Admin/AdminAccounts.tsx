@@ -8,6 +8,8 @@ import { CreateUserDTO, UpdateUserDTO } from "@/types/UserDTO";
 import { useAuthStore } from "@/auth/useAuthStore";
 
 const roles = ["Student", "Parent", "Nurse", "Manager", "Admin"];
+const specializations = ["Nhi khoa", "Đa khoa", "Y tế học đường", "Tim mạch", "Ngoại khoa", "Nội khoa"];
+const positions = ["Trưởng phòng", "Phó phòng"];
 
 const AdminAccounts = () => {
   const { user } = useAuthStore();
@@ -16,10 +18,18 @@ const AdminAccounts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [classes, setClasses] = useState<string[]>([]);
+  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+
+  useEffect(() => {
+    axios.get("/admin/classes")
+      .then((res) => setClasses(res.data))
+      .catch(() => toast.error("Không thể tải danh sách lớp học"));
+  }, []);
 
   const [createForm, setCreateForm] = useState<CreateUserDTO>({
     username: "",
-    password: "",
+    // password: "",
     role: "Student",
     name: "",
     email: "",
@@ -70,7 +80,107 @@ const AdminAccounts = () => {
     }
   };
 
+  // Email validation function
+  const validateEmail = (email: string): boolean => {
+    if (!email || email.trim() === '') return false;
+    
+    // More comprehensive email regex
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    
+    // Additional checks
+    const trimmedEmail = email.trim();
+    
+    // Check basic format
+    if (!emailRegex.test(trimmedEmail)) return false;
+    
+    // Check length constraints
+    if (trimmedEmail.length > 254) return false;
+    
+    // Check for consecutive dots
+    if (trimmedEmail.includes('..')) return false;
+    
+    // Check if starts or ends with dot
+    if (trimmedEmail.startsWith('.') || trimmedEmail.endsWith('.')) return false;
+    
+    // Check local part (before @) length
+    const localPart = trimmedEmail.split('@')[0];
+    if (localPart.length > 64) return false;
+    
+    return true;
+  };
+
+  // Date validation function
+  const validateDateOfBirth = (dateString: string): boolean => {
+    const today = new Date();
+    const selectedDate = new Date(dateString);
+    return selectedDate < today;
+  };
+
+  // Form validation function
+  const validateForm = (): boolean => {
+    const errors: {[key: string]: string} = {};
+
+    // Common validations
+    if (!createForm.username?.trim()) {
+      errors.username = "Tên đăng nhập không được để trống";
+    }
+    // if (!createForm.password?.trim()) {
+    //   errors.password = "Mật khẩu không được để trống";
+    // }
+    if (!createForm.name?.trim()) {
+      errors.name = "Họ tên không được để trống";
+    }
+    if (!createForm.email?.trim()) {
+      errors.email = "Email không được để trống";
+    } else if (!validateEmail(createForm.email)) {
+      errors.email = "Email không hợp lệ";
+    }
+
+    // Role-specific validations
+    switch (createForm.role) {
+      case "Student":
+        if (!createForm.gender) {
+          errors.gender = "Vui lòng chọn giới tính";
+        }
+        if (!createForm.dateOfBirth) {
+          errors.dateOfBirth = "Vui lòng chọn ngày sinh";
+        } else if (!validateDateOfBirth(createForm.dateOfBirth)) {
+          errors.dateOfBirth = "Ngày sinh phải là ngày trong quá khứ";
+        }
+        if (!createForm.class) {
+          errors.class = "Vui lòng chọn lớp học";
+        }
+        if (!createForm.parentId) {
+          errors.parentId = "Vui lòng chọn phụ huynh";
+        }
+        break;
+      case "Parent":
+        if (!createForm.phone?.trim()) {
+          errors.phone = "Số điện thoại không được để trống";
+        }
+        break;
+      case "Nurse":
+        if (!createForm.specialization) {
+          errors.specialization = "Vui lòng chọn chuyên môn";
+        }
+        break;
+      case "Manager":
+        if (!createForm.position) {
+          errors.position = "Vui lòng chọn chức vụ";
+        }
+        break;
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async () => {
+    if (!editMode && !validateForm()) {
+      toast.error("Vui lòng kiểm tra lại thông tin đã nhập");
+      return;
+    }
+
     try {
       if (editMode) {
         await axios.put("/admin/update-user", updateForm);
@@ -92,7 +202,7 @@ const AdminAccounts = () => {
   const buildPayloadByRole = (): Partial<CreateUserDTO> => {
     const base = {
       username: createForm.username,
-      password: createForm.password || "123456",
+      // password: createForm.password || "123456",
       role: createForm.role,
       name: createForm.name,
       email: createForm.email,
@@ -121,7 +231,7 @@ const AdminAccounts = () => {
       case "Manager":
         return {
           ...base,
-          department: createForm.department,
+          department: "Phòng Y tế",
           position: createForm.position,
         };
       case "Admin":
@@ -153,6 +263,7 @@ const AdminAccounts = () => {
     });
     setParentQuery("");
     setParentSelected(false);
+    setFormErrors({});
     setShowModal(true);
   };
 
@@ -175,6 +286,54 @@ const AdminAccounts = () => {
       toast.error("Lỗi khi tìm kiếm");
     }
   };
+
+  const handleFormChange = (field: string, value: any) => {
+    setCreateForm({ ...createForm, [field]: value } as CreateUserDTO);
+    
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors({ ...formErrors, [field]: "" });
+    }
+    
+    // Reset parent selection when role changes
+    if (field === "role") {
+      setParentQuery("");
+      setParentSelected(false);
+    }
+  };
+
+  const getFieldValue = (field: string): string => {
+    return (createForm as any)[field] || "";
+  };
+
+  const renderFormField = (field: string, placeholder: string, type: string = "text") => (
+    <div>
+      <input
+        type={type}
+        placeholder={placeholder}
+        className={`w-full border rounded px-3 py-2 text-sm ${formErrors[field] ? 'border-red-500' : 'border-gray-300'}`}
+        value={getFieldValue(field)}
+        onChange={(e) => handleFormChange(field, e.target.value)}
+      />
+      {formErrors[field] && <p className="text-red-500 text-xs mt-1">{formErrors[field]}</p>}
+    </div>
+  );
+
+  const renderSelectField = (field: string, options: string[], placeholder: string) => (
+    <div>
+      <select
+        className={`w-full border rounded px-3 py-2 text-sm ${formErrors[field] ? 'border-red-500' : 'border-gray-300'}`}
+        value={getFieldValue(field)}
+        onChange={(e) => handleFormChange(field, e.target.value)}
+      >
+        <option value="">{placeholder}</option>
+        {options.map(option => (
+          <option key={option} value={option}>{option}</option>
+        ))}
+      </select>
+      {formErrors[field] && <p className="text-red-500 text-xs mt-1">{formErrors[field]}</p>}
+    </div>
+  );
 
   return (
     <div className="p-4">
@@ -248,192 +407,164 @@ const AdminAccounts = () => {
 
       {/* Modal */}
       {showModal && (
-  <Modal
-    isOpen={showModal}
-    onClose={() => setShowModal(false)}
-    title={editMode ? "Cập nhật người dùng" : "Tạo tài khoản"}
-  >
-    <div className="space-y-4">
-      {/* CREATE MODE */}
-      {!editMode && (
-        <>
-          <input
-            type="text"
-            placeholder="Tên đăng nhập"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={createForm.username}
-            onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
-          />
-          <input
-            type="password"
-            placeholder="Mật khẩu"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={createForm.password}
-            onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
-          />
-          <select
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={createForm.role}
-            onChange={(e) => setCreateForm({ ...createForm, role: e.target.value })}
-          >
-            {roles.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Họ tên"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={createForm.name}
-            onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={createForm.email}
-            onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
-          />
-
-          {/* Trường nhập phụ theo vai trò */}
-          {createForm.role === "Student" && (
-            <>
-              <input
-                type="text"
-                placeholder="Giới tính"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={createForm.gender || ""}
-                onChange={(e) => setCreateForm({ ...createForm, gender: e.target.value })}
-              />
-              <input
-                type="date"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={createForm.dateOfBirth || ""}
-                onChange={(e) => setCreateForm({ ...createForm, dateOfBirth: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Lớp học"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={createForm.class || ""}
-                onChange={(e) => setCreateForm({ ...createForm, class: e.target.value })}
-              />
-
-              {/* Dropdown tìm phụ huynh */}
-              <input
-                type="text"
-                placeholder="Tìm phụ huynh theo tên"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={parentQuery}
-                onChange={(e) => setParentQuery(e.target.value)}
-                onFocus={() => parentQuery.length >= 2 && setShowParentDropdown(true)}
-                onBlur={() => setTimeout(() => setShowParentDropdown(false), 300)}
-              />
-              {showParentDropdown && (
-                <div className="border rounded bg-white max-h-40 overflow-auto text-sm shadow-md z-50 relative">
-                  {parentResults.length === 0 ? (
-                    <div className="p-2 text-gray-500">Không tìm thấy</div>
-                  ) : (
-                    parentResults.map((p) => (
-                      <div
-                        key={p.parentId}
-                        className="p-2 hover:bg-blue-100 cursor-pointer"
-                        onClick={() => {
-                          setCreateForm({ ...createForm, parentId: p.parentId });
-                          setParentQuery(`${p.name} (${p.email})`);
-                          setParentSelected(true);
-                        }}
-                      >
-                        {p.name} – {p.email} – {p.phone}
-                      </div>
-                    ))
-                  )}
+        <Modal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          title={editMode ? "Cập nhật người dùng" : "Tạo tài khoản"}
+        >
+          <div className="space-y-4">
+            {/* CREATE MODE */}
+            {!editMode && (
+              <>
+                {/* Role Selection */}
+                <div>
+                  <select 
+                    className="w-full border rounded px-3 py-2 text-sm border-gray-300" 
+                    value={createForm.role} 
+                    onChange={(e) => handleFormChange("role", e.target.value)}
+                  >
+                    {roles.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
                 </div>
-              )}
-            </>
-          )}
 
-          {createForm.role === "Parent" && (
-            <input
-              type="text"
-              placeholder="Số điện thoại"
-              className="w-full border rounded px-3 py-2 text-sm"
-              value={createForm.phone || ""}
-              onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
-            />
-          )}
+                {/* Common Fields */}
+                {renderFormField("username", "Tên đăng nhập")}
+                {/* {renderFormField("password", "Mật khẩu", "password")} */}
+                {renderFormField("name", "Họ tên")}
+                {renderFormField("email", "Email", "email")}
 
-          {createForm.role === "Nurse" && (
-            <input
-              type="text"
-              placeholder="Chuyên môn"
-              className="w-full border rounded px-3 py-2 text-sm"
-              value={createForm.specialization || ""}
-              onChange={(e) => setCreateForm({ ...createForm, specialization: e.target.value })}
-            />
-          )}
+                {/* Role-specific Fields */}
+                {createForm.role === "Student" && (
+                  <>
+                    {renderSelectField("gender", ["Nam", "Nữ"], "-- Chọn giới tính --")}
+                    
+                    <div>
+                      <input
+                        type="date"
+                        className={`w-full border rounded px-3 py-2 text-sm ${formErrors.dateOfBirth ? 'border-red-500' : 'border-gray-300'}`}
+                        value={createForm.dateOfBirth || ""}
+                        onChange={(e) => handleFormChange("dateOfBirth", e.target.value)}
+                      />
+                      {formErrors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{formErrors.dateOfBirth}</p>}
+                    </div>
 
-          {createForm.role === "Manager" && (
-            <>
-              <input
-                type="text"
-                placeholder="Phòng ban"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={createForm.department || ""}
-                onChange={(e) => setCreateForm({ ...createForm, department: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Chức vụ"
-                className="w-full border rounded px-3 py-2 text-sm"
-                value={createForm.position || ""}
-                onChange={(e) => setCreateForm({ ...createForm, position: e.target.value })}
-              />
-            </>
-          )}
-        </>
+                    {renderSelectField("class", classes, "-- Chọn lớp --")}
+
+                    {/* Parent Search */}
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Tìm phụ huynh theo tên"
+                        className={`w-full border rounded px-3 py-2 text-sm ${formErrors.parentId ? 'border-red-500' : 'border-gray-300'}`}
+                        value={parentQuery}
+                        onChange={(e) => {
+                          setParentQuery(e.target.value);
+                          setParentSelected(false);
+                          if (formErrors.parentId) {
+                            setFormErrors({ ...formErrors, parentId: "" });
+                          }
+                        }}
+                        onFocus={() => parentQuery.length >= 2 && setShowParentDropdown(true)}
+                        onBlur={() => setTimeout(() => setShowParentDropdown(false), 300)}
+                      />
+                      {formErrors.parentId && <p className="text-red-500 text-xs mt-1">{formErrors.parentId}</p>}
+                      
+                      {showParentDropdown && (
+                        <div className="absolute top-full left-0 right-0 border rounded bg-white max-h-40 overflow-auto text-sm shadow-md z-50">
+                          {parentResults.length === 0 ? (
+                            <div className="p-2 text-gray-500">Không tìm thấy</div>
+                          ) : (
+                            parentResults.map((p) => (
+                              <div
+                                key={p.parentId}
+                                className="p-2 hover:bg-blue-100 cursor-pointer"
+                                onClick={() => {
+                                  handleFormChange("parentId", p.parentId);
+                                  setParentQuery(`${p.name} (${p.email})`);
+                                  setParentSelected(true);
+                                  setShowParentDropdown(false);
+                                }}
+                              >
+                                {p.name} – {p.email} – {p.phone}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {createForm.role === "Parent" && (
+                  <>
+                    {renderFormField("phone", "Số điện thoại")}
+                  </>
+                )}
+
+                {createForm.role === "Nurse" && (
+                  <>
+                    {renderSelectField("specialization", specializations, "-- Chọn chuyên môn --")}
+                  </>
+                )}
+
+                {createForm.role === "Manager" && (
+                  <>
+                    <div>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2 text-sm border-gray-300 bg-gray-100"
+                        value="Phòng Y tế"
+                        readOnly
+                      />
+                    </div>
+                    {renderSelectField("position", positions, "-- Chọn chức vụ --")}
+                  </>
+                )}
+              </>
+            )}
+
+            {/* EDIT MODE */}
+            {editMode && (
+              <>
+                <input
+                  type="text"
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  value={updateForm.username}
+                  onChange={(e) => setUpdateForm({ ...updateForm, username: e.target.value })}
+                />
+                <select
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  value={updateForm.role}
+                  onChange={(e) => setUpdateForm({ ...updateForm, role: e.target.value })}
+                >
+                  {roles.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm rounded-lg"
+              >
+                Huỷ
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg"
+              >
+                {editMode ? "Lưu thay đổi" : "Tạo mới"}
+              </button>
+              <p className="text-xs text-gray-500 italic">
+                * Mật khẩu mặc định cho tài khoản mới là <strong>123456</strong>
+              </p>
+            </div>
+          </div>
+        </Modal>
       )}
-
-      {/* EDIT MODE */}
-      {editMode && (
-        <>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={updateForm.username}
-            onChange={(e) => setUpdateForm({ ...updateForm, username: e.target.value })}
-          />
-          <select
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={updateForm.role}
-            onChange={(e) => setUpdateForm({ ...updateForm, role: e.target.value })}
-          >
-            {roles.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-        </>
-      )}
-
-      {/* Nút action */}
-      <div className="flex justify-end gap-3 pt-2">
-        <button
-          onClick={() => setShowModal(false)}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm rounded-lg"
-        >
-          Huỷ
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg"
-        >
-          {editMode ? "Lưu thay đổi" : "Tạo mới"}
-        </button>
-      </div>
-    </div>
-  </Modal>
-)}
-
     </div>
   );
 };

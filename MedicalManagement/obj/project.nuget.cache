@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mEZiyTapuuw=",
+  "dgSpecHash": "/Bxf4ca9NM4=",
   "success": true,
   "projectFilePath": "D:\\1.FPT\\Semester_5\\PRN212\\MySelfDOCNET\\MedicalManagement\\MedicalManagement\\MedicalManagement.csproj",
   "expectedPackageFiles": [
@@ -10,8 +10,8 @@
     "C:\\Users\\PC-ACER\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\PC-ACER\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",
     "C:\\Users\\PC-ACER\\.nuget\\packages\\closedxml.parser\\2.0.0\\closedxml.parser.2.0.0.nupkg.sha512",
-    "C:\\Users\\PC-ACER\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
-    "C:\\Users\\PC-ACER\\.nuget\\packages\\documentformat.openxml.framework\\3.1.1\\documentformat.openxml.framework.3.1.1.nupkg.sha512",
+    "C:\\Users\\PC-ACER\\.nuget\\packages\\documentformat.openxml\\3.3.0\\documentformat.openxml.3.3.0.nupkg.sha512",
+    "C:\\Users\\PC-ACER\\.nuget\\packages\\documentformat.openxml.framework\\3.3.0\\documentformat.openxml.framework.3.3.0.nupkg.sha512",
     "C:\\Users\\PC-ACER\\.nuget\\packages\\enums.net\\5.0.0\\enums.net.5.0.0.nupkg.sha512",
     "C:\\Users\\PC-ACER\\.nuget\\packages\\epplus\\5.8.3\\epplus.5.8.3.nupkg.sha512",
     "C:\\Users\\PC-ACER\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",

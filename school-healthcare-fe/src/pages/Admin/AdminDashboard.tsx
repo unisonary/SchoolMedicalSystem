@@ -11,8 +11,8 @@ import MainLayout from "@/layouts/MainLayout";
 import AdminAccounts from "./AdminAccounts";
 import AdminPassword  from "./AdminPassword";
 import AdminImportExcel from "./AdminImportExcel"; // THÊM DÒNG NÀY
-// import AdminDocuments from "./AdminDocuments";
-// import AdminBlogs from "./AdminBlogs";
+import AdminDocuments from "./AdminDocuments";
+import AdminBlogs from "./AdminBlogs";
 
 const tabs = [
   {
@@ -91,8 +91,8 @@ const AdminDashboard = () => {
       case "accounts": return <AdminAccounts />;
       case "reset": return <AdminPassword  />;
       case "import": return <AdminImportExcel />;
-    //   case "documents": return <AdminDocuments />;
-    //   case "blogs": return <AdminBlogs />;
+      case "documents": return <AdminDocuments />;
+      case "blogs": return <AdminBlogs />;
       default: return <div className="text-gray-600">Chọn một mục để hiển thị</div>;
     }
   };

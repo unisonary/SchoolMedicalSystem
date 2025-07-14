@@ -5,6 +5,18 @@
     "version": "v1"
   },
   "paths": {
+    "/api/admin/classes": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/admin/all-parents": {
       "get": {
         "tags": [
@@ -125,17 +137,6 @@
       "post": {
         "tags": [
           "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "createdBy",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          }
         ],
         "requestBody": {
           "content": {
@@ -515,6 +516,37 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ChangePasswordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/first-login-change-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirstLoginChangePasswordDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirstLoginChangePasswordDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirstLoginChangePasswordDTO"
               }
             }
           }
@@ -2687,7 +2719,7 @@
             "type": "string",
             "nullable": true
           },
-          "imageURL": {
+          "imageUrl": {
             "type": "string",
             "nullable": true
           }
@@ -2780,6 +2812,16 @@
             "nullable": true
           },
           "position": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FirstLoginChangePasswordDTO": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
             "type": "string",
             "nullable": true
           }
@@ -3341,6 +3383,11 @@
         "additionalProperties": false
       },
       "Parent": {
+        "required": [
+          "email",
+          "name",
+          "phone"
+        ],
         "type": "object",
         "properties": {
           "parentId": {
@@ -3348,16 +3395,18 @@
             "format": "int32"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "phone": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "tel"
           },
           "email": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "students": {
             "type": "array",
