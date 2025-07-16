@@ -8,5 +8,7 @@ namespace MedicalManagement.Services.Interfaces
         Task<List<MedicalPlanReadDTO>> GetAllAsync();
         Task UpdateAsync(int id, MedicalPlanUpdateDTO dto);
         Task DeleteAsync(int id);
+
+        Task<int?> GetPlanIdByNameAsync(string planName);
     }
 }

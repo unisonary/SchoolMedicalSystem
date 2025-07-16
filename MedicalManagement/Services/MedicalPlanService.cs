@@ -363,6 +363,14 @@ namespace MedicalManagement.Services
             _context.MedicalPlans.Remove(plan);
             await _context.SaveChangesAsync();
         }
-    
+        
+        public async Task<int?> GetPlanIdByNameAsync(string planName)
+        {
+            return await _context.MedicalPlans
+                .Where(p => p.PlanType == "Health_Checkup" && p.PlanName == planName)
+                .Select(p => (int?)p.PlanId)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }

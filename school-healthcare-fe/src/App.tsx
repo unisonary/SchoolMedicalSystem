@@ -1,12 +1,11 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useAuthStore } from "@/auth/useAuthStore";
 import LoginPage from "@/pages/Login/LoginPage";
 import ForgotPasswordPage from "@/pages/Login/ForgotPasswordPage";
 import ProtectedRouteByRole from "@/auth/ProtectedRouteByRole";
 import "react-toastify/dist/ReactToastify.css";
-import ParentDashboard from "@/pages/Parent/ParentDashboard"; // ✅ đường dẫn thật
+import ParentDashboard from "@/pages/Parent/ParentDashboard"; 
 import UserProfile from "./pages/Profile/UserProfile";
 import ChangePasswordPage from "./pages/Login/ChangePasswordPage";
 import NurseDashboard from "./pages/Nurse/NurseDashboard";
@@ -14,7 +13,13 @@ import ManagerDashboard from "./pages/Manager/ManagerDashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import FirstLoginChangePage from "./pages/Login/FirstLoginChangePage";
 import StudentDashboard from "./pages/Student/StudentDashboard";
-
+import HomePage from "./pages/Home/HomePage";
+import DocumentDetail from "./pages/Public/DocumentDetail";
+import BlogDetail from "./pages/Public/BlogDetail";
+import PublicLayout from "./layouts/PublicLayout";
+import AllDocuments from "./pages/Public/AllDocuments";
+import AllBlogs from "./pages/Public/AllBlogs";
+import SearchResults from "./pages/Public/SearchResults";
 
 // Dummy dashboard components (sau có thể import thật)
 // const StudentDashboard = () => <div>Trang Học sinh</div>;
@@ -23,11 +28,12 @@ import StudentDashboard from "./pages/Student/StudentDashboard";
 // const AdminDashboard = () => <div>Trang Admin</div>;
 
 function App() {
-  const user = useAuthStore((state) => state.user);
+  
 
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Trang login và quên mật khẩu */}
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -36,16 +42,8 @@ function App() {
         />
 
         {/* Redirect từ "/" về dashboard nếu đã login */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <Navigate to={`/${user.role.toLowerCase()}/dashboard`} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
+        <Route path="/" element={<Navigate to="/home" />} />
+
 
         {/* Dashboard theo role */}
         <Route
@@ -104,9 +102,21 @@ function App() {
 
         <Route path="/first-login-change" element={<FirstLoginChangePage />} />
 
+
+        <Route element={<PublicLayout />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/documents" element={<AllDocuments />} />
+          <Route path="/blogs" element={<AllBlogs />} />
+          <Route path="/documents/:id" element={<DocumentDetail />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
+          <Route path="/search" element={<SearchResults />} />
+        </Route>
+
+
+        
         
         {/* Route không tồn tại → chuyển về login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
 
       <ToastContainer position="top-right" autoClose={3000} />

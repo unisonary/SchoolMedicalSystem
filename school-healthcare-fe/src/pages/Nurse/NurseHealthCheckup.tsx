@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import { Activity, User, CheckCircle, Search, RefreshCw, Stethoscope, Eye, Ear, Smile, TrendingUp, Save, Heart } from "lucide-react";
@@ -13,35 +13,65 @@ interface HealthCheckup {
   date: string;
 }
 
+interface Plan {
+  planId: number;
+  planName: string;
+}
+
+
 const NurseHealthCheckup = () => {
   const [checkups, setCheckups] = useState<HealthCheckup[]>([]);
   const [formMap, setFormMap] = useState<Record<number, Partial<HealthCheckup> & { followUpRequired?: boolean }>>({});
   const [planId, setPlanId] = useState<number | null>(null);
-  const [inputPlanId, setInputPlanId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [planNameInput, setPlanNameInput] = useState("");
+  const [suggestions, setSuggestions] = useState<Plan[]>([]);
+  const [selectedPlanName, setSelectedPlanName] = useState("");
+  
+
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const res = await axios.get("nurse/checkups/plans/health-checkup-names");
+        setSuggestions(res.data);
+      } catch {
+        toast.error("Không thể tải danh sách kế hoạch");
+      }
+    };
+  
+    fetchPlans();
+  }, []);
+  
 
   const fetchCheckups = async () => {
-    if (!inputPlanId) {
-      toast.error("Vui lòng nhập mã kế hoạch");
+    if (!selectedPlanName) {
+      toast.error("Vui lòng chọn kế hoạch hợp lệ");
       return;
     }
-
+  
     try {
       setLoading(true);
-      const res = await axios.get(`/nurse/checkups/by-plan/${inputPlanId}`);
+      const res = await axios.get(
+        `/nurse/checkups/by-plan-name?planName=${encodeURIComponent(selectedPlanName)}`
+      );
       const filtered = res.data.filter((item: any) => !item.result || item.result.trim() === "");
       setCheckups(filtered);
-      setPlanId(Number(inputPlanId));
-      
+  
       if (filtered.length === 0) {
         toast.info("Không có dữ liệu kiểm tra cần cập nhật");
       }
+  
+      // lấy PlanId từ backend nếu cần gắn lên giao diện
+      const found = suggestions.find(p => p.planName === selectedPlanName);
+      if (found) setPlanId(found.planId);
     } catch {
       toast.error("Không thể tải danh sách kiểm tra.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleChange = (id: number, field: string, value: string | boolean) => {
     setFormMap((prev) => ({
@@ -164,19 +194,43 @@ const NurseHealthCheckup = () => {
 
         <div className="p-6">
           <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Mã kế hoạch khám sức khỏe
-              </label>
-              <input
-                type="number"
-                placeholder="Nhập mã kế hoạch (planId)"
-                value={inputPlanId}
-                onChange={(e) => setInputPlanId(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                min="1"
-              />
-            </div>
+          <div className="flex-1">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Tên kế hoạch khám sức khỏe
+          </label>
+          <input
+            type="text"
+            placeholder="Nhập tên kế hoạch (ví dụ: Khám sức khỏe tháng 7)"
+            value={planNameInput}
+            onChange={(e) => {
+              setPlanNameInput(e.target.value);
+              setSelectedPlanName(""); // clear nếu đang gõ lại
+            }}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+          {planNameInput && (
+            <ul className="mt-1 border rounded bg-white shadow max-h-48 overflow-auto z-10 relative">
+              {suggestions
+                .filter(p =>
+                  p.planName.toLowerCase().includes(planNameInput.toLowerCase())
+                )
+                .slice(0, 5)
+                .map((plan) => (
+                  <li
+                    key={plan.planId}
+                    onClick={() => {
+                      setSelectedPlanName(plan.planName);
+                      setPlanNameInput(plan.planName);
+                    }}
+                    className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                  >
+                    {plan.planName}
+                  </li>
+                ))}
+            </ul>
+          )}
+          </div>
+
             <div className="flex-shrink-0 mt-7">
               <button
                 onClick={fetchCheckups}

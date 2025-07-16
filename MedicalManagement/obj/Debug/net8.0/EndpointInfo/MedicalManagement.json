@@ -1302,6 +1302,39 @@
         }
       }
     },
+    "/api/nurse/checkups/by-plan-name": {
+      "get": {
+        "tags": [
+          "NurseHealthCheckup"
+        ],
+        "parameters": [
+          {
+            "name": "planName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/checkups/plans/health-checkup-names": {
+      "get": {
+        "tags": [
+          "NurseHealthCheckup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/nurse/checkups/{id}": {
       "put": {
         "tags": [
@@ -2153,6 +2186,142 @@
         }
       }
     },
+    "/api/public/documents/latest": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/blogs/latest": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/documents/search": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/blogs/search": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/documents/{id}": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/blogs/{id}": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/documents/all": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/public/blogs/all": {
+      "get": {
+        "tags": [
+          "PublicContent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Student": {
       "get": {
         "tags": [
@@ -2425,44 +2594,6 @@
         }
       }
     },
-    "/api/student/health/records": {
-      "get": {
-        "tags": [
-          "StudentHealth"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthRecordDTO"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthRecordDTO"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthRecordDTO"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/student/health/events": {
       "get": {
         "tags": [
@@ -2569,44 +2700,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/HealthCheckupDTO"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/student/health/notifications": {
-      "get": {
-        "tags": [
-          "StudentHealth"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MedicalNotificationDTO"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MedicalNotificationDTO"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MedicalNotificationDTO"
                   }
                 }
               }
@@ -2940,32 +3033,6 @@
         },
         "additionalProperties": false
       },
-      "HealthRecordDTO": {
-        "type": "object",
-        "properties": {
-          "recordId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "nurseName": {
-            "type": "string",
-            "nullable": true
-          },
-          "severity": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "InventoryCreateDTO": {
         "type": "object",
         "properties": {
@@ -3191,47 +3258,6 @@
             "nullable": true
           },
           "location": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MedicalNotificationDTO": {
-        "type": "object",
-        "properties": {
-          "notificationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "studentName": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "content": {
-            "type": "string",
-            "nullable": true
-          },
-          "notificationType": {
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isRead": {
-            "type": "boolean"
-          },
-          "priority": {
             "type": "string",
             "nullable": true
           }

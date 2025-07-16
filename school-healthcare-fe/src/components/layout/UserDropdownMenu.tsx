@@ -11,7 +11,7 @@ const UserDropdownMenu = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/home");
   };
 
   const jumpToTab = (tab: string) => {

@@ -760,6 +760,22 @@
   },
   {
     "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "GetByPlanNameAndNurse",
+    "RelativePath": "api/nurse/checkups/by-plan-name",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "planName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
     "Method": "GetByPlanAndNurse",
     "RelativePath": "api/nurse/checkups/by-plan/{planId}",
     "HttpMethod": "GET",
@@ -788,6 +804,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseHealthCheckupController",
+    "Method": "GetHealthCheckupPlanNames",
+    "RelativePath": "api/nurse/checkups/plans/health-checkup-names",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -1292,6 +1318,58 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetBlogById",
+    "RelativePath": "api/public/blogs/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetAllBlogs",
+    "RelativePath": "api/public/blogs/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetLatestBlogs",
+    "RelativePath": "api/public/blogs/latest",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "SearchBlogs",
+    "RelativePath": "api/public/blogs/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "title",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedicalManagement.Controllers.PublicConsentController",
     "Method": "RespondFromEmail",
     "RelativePath": "api/public/consents/respond",
@@ -1301,6 +1379,58 @@
     "Parameters": [
       {
         "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetDocumentById",
+    "RelativePath": "api/public/documents/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetAllDocuments",
+    "RelativePath": "api/public/documents/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "GetLatestDocuments",
+    "RelativePath": "api/public/documents/latest",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.PublicContentController",
+    "Method": "SearchDocuments",
+    "RelativePath": "api/public/documents/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "title",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -1484,46 +1614,6 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[MedicalManagement.Models.DTOs.MedicalEventDTO, MedicalManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MedicalManagement.Controllers.StudentHealthController",
-    "Method": "GetNotifications",
-    "RelativePath": "api/student/health/notifications",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MedicalManagement.Models.DTOs.MedicalNotificationDTO, MedicalManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MedicalManagement.Controllers.StudentHealthController",
-    "Method": "GetHealthRecords",
-    "RelativePath": "api/student/health/records",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MedicalManagement.Models.DTOs.HealthRecordDTO, MedicalManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

@@ -130,6 +130,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IInventoryAlertService, InventoryAlertService>();
 builder.Services.AddScoped<IContentService, ContentService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IPublicContentService, PublicContentService>();
 
 
 builder.Services.AddHangfire(config =>
@@ -175,7 +176,7 @@ app.UseHangfireDashboard();
 app.UseHangfireServer();
 
 // Test chạy ngay khi app khởi động
-BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());
+//BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());
 
 
 RecurringJob.AddOrUpdate<IInventoryAlertService>(
