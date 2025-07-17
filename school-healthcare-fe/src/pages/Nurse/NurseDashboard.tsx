@@ -7,6 +7,7 @@ import {
   Stethoscope,
   Syringe,
   CalendarClock,
+  HeartPulse,
 } from "lucide-react";
 import MainLayout from "@/layouts/MainLayout";
 
@@ -18,9 +19,11 @@ import NurseSupplyLog from "./NurseSupplyLog";
 import NurseHealthCheckup from "./NurseHealthCheckup";
 import NurseVaccinations from "./NurseVaccinations";
 import NurseAppointments from "./NurseAppointments";
+import NurseMedicalCondition from "./NurseMedicalCondition";
 
 const tabs = [
   { key: "events", label: "Sự kiện y tế", icon: FilePlus2, color: "from-blue-500 to-cyan-500", description: "Ghi nhận và xử lý sự kiện y tế" },
+  { key: "medicalcondition", label: "Tình trạng sức khỏe", icon: HeartPulse, color: "from-red-500 to-rose-500", description: "Xem tình trạng sức khỏe học sinh" },
   { key: "medications", label: "Xử lý thuốc", icon: Pill, color: "from-green-500 to-emerald-500", description: "Xử lý thuốc phụ huynh gửi" },
   { key: "inventory", label: "Kho vật tư", icon: Boxes, color: "from-purple-500 to-violet-500", description: "Quản lý vật tư y tế và thuốc" },
   { key: "supplylog", label: "Xuất vật tư", icon: ClipboardList, color: "from-orange-500 to-yellow-500", description: "Ghi nhận vật tư đã dùng" },
@@ -38,13 +41,13 @@ const NurseDashboard = () => {
   const handleTabChange = (key: string) => {
     setActiveTab(key);
     localStorage.setItem("nurse-tab", key);
-    
+
     // Smooth scroll to content section
     setTimeout(() => {
       if (contentRef.current && headerRef.current) {
         const headerHeight = headerRef.current.offsetHeight;
         const targetPosition = headerRef.current.offsetTop + headerHeight - 20; // 20px offset for better spacing
-        
+
         window.scrollTo({
           top: targetPosition,
           behavior: 'smooth'
@@ -73,6 +76,7 @@ const NurseDashboard = () => {
       case "checkup": return <NurseHealthCheckup />;
       case "vaccination": return <NurseVaccinations />;
       case "appointments": return <NurseAppointments />;
+      case "medicalcondition": return <NurseMedicalCondition />;
       default: return <div className="text-gray-600">Chọn một mục để hiển thị</div>;
     }
   };
@@ -94,7 +98,7 @@ const NurseDashboard = () => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;

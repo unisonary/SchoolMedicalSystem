@@ -880,6 +880,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedicalManagement.Controllers.NurseMedicalConditionController",
+    "Method": "GetMedicalConditionByStudentId",
+    "RelativePath": "api/nurse/medical-condition/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "NurseMedicalEventController",
     "Method": "GetAll",
     "RelativePath": "api/nurse/medical-events",
@@ -1088,6 +1104,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicalManagement.Controllers.NurseVaccinationController",
+    "Method": "GetHealthCheckupPlanNames",
+    "RelativePath": "api/nurse/vaccinations/plans/vaccinations-names",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -1481,6 +1481,29 @@
         }
       }
     },
+    "/api/nurse/medical-condition/{studentId}": {
+      "get": {
+        "tags": [
+          "NurseMedicalCondition"
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/nurse/medical-events": {
       "get": {
         "tags": [
@@ -1777,6 +1800,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nurse/vaccinations/plans/vaccinations-names": {
+      "get": {
+        "tags": [
+          "NurseVaccination"
         ],
         "responses": {
           "200": {
