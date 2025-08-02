@@ -9,7 +9,9 @@ import {
   User,
   Target,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  CheckSquare,
+  Square
 } from "lucide-react";
 
 interface Student {
@@ -81,6 +83,19 @@ const ManagerAssignment = () => {
       prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
     );
   };
+
+  const selectAllStudents = () => {
+    const allStudentIds = students.map(s => s.studentId);
+    setSelectedStudentIds(allStudentIds);
+    toast.success(`Đã chọn tất cả ${students.length} học sinh`);
+  };
+
+  const deselectAllStudents = () => {
+    setSelectedStudentIds([]);
+    toast.info("Đã bỏ chọn tất cả học sinh");
+  };
+
+  const isAllSelected = students.length > 0 && selectedStudentIds.length === students.length;
 
   const handleAssign = async () => {
     if (!selectedPlanId || !selectedNurseId || selectedStudentIds.length === 0) {
@@ -239,15 +254,40 @@ const ManagerAssignment = () => {
       {/* Students List */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
         <div className="bg-gradient-to-r from-green-50 to-green-100 px-6 py-4 border-b">
-          <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-            <Users className="w-5 h-5 text-green-500" />
-            <span>Danh sách học sinh đã đồng ý</span>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <Users className="w-5 h-5 text-green-500" />
+              <span className="text-xl font-semibold text-gray-800">Danh sách học sinh đã đồng ý</span>
+              {students.length > 0 && (
+                <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
+                  {students.length}
+                </span>
+              )}
+            </div>
+            
+            {/* Select All Controls */}
             {students.length > 0 && (
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                {students.length}
-              </span>
+              <div className="flex items-center space-x-2">
+                {isAllSelected ? (
+                  <button
+                    onClick={deselectAllStudents}
+                    className="flex items-center space-x-2 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-lg transition-all text-sm font-medium"
+                  >
+                    <Square className="w-4 h-4" />
+                    <span>Bỏ chọn tất cả</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={selectAllStudents}
+                    className="flex items-center space-x-2 bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg transition-all text-sm font-medium"
+                  >
+                    <CheckSquare className="w-4 h-4" />
+                    <span>Chọn tất cả</span>
+                  </button>
+                )}
+              </div>
             )}
-          </h3>
+          </div>
         </div>
 
         <div className="p-6">

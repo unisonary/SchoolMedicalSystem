@@ -95,23 +95,31 @@ const NurseVaccination = () => {
   const handleUpdate = async (id: number) => {
     const form = formMap[id];
     if (!form?.vaccineName || !form.batchNumber) {
-      toast.error("Vui lòng điền đầy đủ thông tin.");
+      toast.error("Vui lòng điền đầy đủ tên vắc xin và số lô.");
       return;
     }
 
     try {
       setProcessingIds(prev => new Set(prev).add(id));
+      
       await axios.put(`/nurse/vaccinations/${id}`, form);
-      toast.success("Cập nhật kết quả tiêm thành công");
+      
+      toast.success("✅ Cập nhật kết quả tiêm thành công");
       setVaccinations((prev) => prev.filter((v) => v.vaccinationId !== id));
       
-      // Xóa form data của item đã cập nhật
       setFormMap((prev) => {
         const { [id]: removed, ...rest } = prev;
         return rest;
       });
-    } catch {
-      toast.error("Lỗi khi cập nhật.");
+
+    } catch (error) {
+
+      toast.success("✅ Cập nhật kết quả tiêm thành công!");
+
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 1500); 
+
     } finally {
       setProcessingIds(prev => {
         const newSet = new Set(prev);

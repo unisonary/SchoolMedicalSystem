@@ -176,7 +176,7 @@ app.UseHangfireDashboard();
 app.UseHangfireServer();
 
 // Test chạy ngay khi app khởi động
-//BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());
+BackgroundJob.Enqueue<IInventoryAlertService>(service => service.GenerateDailyInventoryAlertsAsync());
 
 
 RecurringJob.AddOrUpdate<IInventoryAlertService>(

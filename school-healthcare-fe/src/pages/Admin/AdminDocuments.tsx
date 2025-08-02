@@ -141,7 +141,7 @@ const AdminDocuments = () => {
           <div className="p-2 bg-blue-100 rounded-lg">
             <FileText className="w-8 h-8 text-blue-600" />
           </div>
-          📄 Quản lý tài liệu sức khỏe
+          Quản lý tài liệu sức khỏe
         </h2>
         <p className="text-gray-600">Tạo và quản lý các tài liệu thông tin sức khỏe cho người dùng</p>
       </div>

@@ -141,7 +141,7 @@ const AdminBlogs = () => {
           <div className="p-2 bg-purple-100 rounded-lg">
             <BookOpen className="w-8 h-8 text-purple-600" />
           </div>
-          📝 Quản lý bài viết blog
+          Quản lý bài viết blog
         </h2>
         <p className="text-gray-600">Tạo và quản lý các bài viết blog thông tin sức khỏe</p>
       </div>
@@ -171,7 +171,7 @@ const AdminBlogs = () => {
             ) : (
               <>
                 <Plus className="w-5 h-5 text-green-600" />
-                <span>➕ Thêm bài viết mới</span>
+                <span>Thêm bài viết mới</span>
               </>
             )}
           </h3>

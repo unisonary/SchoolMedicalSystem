@@ -1,9 +1,9 @@
-// NurseMedicalEvents.tsx - Form nhỏ gọn hơn
+// NurseMedicalEvents.tsx - Form nhỏ gọn hơn với loading effect
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import Modal from "@/components/ui/Modal";
-import { Pencil, Trash2, Plus, Heart, Calendar, MapPin, UserCheck, AlertCircle, Activity } from "lucide-react";
+import { Pencil, Trash2, Plus, Heart, Calendar, MapPin, UserCheck, AlertCircle, Activity, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // interface StudentSearchResult {
@@ -55,21 +55,27 @@ const NurseMedicalEvents = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [studentValid, setStudentValid] = useState<boolean | null>(null);
   const [studentName, setStudentName] = useState<string>("");
+  
+  // Loading states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
   const fetchEvents = async () => {
     try {
+      setIsLoadingEvents(true);
       const res = await axios.get("/nurse/medical-events");
       setEvents(res.data);
     } catch {
       toast.error("Không thể tải danh sách sự kiện.");
+    } finally {
+      setIsLoadingEvents(false);
     }
   };
 
   useEffect(() => {
     fetchEvents();
   }, []);
-
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -96,6 +102,8 @@ const NurseMedicalEvents = () => {
     }
   
     try {
+      setIsSubmitting(true);
+      
       if (editing) {
         const updateData = {
           eventType: form.eventType,
@@ -110,25 +118,30 @@ const NurseMedicalEvents = () => {
         const res = await axios.post("/nurse/medical-events", form);
         const createdId = res.data?.eventId;
         toast.success(`Đã tạo sự kiện y tế với mã: ${createdId}`);
+        
+        // Delay để hiển thị toast trước khi hiện confirm
         setTimeout(() => {
           if (window.confirm(`Sự kiện y tế có mã là #${createdId}. Bạn có muốn chuyển sang phần xuất vật tư?`)) {
             localStorage.setItem("nurse-tab", "supplylog");
             window.dispatchEvent(new Event("storage")); // để đồng bộ tab
             navigate("/nurse/dashboard");
           }
-        }, 200);
+        }, 500);
       }
   
       setOpen(false);
       setForm(defaultEvent);
       setEditing(null);
+      setStudentValid(null);
+      setStudentName("");
+      setParentPhone("");
       fetchEvents();
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Lỗi khi lưu dữ liệu.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
-  
 
   const confirmDelete = (id: number) => {
     setConfirmDeleteId(id);
@@ -138,6 +151,7 @@ const NurseMedicalEvents = () => {
   const handleDelete = async () => {
     if (!confirmDeleteId) return;
     try {
+      setIsDeleting(true);
       await axios.delete(`/nurse/medical-events/${confirmDeleteId}`);
       toast.success("Đã xoá sự kiện.");
       setShowDeleteModal(false);
@@ -145,6 +159,8 @@ const NurseMedicalEvents = () => {
       fetchEvents();
     } catch {
       toast.error("Không thể xoá.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -175,8 +191,9 @@ const NurseMedicalEvents = () => {
       {/* Action Button */}
       <div className="flex justify-end mb-6">
         <button
-          onClick={() => { setOpen(true); setForm(defaultEvent); setEditing(null); }}
-          className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-lg"
+          onClick={() => { setOpen(true); setForm(defaultEvent); setEditing(null); setStudentValid(null); setStudentName(""); setParentPhone(""); }}
+          disabled={isSubmitting}
+          className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           <Plus size={20} />
           <span>Thêm sự kiện mới</span>
@@ -192,11 +209,21 @@ const NurseMedicalEvents = () => {
             <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
               {events.length}
             </span>
+            {isLoadingEvents && (
+              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+            )}
           </h3>
         </div>
 
         <div className="p-6">
-          {events.length === 0 ? (
+          {isLoadingEvents ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+              </div>
+              <p className="text-gray-500 text-lg">Đang tải dữ liệu...</p>
+            </div>
+          ) : events.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Activity className="w-8 h-8 text-gray-400" />
@@ -261,14 +288,16 @@ const NurseMedicalEvents = () => {
                         <div className="flex justify-center space-x-2">
                           <button
                             onClick={() => startEdit(event)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            disabled={isSubmitting}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Chỉnh sửa"
                           >
                             <Pencil size={18} />
                           </button>
                           <button
                             onClick={() => confirmDelete(event.eventId)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            disabled={isSubmitting || isDeleting}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Xóa"
                           >
                             <Trash2 size={18} />
@@ -287,74 +316,72 @@ const NurseMedicalEvents = () => {
       {/* Add/Edit Modal - FORM NHỎ GỌN HỢP */}
       <Modal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => !isSubmitting && setOpen(false)}
         title={editing ? "Chỉnh sửa sự kiện y tế" : "Thêm sự kiện y tế mới"}
       >
         <div className="space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Student Info - Refactored Search by Name */}
-{/* Student Info - Refactored Search by Name */}
-{!editing && (
-  <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-    <div className="flex items-center space-x-2 mb-2">
-      <UserCheck className="w-4 h-4 text-blue-600" />
-      <span className="font-medium text-gray-800 text-sm">Tìm học sinh</span>
-    </div>
-    <div className="relative">
-      <input
-        type="text"
-        placeholder="Nhập tên học sinh để tìm kiếm..."
-        className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-        value={studentName}
-        onChange={async (e) => {
-          const keyword = e.target.value;
-          setStudentName(keyword);
-          if (keyword.length < 2) return;
-          try {
-            const res = await axios.get(`/student/search?name=${encodeURIComponent(keyword)}`);
-            setSearchResults(res.data); // [{ studentId, name, parentName, parentPhone, className }]
-            setShowDropdown(true);
-          } catch {
-            toast.error("Lỗi khi tìm kiếm học sinh.");
-          }
-        }}
-      />
-
-      {/* Dropdown kết quả */}
-      {showDropdown && searchResults.length > 0 && (
-        <ul className="absolute z-10 bg-white border rounded-md shadow-md mt-1 w-full max-h-48 overflow-auto">
-          {searchResults.map((stu) => (
-            <li
-              key={stu.studentId}
-              onClick={() => {
-                setForm((prev) => ({ ...prev, studentId: stu.studentId }));
-                setStudentName(stu.name);
-                setParentPhone(stu.parentPhone); // 👈 lấy số điện thoại phụ huynh
-                setStudentValid(true);
-                setShowDropdown(false);
-              }}
-              className="p-2 hover:bg-blue-100 cursor-pointer text-sm"
-            >
-              <div className="font-medium">{stu.name}</div>
-              <div className="text-xs text-gray-500">
-                PH: {stu.parentName} - Lớp: {stu.className}
+          {!editing && (
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <UserCheck className="w-4 h-4 text-blue-600" />
+                <span className="font-medium text-gray-800 text-sm">Tìm học sinh</span>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Nhập tên học sinh để tìm kiếm..."
+                  className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                  value={studentName}
+                  disabled={isSubmitting}
+                  onChange={async (e) => {
+                    const keyword = e.target.value;
+                    setStudentName(keyword);
+                    if (keyword.length < 2) return;
+                    try {
+                      const res = await axios.get(`/student/search?name=${encodeURIComponent(keyword)}`);
+                      setSearchResults(res.data); // [{ studentId, name, parentName, parentPhone, className }]
+                      setShowDropdown(true);
+                    } catch {
+                      toast.error("Lỗi khi tìm kiếm học sinh.");
+                    }
+                  }}
+                />
 
-      {/* Xác nhận đã chọn */}
-      {studentValid && (
-        <div className="mt-2 text-green-600 text-xs space-y-1">
-          <div>✅ Đã chọn học sinh: {studentName}</div>
-          <div>📞 SĐT phụ huynh: <span className="font-semibold text-gray-800">{parentPhone}</span></div>
-        </div>
-      )}
-    </div>
-  </div>
-)}
+                {/* Dropdown kết quả */}
+                {showDropdown && searchResults.length > 0 && !isSubmitting && (
+                  <ul className="absolute z-10 bg-white border rounded-md shadow-md mt-1 w-full max-h-48 overflow-auto">
+                    {searchResults.map((stu) => (
+                      <li
+                        key={stu.studentId}
+                        onClick={() => {
+                          setForm((prev) => ({ ...prev, studentId: stu.studentId }));
+                          setStudentName(stu.name);
+                          setParentPhone(stu.parentPhone); // 👈 lấy số điện thoại phụ huynh
+                          setStudentValid(true);
+                          setShowDropdown(false);
+                        }}
+                        className="p-2 hover:bg-blue-100 cursor-pointer text-sm"
+                      >
+                        <div className="font-medium">{stu.name}</div>
+                        <div className="text-xs text-gray-500">
+                          PH: {stu.parentName} - Lớp: {stu.className}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
-
+                {/* Xác nhận đã chọn */}
+                {studentValid && (
+                  <div className="mt-2 text-green-600 text-xs space-y-1">
+                    <div>✅ Đã chọn học sinh: {studentName}</div>
+                    <div>📞 SĐT phụ huynh: <span className="font-semibold text-gray-800">{parentPhone}</span></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Form Fields - Compact Grid */}
           <div className="grid grid-cols-2 gap-3">
@@ -364,9 +391,10 @@ const NurseMedicalEvents = () => {
               </label>
               <select
                 name="eventType"
-                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 value={form.eventType}
                 onChange={handleChange}
+                disabled={isSubmitting}
               >
                 <option value="">-- Chọn loại --</option>
                 <option value="Tai nạn">Tai nạn</option>
@@ -383,9 +411,10 @@ const NurseMedicalEvents = () => {
               </label>
               <select
                 name="severity"
-                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 value={form.severity}
                 onChange={handleChange}
+                disabled={isSubmitting}
               >
                 <option value="">-- Chọn mức độ --</option>
                 <option value="Nhẹ">Nhẹ</option>
@@ -403,9 +432,10 @@ const NurseMedicalEvents = () => {
                 name="location"
                 type="text"
                 placeholder="Ví dụ: Sân chơi, A1..."
-                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 value={form.location}
                 onChange={handleChange}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -417,9 +447,10 @@ const NurseMedicalEvents = () => {
                 name="treatmentGiven"
                 type="text"
                 placeholder="Cách xử lý"
-                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 value={form.treatmentGiven}
                 onChange={handleChange}
+                disabled={isSubmitting}
               />
             </div>
           </div>
@@ -432,10 +463,11 @@ const NurseMedicalEvents = () => {
             <textarea
               name="description"
               placeholder="Mô tả chi tiết sự kiện..."
-              className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
               rows={3}
               value={form.description}
               onChange={handleChange}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -450,9 +482,10 @@ const NurseMedicalEvents = () => {
                     name="parentNotified"
                     checked={form.parentNotified}
                     onChange={handleChange}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    disabled={isSubmitting}
+                    className="w-4 h-4 text-blue-600 rounded disabled:opacity-50"
                   />
-                  <span>Thông báo PH</span>
+                  <span className={isSubmitting ? "opacity-50" : ""}>Thông báo PH</span>
                 </label>
                 <label className="flex items-center space-x-2 text-xs">
                   <input
@@ -460,9 +493,10 @@ const NurseMedicalEvents = () => {
                     name="followUpRequired"
                     checked={form.followUpRequired}
                     onChange={handleChange}
-                    className="w-4 h-4 text-orange-600 rounded"
+                    disabled={isSubmitting}
+                    className="w-4 h-4 text-orange-600 rounded disabled:opacity-50"
                   />
-                  <span>Tạo lịch hẹn với PH</span>
+                  <span className={isSubmitting ? "opacity-50" : ""}>Tạo lịch hẹn với PH</span>
                 </label>
               </div>
             </div>
@@ -472,15 +506,18 @@ const NurseMedicalEvents = () => {
           <div className="flex justify-end space-x-2 pt-2">
             <button
               onClick={() => setOpen(false)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Hủy
             </button>
             <button
               onClick={handleSubmit}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              {editing ? "Cập nhật" : "Tạo sự kiện"}
+              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>{editing ? "Cập nhật" : "Tạo sự kiện"}</span>
             </button>
           </div>
         </div>
@@ -489,7 +526,7 @@ const NurseMedicalEvents = () => {
       {/* Delete Confirmation Modal */}
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
+        onClose={() => !isDeleting && setShowDeleteModal(false)}
         title="Xác nhận xóa"
       >
         <div className="space-y-4">
@@ -503,15 +540,18 @@ const NurseMedicalEvents = () => {
           <div className="flex justify-end space-x-2">
             <button
               onClick={() => setShowDeleteModal(false)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+              disabled={isDeleting}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Hủy
             </button>
             <button
               onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+              disabled={isDeleting}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              Xóa
+              {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>Xóa</span>
             </button>
           </div>
         </div>

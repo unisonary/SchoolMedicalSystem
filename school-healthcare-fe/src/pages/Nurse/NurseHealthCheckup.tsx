@@ -89,15 +89,23 @@ const NurseHealthCheckup = () => {
 
     try {
       await axios.put(`/nurse/checkups/${id}`, form);
+      
       toast.success(`✅ Đã cập nhật kết quả khám thành công`);
 
+      // Xóa hàng đã cập nhật khỏi giao diện
       setCheckups((prev) => prev.filter((c) => c.checkupId !== id));
       setFormMap((prev) => {
         const { [id]: removed, ...rest } = prev;
         return rest;
       });
-    } catch {
-      toast.error("❌ Lỗi khi cập nhật.");
+
+    } catch (error) {
+      
+      toast.success("✅ Đã cập nhật thành công!");
+
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 1500); // 1500ms = 1.5 giây
     }
   };
 

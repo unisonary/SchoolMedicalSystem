@@ -16,7 +16,8 @@ import {
   FileText,
   Target,
   Stethoscope,
-  Syringe
+  Syringe,
+  Loader2
 } from "lucide-react";
 
 interface MedicalPlan {
@@ -48,6 +49,10 @@ const ManagerMedicalPlans = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState({ ...emptyForm });
   const [processingIds, setProcessingIds] = useState<Set<number>>(new Set());
+  
+  // Loading states
+  const [isCreating, setIsCreating] = useState(false);
+  const [isLoadingClasses, setIsLoadingClasses] = useState(false);
 
   const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
 
@@ -65,10 +70,13 @@ const ManagerMedicalPlans = () => {
 
   const fetchClasses = async () => {
     try {
+      setIsLoadingClasses(true);
       const res = await axios.get("/manager/plans/classes");
       setClasses(res.data);
     } catch {
       toast.error("Không thể tải danh sách lớp.");
+    } finally {
+      setIsLoadingClasses(false);
     }
   };
 
@@ -89,12 +97,15 @@ const ManagerMedicalPlans = () => {
     }
 
     try {
+      setIsCreating(true);
       await axios.post("/manager/plans", form);
       toast.success("Đã tạo kế hoạch mới");
       setForm({ ...emptyForm });
       fetchPlans();
     } catch {
       toast.error("Lỗi khi tạo kế hoạch.");
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -159,6 +170,8 @@ const ManagerMedicalPlans = () => {
       <Stethoscope className="w-4 h-4 text-green-500" />
     );
   };
+
+  const isFormDisabled = isCreating || loading;
 
   return (
     <div className="p-6 space-y-6">
@@ -231,6 +244,9 @@ const ManagerMedicalPlans = () => {
           <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
             <Plus className="w-5 h-5 text-green-500" />
             <span>Tạo kế hoạch mới</span>
+            {isCreating && (
+              <Loader2 className="w-4 h-4 animate-spin text-green-500" />
+            )}
           </h3>
         </div>
 
@@ -243,7 +259,8 @@ const ManagerMedicalPlans = () => {
                   name="planType" 
                   value={form.planType} 
                   onChange={handleInput} 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none"
+                  disabled={isFormDisabled}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="Vaccination">💉 Tiêm chủng</option>
                   <option value="Health_Checkup">🩺 Khám sức khỏe</option>
@@ -258,7 +275,8 @@ const ManagerMedicalPlans = () => {
                 value={form.planName} 
                 onChange={handleInput} 
                 placeholder="Nhập tên kế hoạch..." 
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                disabled={isFormDisabled}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -270,7 +288,8 @@ const ManagerMedicalPlans = () => {
                   name="startDate" 
                   value={form.startDate} 
                   onChange={handleInput} 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" 
+                  disabled={isFormDisabled}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
                   min={tomorrow} 
                 />
                 <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
@@ -285,7 +304,8 @@ const ManagerMedicalPlans = () => {
                   name="endDate" 
                   value={form.endDate} 
                   onChange={handleInput} 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" 
+                  disabled={isFormDisabled}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
                   min={form.startDate || tomorrow} 
                 />
                 <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
@@ -293,15 +313,23 @@ const ManagerMedicalPlans = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Lớp học</label>
+              <label className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                <span>Lớp học</span>
+                {isLoadingClasses && (
+                  <Loader2 className="w-3 h-3 animate-spin text-gray-500" />
+                )}
+              </label>
               <div className="relative">
                 <select 
                   name="targetGrade" 
                   value={form.targetGrade} 
                   onChange={handleInput} 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none"
+                  disabled={isFormDisabled || isLoadingClasses}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="">-- Chọn lớp --</option>
+                  <option value="">
+                    {isLoadingClasses ? "-- Đang tải..." : "-- Chọn lớp --"}
+                  </option>
                   {classes.map((cls) => (
                     <option key={cls} value={cls}>{cls}</option>
                   ))}
@@ -318,7 +346,8 @@ const ManagerMedicalPlans = () => {
                   value={form.description} 
                   onChange={handleInput} 
                   placeholder="Nhập mô tả chi tiết về kế hoạch..." 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none" 
+                  disabled={isFormDisabled}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed" 
                   rows={3}
                 />
                 <FileText className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
@@ -328,10 +357,15 @@ const ManagerMedicalPlans = () => {
 
           <button 
             onClick={handleCreate} 
-            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg"
+            disabled={isFormDisabled}
+            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <Plus className="w-5 h-5" />
-            <span>Tạo kế hoạch</span>
+            {isCreating ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Plus className="w-5 h-5" />
+            )}
+            <span>{isCreating ? "Đang tạo..." : "Tạo kế hoạch"}</span>
           </button>
         </div>
       </div>
@@ -346,11 +380,14 @@ const ManagerMedicalPlans = () => {
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
                 {plans.length}
               </span>
+              {loading && (
+                <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+              )}
             </h3>
             <button 
               onClick={fetchPlans} 
-              disabled={loading}
-              className="flex items-center space-x-2 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium px-4 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md disabled:opacity-50"
+              disabled={loading || isCreating}
+              className="flex items-center space-x-2 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium px-4 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               <span>{loading ? "Đang tải..." : "Làm mới"}</span>
@@ -362,7 +399,7 @@ const ManagerMedicalPlans = () => {
           {loading ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-8 h-8 text-gray-400 animate-spin" />
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
               </div>
               <p className="text-gray-500 text-lg">Đang tải dữ liệu...</p>
             </div>
@@ -398,7 +435,8 @@ const ManagerMedicalPlans = () => {
                             name="planName" 
                             value={form.planName} 
                             onChange={handleInput} 
-                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            disabled={processingIds.has(plan.planId)}
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                           />
                         ) : (
                           <div className="flex items-center space-x-2">
@@ -440,7 +478,8 @@ const ManagerMedicalPlans = () => {
                             name="status" 
                             value={form.status} 
                             onChange={handleInput} 
-                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            disabled={processingIds.has(plan.planId)}
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <option value="Planned">Đã lên kế hoạch</option>
                             <option value="In_Progress">Đang thực hiện</option>
@@ -462,14 +501,15 @@ const ManagerMedicalPlans = () => {
                                 className="flex items-center space-x-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium px-3 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                               >
                                 {processingIds.has(plan.planId) ? (
-                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                  <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
                                   <Save className="w-4 h-4" />
                                 )}
                               </button>
                               <button 
                                 onClick={cancelEdit} 
-                                className="flex items-center space-x-1 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium px-3 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md"
+                                disabled={processingIds.has(plan.planId)}
+                                className="flex items-center space-x-1 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium px-3 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                               >
                                 <X className="w-4 h-4" />
                               </button>
@@ -477,7 +517,8 @@ const ManagerMedicalPlans = () => {
                           ) : (
                             <button 
                               onClick={() => handleEdit(plan)} 
-                              className="flex items-center space-x-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-3 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md"
+                              disabled={isCreating || processingIds.size > 0}
+                              className="flex items-center space-x-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-3 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                             >
                               <Edit3 className="w-4 h-4" />
                             </button>
