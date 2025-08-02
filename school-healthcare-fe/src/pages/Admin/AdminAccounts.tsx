@@ -1,4 +1,4 @@
-// src/pages/admin/AdminAccounts.tsx
+// school-healthcare-fe/src/pages/Admin/AdminAccounts.tsx
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosInstance";
 import { UserPlus, Trash2, Edit3, Search, Users, UserCheck, UserX } from "lucide-react";
@@ -60,7 +60,7 @@ const AdminAccounts = () => {
         return;
       }
       try {
-        const res = await axios.get(`/admin/search-parents?name=${encodeURIComponent(parentQuery)}`);
+        const res = await axios.get(`/admin/search-parents?query=${encodeURIComponent(parentQuery)}`);
         setParentResults(res.data);
         setShowParentDropdown(true);
       } catch {
@@ -214,7 +214,7 @@ const AdminAccounts = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`/admin/search?query=${searchQuery}`);
+      const res = await axios.get(`/admin/search?query=${searchQuery}&role=${roleFilter}`);
       setUsers(res.data);
     } catch {
       toast.error("Lỗi khi tìm kiếm");
@@ -321,7 +321,14 @@ const AdminAccounts = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
                 <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-                    <input type="text" className="px-4 py-2 text-sm outline-none flex-1 focus:ring-2 focus:ring-blue-500" placeholder="Tìm theo username..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                    <input 
+                        type="text" 
+                        className="px-4 py-2 text-sm outline-none flex-1 focus:ring-2 focus:ring-blue-500" 
+                        placeholder={roleFilter === 'Parent' ? "Tìm theo username hoặc SĐT..." : "Tìm theo username..."} 
+                        value={searchQuery} 
+                        onChange={(e) => setSearchQuery(e.target.value)} 
+                        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    />
                     <button className="px-4 bg-gray-100 hover:bg-gray-200" onClick={handleSearch}><Search size={16} /></button>
                 </div>
               </div>
@@ -353,6 +360,9 @@ const AdminAccounts = () => {
                     <th className="py-3 px-4 text-left font-semibold">Username</th>
                     <th className="py-3 px-4 text-left font-semibold">Vai trò</th>
                     <th className="py-3 px-4 text-left font-semibold">Trạng thái</th>
+                    {roleFilter === 'Parent' && (
+                    <th className="py-3 px-4 text-left font-semibold">Số điện thoại</th>
+                    )}
                     <th className="py-3 px-4 text-left font-semibold">Thao tác</th>
                   </tr>
                 </thead>
@@ -363,6 +373,9 @@ const AdminAccounts = () => {
                       <td className="py-3 px-4 text-gray-700">{u.username}</td>
                       <td className="py-3 px-4"><span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">{u.role}</span></td>
                       <td className="py-3 px-4"><span className={`text-xs font-semibold px-3 py-1 rounded-full ${u.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>{u.isActive ? "Hoạt động" : "Vô hiệu hóa"}</span></td>
+                      {roleFilter === 'Parent' && (
+                      <td className="py-3 px-4 text-gray-700">{u.phoneNumber || "Chưa có"}</td>
+                      )}
                       <td className="py-3 px-4">
                         <div className="flex gap-2">
                           <button onClick={() => handleEdit(u)} className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg" title="Chỉnh sửa"><Edit3 size={16} /></button>
@@ -409,7 +422,7 @@ const AdminAccounts = () => {
                     {renderSelectField("class", classes, "-- Chọn lớp học --")}
                     <div className="relative">
                       <label className="block text-sm font-medium text-gray-700 mb-2">Phụ huynh</label>
-                      <input type="text" placeholder="Tìm phụ huynh theo tên..." className={`w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.parentId ? 'border-red-500' : 'border-gray-300'}`} value={parentQuery} onChange={(e) => {setParentQuery(e.target.value); setParentSelected(false); if (formErrors.parentId) setFormErrors({...formErrors, parentId: ""});}} onFocus={() => parentQuery.length >= 2 && setShowParentDropdown(true)} onBlur={() => setTimeout(() => setShowParentDropdown(false), 300)} />
+                      <input type="text" placeholder="Tìm phụ huynh theo tên hoặc SĐT..." className={`w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.parentId ? 'border-red-500' : 'border-gray-300'}`} value={parentQuery} onChange={(e) => {setParentQuery(e.target.value); setParentSelected(false); if (formErrors.parentId) setFormErrors({...formErrors, parentId: ""});}} onFocus={() => parentQuery.length >= 2 && setShowParentDropdown(true)} onBlur={() => setTimeout(() => setShowParentDropdown(false), 300)} />
                       {formErrors.parentId && <p className="text-red-500 text-xs mt-1">{formErrors.parentId}</p>}
                       {showParentDropdown && (
                         <div className="absolute top-full left-0 right-0 border rounded-lg bg-white max-h-40 overflow-auto text-sm shadow-lg z-50 mt-1">

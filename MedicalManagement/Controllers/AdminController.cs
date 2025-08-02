@@ -55,17 +55,18 @@ namespace MedicalManagement.Controllers
         }
 
         [HttpGet("search-parents")]
-        public async Task<IActionResult> SearchParentsByName([FromQuery] string name)
+        public async Task<IActionResult> SearchParents([FromQuery] string query)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return BadRequest(new { message = "Thiếu tên để tìm kiếm." });
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest(new { message = "Thiếu thông tin để tìm kiếm." });
 
-            string normalizedInput = RemoveDiacritics(name.ToLower());
+            string normalizedInput = RemoveDiacritics(query.ToLower());
 
             var parents = await _context.Parents.ToListAsync();
 
             var result = parents
-                .Where(p => RemoveDiacritics(p.Name.ToLower()).Contains(normalizedInput))
+                .Where(p => RemoveDiacritics(p.Name.ToLower()).Contains(normalizedInput) ||
+                            p.Phone.Contains(query))
                 .Select(p => new
                 {
                     parentId = p.ParentId,
@@ -167,9 +168,13 @@ namespace MedicalManagement.Controllers
 
         // Tìm kiếm người dùng theo username
         [HttpGet("search")]
-        public async Task<IActionResult> SearchUsers([FromQuery] string query)
+        public async Task<IActionResult> SearchUsers([FromQuery] string query, [FromQuery] string role)
         {
-            var users = await _adminService.SearchUsersAsync(query);
+            if (string.IsNullOrEmpty(role))
+            {
+                return BadRequest("Vui lòng chọn vai trò khi tìm kiếm.");
+            }
+            var users = await _adminService.SearchUsersAsync(query, role);
             return Ok(users);
         }
 
