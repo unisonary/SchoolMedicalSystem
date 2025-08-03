@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\models\\dtos\\useraccount\\userforlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\models\\dtos\\useraccount\\userforlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -21,6 +13,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\services\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\services\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\learning\\semester 5\\swp\\schoolmedicalsystem\\medicalmanagement\\models\\dtos\\useraccount\\userforlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\models\\dtos\\useraccount\\userforlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 12,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -74,7 +74,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\appsettings.json",
               "RelativeDocumentMoniker": "MedicalManagement\\appsettings.json",
@@ -82,11 +82,12 @@
               "RelativeToolTip": "MedicalManagement\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-02T14:03:47.223Z"
+              "WhenOpened": "2025-08-02T14:03:47.223Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "AdminController.cs",
               "DocumentMoniker": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Controllers\\AdminController.cs",
@@ -99,20 +100,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "AdminService.cs",
               "DocumentMoniker": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Services\\AdminService.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Services\\AdminService.cs",
               "ToolTip": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Services\\AdminService.cs",
               "RelativeToolTip": "MedicalManagement\\Services\\AdminService.cs",
-              "ViewState": "AgIAAEABAAAAAAAAAAAuwFgBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMQAAAAAAAAAAAA0wOgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T14:00:44.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T14:00:44.475Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "IAdminService.cs",
               "DocumentMoniker": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Services\\Interfaces\\IAdminService.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Services\\Interfaces\\IAdminService.cs",
@@ -124,16 +124,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "UserForListDTO.cs",
               "DocumentMoniker": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Models\\DTOs\\UserAccount\\UserForListDTO.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Models\\DTOs\\UserAccount\\UserForListDTO.cs",
               "ToolTip": "D:\\Learning\\Semester 5\\SWP\\SchoolMedicalSystem\\MedicalManagement\\Models\\DTOs\\UserAccount\\UserForListDTO.cs",
               "RelativeToolTip": "MedicalManagement\\Models\\DTOs\\UserAccount\\UserForListDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-02T13:59:45.908Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-02T13:59:45.908Z"
             }
           ]
         }
