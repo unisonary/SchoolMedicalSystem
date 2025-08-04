@@ -10,7 +10,7 @@ obj/
 
 # VS Code
 .vscode/
-
+.vs/
 # Other
 *.log
 *.cache
