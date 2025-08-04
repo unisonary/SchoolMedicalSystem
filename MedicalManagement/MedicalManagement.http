@@ -31,6 +31,36 @@ Authorization: Bearer {{manager_token}}
 
 ###
 
+## Lấy danh sách học sinh đã từ chối theo kế hoạch (cho UI)
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/denied-students/45
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Test endpoint - Kiểm tra tất cả consent của kế hoạch
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/test-consents/45
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Test endpoint - Kiểm tra danh sách students và class
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/test-students
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Tạo test data - consent từ chối (planId=45, studentId=1)
+POST {{MedicalManagement_HostAddress}}/api/manager/assignments/create-test-denial/45/1
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Tạo test data với thông tin lớp (planId=45, studentId=1, class=12A1)
+POST {{MedicalManagement_HostAddress}}/api/manager/assignments/create-test-denial/45/1?className=12A1
+Authorization: Bearer {{manager_token}}
+
+###
+
 ## Cập nhật lý do từ chối (cho cả Denied và Email_Denied)
 PUT {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/123/notes
 Authorization: Bearer {{manager_token}}

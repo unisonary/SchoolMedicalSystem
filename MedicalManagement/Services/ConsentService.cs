@@ -171,6 +171,30 @@ namespace MedicalManagement.Services
             }).ToList();
         }
 
+        public async Task<List<DeniedStudentDTO>> GetDeniedStudentsByPlanAsync(int planId)
+        {
+            var result = await (from consent in _context.Consents
+                               join student in _context.Students on consent.StudentId equals student.StudentId
+                               join parent in _context.Parents on student.ParentId equals parent.ParentId into parentGroup
+                               from parent in parentGroup.DefaultIfEmpty()
+                               where consent.ReferenceId == planId && 
+                                     (consent.ConsentStatus == "Denied" || consent.ConsentStatus == "Email_Denied")
+                               orderby consent.ConsentDate ?? consent.RequestedDate descending
+                               select new DeniedStudentDTO
+                               {
+                                   ConsentId = consent.ConsentId,
+                                   StudentId = consent.StudentId,
+                                   StudentName = student.Name ?? "Không xác định",
+                                   StudentClass = !string.IsNullOrEmpty(student.Class) ? student.Class : "Chưa phân lớp",
+                                   ConsentStatus = consent.ConsentStatus,
+                                   ConsentDate = consent.ConsentDate,
+                                   Notes = consent.Notes,
+                                   ParentName = parent != null ? parent.Name : "Không xác định"
+                               }).ToListAsync();
+
+            return result;
+        }
+
         public async Task UpdateConsentNotesAsync(int consentId, string notes)
         {
             var consent = await _context.Consents.FindAsync(consentId);

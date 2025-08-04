@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "D:\\MedicalSchool\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\medicalschool\\medicalmanagement\\controllers\\managerassignmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\controllers\\managerassignmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\medicalschool\\medicalmanagement\\medicalmanagement.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\medicalmanagement.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\medicalschool\\medicalmanagement\\services\\consentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\services\\consentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\medicalschool\\medicalmanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|d:\\medicalschool\\medicalmanagement\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{A17337C7-A01A-424A-9BDC-587FB27F626D}|MedicalManagement\\MedicalManagement.csproj|solutionrelative:medicalmanagement\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -22,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -57,12 +73,59 @@
               "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ManagerAssignmentController.cs",
+              "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\Controllers\\ManagerAssignmentController.cs",
+              "RelativeDocumentMoniker": "MedicalManagement\\Controllers\\ManagerAssignmentController.cs",
+              "ToolTip": "D:\\MedicalSchool\\MedicalManagement\\Controllers\\ManagerAssignmentController.cs",
+              "RelativeToolTip": "MedicalManagement\\Controllers\\ManagerAssignmentController.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAA8wDABAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-04T11:09:37.854Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "MedicalManagement.http",
+              "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\MedicalManagement.http",
+              "RelativeDocumentMoniker": "MedicalManagement\\MedicalManagement.http",
+              "ToolTip": "D:\\MedicalSchool\\MedicalManagement\\MedicalManagement.http",
+              "RelativeToolTip": "MedicalManagement\\MedicalManagement.http",
+              "ViewState": "AgIAABoAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-08-04T10:01:07.075Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\Program.cs",
+              "RelativeDocumentMoniker": "MedicalManagement\\Program.cs",
+              "ToolTip": "D:\\MedicalSchool\\MedicalManagement\\Program.cs",
+              "RelativeToolTip": "MedicalManagement\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-04T10:01:05.348Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ConsentService.cs",
+              "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\Services\\ConsentService.cs",
+              "RelativeDocumentMoniker": "MedicalManagement\\Services\\ConsentService.cs",
+              "ToolTip": "D:\\MedicalSchool\\MedicalManagement\\Services\\ConsentService.cs",
+              "RelativeToolTip": "MedicalManagement\\Services\\ConsentService.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwJkAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-04T10:01:00.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "AdminService.cs",
               "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\Services\\AdminService.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Services\\AdminService.cs",
@@ -70,12 +133,11 @@
               "RelativeToolTip": "MedicalManagement\\Services\\AdminService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-04T09:07:17.843Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-04T09:07:17.843Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "VaccinationService.cs",
               "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\Services\\VaccinationService.cs",
               "RelativeDocumentMoniker": "MedicalManagement\\Services\\VaccinationService.cs",
@@ -83,21 +145,19 @@
               "RelativeToolTip": "MedicalManagement\\Services\\VaccinationService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-04T09:03:58.732Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-04T09:03:58.732Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\MedicalSchool\\MedicalManagement\\appsettings.json",
               "RelativeDocumentMoniker": "MedicalManagement\\appsettings.json",
               "ToolTip": "D:\\MedicalSchool\\MedicalManagement\\appsettings.json",
               "RelativeToolTip": "MedicalManagement\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-04T09:02:37.589Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-04T09:02:37.589Z"
             }
           ]
         }
