@@ -69,7 +69,24 @@ namespace MedicalManagement.Services
 
             consent.ConsentStatus = dto.ConsentStatus;
             consent.ConsentDate = DateTime.Now;
-            consent.Notes = dto.Notes;
+            
+            // Xử lý Notes: cho phép nhập lý do tùy chọn qua app
+            if (string.IsNullOrWhiteSpace(dto.Notes))
+            {
+                // Nếu không có ghi chú, tạo ghi chú mặc định
+                var planTypeText = consent.ConsentType == "Health_Checkup"
+                    ? "kế hoạch khám sức khỏe định kỳ"
+                    : "kế hoạch tiêm chủng";
+                    
+                consent.Notes = dto.ConsentStatus == "Approved"
+                    ? $"Tôi đồng ý cho con tham gia vào {planTypeText}."
+                    : $"Tôi không đồng ý cho con tham gia vào {planTypeText}.";
+            }
+            else
+            {
+                // Sử dụng ghi chú do phụ huynh nhập (qua app)
+                consent.Notes = dto.Notes.Trim();
+            }
 
             await _context.SaveChangesAsync();
         }
