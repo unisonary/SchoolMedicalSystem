@@ -49,5 +49,10 @@ namespace MedicalManagement.Models.Entities
         [Column("note")]
         public string? Note { get; set; }
 
+        [Column("prescription_image_url")]
+        public string? PrescriptionImageUrl { get; set; }
+        [Column("rejection_reason")]
+        public string? RejectionReason { get; set; }
+
     }
 }
