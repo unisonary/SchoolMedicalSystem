@@ -8,7 +8,6 @@ import {
   Calendar,
   User,
   Target,
-  RefreshCw,
   AlertCircle,
   CheckSquare,
   Square,
@@ -50,58 +49,28 @@ const ManagerAssignment = () => {
       try {
         setLoading(true);
         
-        console.log("🔍 Loading students for planId:", selectedPlanId);
-        console.log("🌐 Base URL:", axios.defaults.baseURL || "http://localhost:7170/api");
-        
         // Load học sinh đã đồng ý
-        console.log("📋 Calling consented students API...");
-        const consentedUrl = `/manager/assignments/consented-students/${selectedPlanId}`;
-        console.log("🔗 Consented URL:", consentedUrl);
-        
-        const consentedRes = await axios.get(consentedUrl);
-        console.log("✅ Consented students loaded:", consentedRes.data);
-        console.log("📊 Consented students count:", consentedRes.data?.length || 0);
+        const consentedRes = await axios.get(`/manager/assignments/consented-students/${selectedPlanId}`);
         setStudents(consentedRes.data || []);
         
         // Load học sinh đã từ chối  
         try {
-          console.log("📋 Calling rejected students API...");
-          const rejectedUrl = `/manager/assignments/consents/denied?planId=${selectedPlanId}`;
-          console.log("🔗 Rejected URL:", rejectedUrl);
-          
-          const rejectedRes = await axios.get(rejectedUrl);
-          console.log("✅ Rejected students loaded:", rejectedRes.data);
-          console.log("📊 Rejected students count:", rejectedRes.data?.length || 0);
+          const rejectedRes = await axios.get(`/manager/assignments/consents/denied?planId=${selectedPlanId}`);
           setRejectedStudents(rejectedRes.data || []);
         } catch (rejectedError) {
-          console.error("❌ Error loading rejected students:", rejectedError);
-          if ((rejectedError as any).response) {
-            console.error("📄 Error response status:", (rejectedError as any).response.status);
-            console.error("📄 Error response data:", (rejectedError as any).response.data);
-          }
           setRejectedStudents([]);
-          
-          // Chỉ hiển thị lỗi nếu không phải 404 (endpoint chưa implement)
           if ((rejectedError as any).response && (rejectedError as any).response.status !== 404) {
             toast.error("Có lỗi khi tải danh sách học sinh đã từ chối");
           }
         }
         
       } catch (error) {
-        console.error("❌ Error loading consented students:", error);
-        if ((error as any).response) {
-          console.error("📄 Error response status:", (error as any).response.status);
-          console.error("📄 Error response data:", (error as any).response.data);
-          console.error("📄 Error response headers:", (error as any).response.headers);
-        }
         toast.error("Không thể tải danh sách học sinh đã đồng ý");
         setStudents([]);
         setRejectedStudents([]);
       } finally {
         setLoading(false);
       }
-    } else {
-      console.log("⚠️ No planId selected");
     }
   };
 
@@ -111,41 +80,15 @@ const ManagerAssignment = () => {
 
   // Load danh sách kế hoạch và y tá
   useEffect(() => {
-    console.log("🏥 Loading initial data (plans & nurses)...");
-    
     // Load Plans
-    console.log("📋 Calling plans API...");
-    axios.get("/manager/plans")
-      .then((res) => {
-        console.log("✅ Plans loaded:", res.data);
-        console.log("📊 Plans count:", res.data?.length || 0);
-        setPlans(res.data || []);
-      })
-      .catch((error) => {
-        console.error("❌ Error loading plans:", error);
-        if ((error as any).response) {
-          console.error("📄 Plans error status:", (error as any).response.status);
-          console.error("📄 Plans error data:", (error as any).response.data);
-        }
-        toast.error("Không thể tải danh sách kế hoạch");
-      });
+    axios.get("/manager/plans") 
+      .then((res) => setPlans(res.data || []))
+      .catch(() => toast.error("Không thể tải danh sách kế hoạch"));
 
     // Load Nurses
-    console.log("👩‍⚕️ Calling nurses API...");
     axios.get("/nurses")
-      .then((res) => {
-        console.log("✅ Nurses loaded:", res.data);
-        console.log("📊 Nurses count:", res.data?.length || 0);
-        setNurses(res.data || []);
-      })
-      .catch((error) => {
-        console.error("❌ Error loading nurses:", error);
-        if ((error as any).response) {
-          console.error("📄 Nurses error status:", (error as any).response.status);
-          console.error("📄 Nurses error data:", (error as any).response.data);
-        }
-        toast.error("Không thể tải danh sách y tá");
-      });
+      .then((res) => setNurses(res.data || []))
+      .catch(() => toast.error("Không thể tải danh sách y tá"));
   }, []);
 
   // Reset selectedStudentIds khi chuyển đổi view mode
@@ -176,11 +119,6 @@ const ManagerAssignment = () => {
 
   const handleAssign = async () => {
     if (!selectedPlanId || !selectedNurseId || selectedStudentIds.length === 0) {
-      console.log("Assigning:", {
-        selectedPlanId,
-        selectedNurseId,
-        selectedStudentIds
-      });      
       toast.warning("Vui lòng chọn kế hoạch, y tá và học sinh");
       return;
     }
@@ -191,10 +129,10 @@ const ManagerAssignment = () => {
         nurseId: selectedNurseId,
         studentIds: selectedStudentIds
       });
+      
       toast.success("Phân công thành công!");
       setSelectedStudentIds([]);
       setSelectedNurseId(null);
-
       await loadStudents();
     } catch {
       toast.error("Lỗi khi phân công y tá");
@@ -207,45 +145,52 @@ const ManagerAssignment = () => {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">📌 Phân công y tá cho kế hoạch y tế</h2>
-        <p className="text-gray-600">Quản lý và phân công y tá thực hiện các kế hoạch y tế cho học sinh</p>
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
+          <ClipboardList className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
+          Phân công y tá cho kế hoạch y tế
+        </h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Quản lý và phân công y tá thực hiện các kế hoạch y tế cho học sinh một cách hiệu quả
+        </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-              <ClipboardList className="w-6 h-6 text-white" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 p-6 rounded-2xl border border-blue-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <ClipboardList className="w-7 h-7 text-white" />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-blue-800">Tổng kế hoạch</h3>
-              <p className="text-2xl font-bold text-blue-600">{plans.length}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-              <Users className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-green-800">Y tá khả dụng</h3>
-              <p className="text-2xl font-bold text-green-600">{nurses.length}</p>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-blue-800 mb-1">Tổng kế hoạch</h3>
+              <p className="text-3xl font-bold text-blue-600 tabular-nums">{plans.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-6 h-6 text-white" />
+        <div className="bg-gradient-to-br from-green-50 via-green-100 to-green-200 p-6 rounded-2xl border border-green-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Users className="w-7 h-7 text-white" />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-purple-800">Học sinh đã chọn</h3>
-              <p className="text-2xl font-bold text-purple-600">{selectedStudentIds.length}</p>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-green-800 mb-1">Y tá khả dụng</h3>
+              <p className="text-3xl font-bold text-green-600 tabular-nums">{nurses.length}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200 p-6 rounded-2xl border border-purple-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <CheckCircle2 className="w-7 h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-purple-800 mb-1">Học sinh đã chọn</h3>
+              <p className="text-3xl font-bold text-purple-600 tabular-nums">{selectedStudentIds.length}</p>
             </div>
           </div>
         </div>
@@ -331,23 +276,23 @@ const ManagerAssignment = () => {
       {/* Students List */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
         {/* View Mode Tabs */}
-        <div className="bg-gray-50 px-6 py-3 border-b">
-          <div className="flex space-x-1 bg-white rounded-lg p-1 shadow-sm">
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
+          <div className="flex space-x-2 bg-white rounded-xl p-1.5 shadow-lg border border-gray-200">
             <button
               onClick={() => setViewMode('consented')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+              className={`flex items-center space-x-2 px-5 py-3 rounded-lg text-sm font-semibold transition-all duration-300 transform ${
                 viewMode === 'consented'
-                  ? 'bg-green-500 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-105'
+                  : 'text-gray-600 hover:text-green-600 hover:bg-green-50 hover:scale-105'
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>Đã đồng ý</span>
               {students.length > 0 && (
-                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                   viewMode === 'consented' 
-                    ? 'bg-green-600 text-white' 
-                    : 'bg-green-100 text-green-800'
+                    ? 'bg-green-400 text-green-900' 
+                    : 'bg-green-100 text-green-700'
                 }`}>
                   {students.length}
                 </span>
@@ -355,19 +300,19 @@ const ManagerAssignment = () => {
             </button>
             <button
               onClick={() => setViewMode('rejected')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+              className={`flex items-center space-x-2 px-5 py-3 rounded-lg text-sm font-semibold transition-all duration-300 transform ${
                 viewMode === 'rejected'
-                  ? 'bg-red-500 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg scale-105'
+                  : 'text-gray-600 hover:text-red-600 hover:bg-red-50 hover:scale-105'
               }`}
             >
               <XCircle className="w-4 h-4" />
               <span>Đã từ chối</span>
               {rejectedStudents.length > 0 && (
-                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                   viewMode === 'rejected' 
-                    ? 'bg-red-600 text-white' 
-                    : 'bg-red-100 text-red-800'
+                    ? 'bg-red-400 text-red-900' 
+                    : 'bg-red-100 text-red-700'
                 }`}>
                   {rejectedStudents.length}
                 </span>
@@ -437,11 +382,36 @@ const ManagerAssignment = () => {
 
         <div className="p-6">
           {loading ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-8 h-8 text-gray-400 animate-spin" />
+            <div className="space-y-4">
+              {/* Loading skeleton */}
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className={`grid gap-3 ${
+                  viewMode === 'consented' 
+                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+                    : 'grid-cols-1 sm:grid-cols-2'
+                }`}>
+                  {[...Array(6)].map((_, index) => (
+                    <div key={`skeleton-${index}`} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="animate-pulse space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                          <div className="flex-1">
+                            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                            <div className="h-3 bg-gray-200 rounded w-1/2 mt-2"></div>
+                          </div>
+                        </div>
+                        {viewMode === 'rejected' && (
+                          <div className="space-y-2">
+                            <div className="h-3 bg-gray-200 rounded w-full"></div>
+                            <div className="h-8 bg-gray-200 rounded"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <p className="text-gray-500 text-lg">Đang tải dữ liệu...</p>
             </div>
           ) : currentStudents.length > 0 ? (
             <div>
@@ -473,13 +443,13 @@ const ManagerAssignment = () => {
                 {currentStudents.map((s, index) => (
                   <div 
                     key={`${viewMode}-student-${s.studentId}-${index}`} 
-                    className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl ${
                       viewMode === 'consented' 
                         ? selectedStudentIds.includes(s.studentId)
-                          ? 'border-blue-500 bg-blue-50 cursor-pointer'
-                          : 'border-gray-200 bg-white hover:border-gray-300 cursor-pointer'
+                          ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 cursor-pointer shadow-md'
+                          : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 cursor-pointer'
                         : viewMode === 'rejected'
-                          ? 'border-red-200 bg-red-50'
+                          ? 'border-red-200 bg-gradient-to-br from-red-50 to-red-100 shadow-sm'
                           : 'border-gray-200 bg-white'
                     }`}
                   >
@@ -542,30 +512,42 @@ const ManagerAssignment = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                viewMode === 'consented' ? 'bg-gray-100' : 'bg-red-100'
-              }`}>
+            <div className="text-center py-16">
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${
+                viewMode === 'consented' 
+                  ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200' 
+                  : 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200'
+              } animate-pulse`}>
                 {viewMode === 'consented' ? (
-                <AlertCircle className="w-8 h-8 text-gray-400" />
+                  <AlertCircle className="w-10 h-10 text-blue-400" />
                 ) : (
-                  <XCircle className="w-8 h-8 text-red-400" />
+                  <XCircle className="w-10 h-10 text-red-400" />
                 )}
               </div>
-              <p className="text-gray-500 text-lg">
-                {viewMode === 'consented' 
-                  ? 'Không có học sinh nào đã đồng ý' 
-                  : 'Không có học sinh nào đã từ chối'
-                }
-              </p>
-              <p className="text-gray-400 text-sm mt-2">
-                {selectedPlanId 
-                  ? viewMode === 'consented'
-                  ? "Chưa có học sinh nào đồng ý tham gia kế hoạch này hoặc đã được phân công"
-                    : "Chưa có học sinh nào từ chối tham gia kế hoạch này"
-                  : "Vui lòng chọn kế hoạch để xem danh sách học sinh"
-                }
-              </p>
+              
+              <div className="space-y-2 mb-6">
+                <h3 className="text-xl font-semibold text-gray-700">
+                  {viewMode === 'consented' 
+                    ? 'Chưa có học sinh đồng ý' 
+                    : 'Chưa có học sinh từ chối'
+                  }
+                </h3>
+                <p className="text-gray-500 max-w-md mx-auto leading-relaxed">
+                  {selectedPlanId 
+                    ? viewMode === 'consented'
+                      ? "Chưa có học sinh nào đồng ý tham gia kế hoạch này hoặc đã được phân công y tá."
+                      : "Tất cả phụ huynh đều đã đồng ý cho con em tham gia kế hoạch này."
+                    : "Hãy chọn một kế hoạch y tế để xem danh sách học sinh."
+                  }
+                </p>
+              </div>
+
+              {!selectedPlanId && (
+                <div className="inline-flex items-center space-x-2 text-blue-600 bg-blue-50 px-4 py-2 rounded-lg border border-blue-200">
+                  <Target className="w-4 h-4" />
+                  <span className="text-sm font-medium">Chọn kế hoạch để bắt đầu</span>
+                </div>
+              )}
             </div>
           )}
         </div>
