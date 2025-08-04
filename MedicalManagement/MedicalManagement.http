@@ -4,3 +4,38 @@ GET {{MedicalManagement_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Manager Consent Management APIs
+
+## Xem tất cả consent của kế hoạch
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/45
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Xem tất cả consent từ chối (thật sự)
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/denied
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Xem consent từ chối qua email (cần xác nhận)
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/email-denied
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Xem consent từ chối qua email của kế hoạch cụ thể
+GET {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/email-denied?planId=45
+Authorization: Bearer {{manager_token}}
+
+###
+
+## Cập nhật lý do từ chối (cho cả Denied và Email_Denied)
+PUT {{MedicalManagement_HostAddress}}/api/manager/assignments/consents/123/notes
+Authorization: Bearer {{manager_token}}
+Content-Type: application/json
+
+{
+  "notes": "Phụ huynh lo ngại về tác dụng phụ của vaccine. Đã trao đổi và giải thích nhưng vẫn từ chối tham gia."
+}

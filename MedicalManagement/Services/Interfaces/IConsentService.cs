@@ -7,6 +7,11 @@ namespace MedicalManagement.Services.Interfaces
         Task<List<ConsentReadDTO>> GetPendingConsentsAsync(int parentId);
         Task<List<ConsentReadDTO>> GetConsentHistoryAsync(int parentId);
         Task RespondToConsentAsync(int consentId, int parentId, ConsentActionDTO dto);
-
+        
+        // Manager functions
+        Task<List<ConsentReadDTO>> GetAllConsentsByPlanAsync(int planId);
+        Task<List<ConsentReadDTO>> GetDeniedConsentsAsync(int? planId = null);
+        Task<List<ConsentReadDTO>> GetEmailDeniedConsentsAsync(int? planId = null);
+        Task UpdateConsentNotesAsync(int consentId, string notes);
     }
 }
