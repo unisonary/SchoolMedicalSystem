@@ -154,12 +154,16 @@ const MedicalConditions = () => {
 
             <div className="p-6">
               {studentConditions.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="w-8 h-8 text-gray-400" />
+                <div className="text-center py-16">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
+                    <Heart className="w-10 h-10 text-blue-400" />
                   </div>
-                  <p className="text-gray-500 text-lg">Chưa có dữ liệu tình trạng y tế</p>
-                  <p className="text-gray-400 text-sm mt-2">Hãy thêm thông tin y tế cho học sinh</p>
+                  <h4 className="text-xl font-bold text-gray-800 mb-2">Chưa có dữ liệu y tế</h4>
+                  <p className="text-gray-600 mb-6">Hãy thêm thông tin sức khỏe cho học sinh để theo dõi tốt hơn</p>
+                  <div className="inline-flex items-center space-x-2 text-blue-600 bg-blue-50 px-4 py-2 rounded-full border border-blue-200">
+                    <Plus className="w-4 h-4" />
+                    <span className="text-sm font-medium">Thêm thông tin y tế</span>
+                  </div>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -223,10 +227,17 @@ const MedicalConditions = () => {
   });
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">📋 Quản lý tình trạng y tế học sinh</h2>
-        <p className="text-gray-600">Theo dõi và quản lý thông tin sức khỏe của con em</p>
+    <div className="p-6 sm:p-8 space-y-8 bg-gradient-to-br from-blue-50 to-white min-h-screen">
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mb-6 shadow-lg">
+          <Heart className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent mb-4">
+          Quản lý tình trạng y tế
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Theo dõi và quản lý thông tin sức khỏe của con em một cách chi tiết và chính xác
+        </p>
       </div>
       <Tabs tabs={tabs} onChange={(key) => {
         setEditing(null);

@@ -124,61 +124,115 @@ const ConsentTab = () => {
         </div>
       )}
 
-      <div className="text-center mb-4">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">📝 Xác nhận kế hoạch y tế</h2>
-        <p className="text-gray-600">Phê duyệt hoặc từ chối các chương trình tiêm chủng và khám sức khỏe</p>
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full mb-6 shadow-lg">
+          <CheckCircle className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+          Xác nhận kế hoạch y tế
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Phê duyệt hoặc từ chối các chương trình tiêm chủng và khám sức khỏe cho con em của bạn
+        </p>
       </div>
 
-      {/* Pending */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-blue-600">Yêu cầu chờ xác nhận</h3>
-        <div className="bg-white border border-blue-100 rounded-xl p-6 shadow-sm space-y-4">
+      {/* Enhanced Pending Section */}
+      <div className="space-y-6 mb-10">
+        <div className="flex items-center space-x-3">
+          <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full animate-pulse"></div>
+          <h3 className="text-2xl font-bold text-gray-800">Yêu cầu chờ xác nhận</h3>
+          <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            {pending.length}
+          </span>
+        </div>
+        
+        <div className="bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 rounded-2xl p-8 shadow-xl space-y-6 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-5 rounded-full transform translate-x-16 -translate-y-16"></div>
+          
           {pending.length === 0 ? (
-            <p className="italic text-gray-500">Không có yêu cầu chờ xử lý.</p>
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-bold text-gray-800 mb-2">Tất cả đã xử lý!</h4>
+              <p className="text-gray-600">Không có yêu cầu nào cần xác nhận lúc này</p>
+            </div>
           ) : (
-            pending.map((c) => (
+            pending.map((c, index) => (
               <div
                 key={c.consentId}
-                className={`border rounded-xl p-4 flex justify-between items-start hover:bg-gray-50 transition ${
+                style={{ animationDelay: `${index * 100}ms` }}
+                className={`border-2 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl animate-fade-in relative overflow-hidden ${
                   c.consentStatus === "Email_Denied" 
-                    ? "border-orange-200 bg-orange-50" 
-                    : "border-gray-200"
+                    ? "border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50 shadow-lg" 
+                    : "border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-blue-300 hover:bg-blue-50 shadow-md"
                 }`}
               >
-                <div className="text-gray-700 space-y-1">
-                  <p><strong>👦 Học sinh:</strong> {c.studentName}</p>
-                  <p><strong>📋 Loại:</strong> {c.consentType === "Vaccination" ? "Tiêm chủng" : "Khám sức khỏe"}</p>
-                  <p><strong>📌 Mã kế hoạch:</strong> #{c.referenceId}</p>
-                  {c.consentStatus === "Email_Denied" && (
-                    <p className="text-orange-800 text-sm font-medium">
-                      ⚠️ Đã từ chối qua email - Cần nhập lý do chi tiết
+                {/* Status indicator */}
+                <div className={`absolute top-0 left-0 w-1 h-full ${
+                  c.consentStatus === "Email_Denied" ? "bg-gradient-to-b from-orange-500 to-amber-500" : "bg-gradient-to-b from-blue-500 to-cyan-500"
+                }`}></div>
+                
+                <div className="flex-1 space-y-3 ml-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                      c.consentType === "Vaccination" 
+                        ? "bg-gradient-to-br from-green-500 to-emerald-500" 
+                        : "bg-gradient-to-br from-purple-500 to-violet-500"
+                    } shadow-lg`}>
+                      <span className="text-white font-bold text-lg">
+                        {c.consentType === "Vaccination" ? "💉" : "🏥"}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg text-gray-800">{c.studentName}</h4>
+                      <p className="text-sm text-gray-600">
+                        {c.consentType === "Vaccination" ? "Chương trình tiêm chủng" : "Khám sức khỏe định kỳ"}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/70 rounded-lg p-3 border border-gray-200">
+                    <p className="text-sm text-gray-700">
+                      <span className="font-semibold">Mã kế hoạch:</span> #{c.referenceId}
                     </p>
+                  </div>
+                  
+                  {c.consentStatus === "Email_Denied" && (
+                    <div className="bg-gradient-to-r from-orange-100 to-amber-100 border border-orange-300 rounded-lg p-3">
+                      <p className="text-orange-800 text-sm font-semibold flex items-center space-x-2">
+                        <span>⚠️</span>
+                        <span>Đã từ chối qua email - Cần nhập lý do chi tiết</span>
+                      </p>
+                    </div>
                   )}
                 </div>
 
-                <div className="flex space-x-2 mt-1">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-4 sm:mt-0 sm:ml-4">
                   {c.consentStatus === "Email_Denied" ? (
-                    // Chỉ hiện nút nhập lý do từ chối
                     <button
                       onClick={() => setNoteModal({ id: c.consentId, visible: true, isEmailDenied: true })}
-                      className="flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-sm transition"
+                      className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold"
                     >
-                      <XCircle size={16} className="mr-1" /> Nhập lý do từ chối
+                      <XCircle size={18} className="mr-2" />
+                      Nhập lý do từ chối
                     </button>
                   ) : (
-                    // UI bình thường cho Pending
                     <>
                       <button
                         onClick={() => handleApprove(c.consentId, c.consentType)}
-                        className="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-sm transition"
+                        className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold"
                       >
-                        <CheckCircle size={16} className="mr-1" /> Đồng ý
+                        <CheckCircle size={18} className="mr-2" />
+                        Đồng ý
                       </button>
                       <button
                         onClick={() => handleDeny(c.consentId, c.consentType)}
-                        className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-sm transition"
+                        className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold"
                       >
-                        <XCircle size={16} className="mr-1" /> Từ chối
+                        <XCircle size={18} className="mr-2" />
+                        Từ chối
                       </button>
                     </>
                   )}
@@ -189,44 +243,96 @@ const ConsentTab = () => {
         </div>
       </div>
 
-      {/* History */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-blue-600">📜 Lịch sử phản hồi</h3>
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      {/* Enhanced History Section */}
+      <div className="space-y-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full"></div>
+          <h3 className="text-2xl font-bold text-gray-800">Lịch sử phản hồi</h3>
+          <span className="bg-gradient-to-r from-purple-500 to-violet-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            {history.length}
+          </span>
+        </div>
+        
+        <div className="bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 rounded-2xl overflow-hidden shadow-xl relative">
+          {/* Background decoration */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500 to-violet-500 opacity-5 rounded-full transform translate-x-16 -translate-y-16"></div>
+          
           {history.length === 0 ? (
-            <div className="p-6 text-center text-gray-500 italic">Chưa có lịch sử phản hồi.</div>
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-white text-2xl">📜</span>
+              </div>
+              <h4 className="text-xl font-bold text-gray-800 mb-2">Chưa có lịch sử</h4>
+              <p className="text-gray-600">Lịch sử phản hồi sẽ xuất hiện tại đây</p>
+            </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full table-auto text-sm">
-                <thead className="bg-gray-50 border-b">
-                  <tr>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Học sinh</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Loại</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Kế hoạch</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Trạng thái</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Ngày phản hồi</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Ghi chú</th>
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="bg-gradient-to-r from-purple-100 to-violet-100 border-b-2 border-purple-200">
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Học sinh</th>
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Loại</th>
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Kế hoạch</th>
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Trạng thái</th>
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Ngày phản hồi</th>
+                    <th className="text-left px-6 py-4 text-purple-800 font-bold text-sm">Ghi chú</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((c) => (
-                    <tr key={c.consentId} className="text-gray-800">
-                      <td className="border px-4 py-3">{c.studentName}</td>
-                      <td className="border px-4 py-3">
-                        {c.consentType === "Vaccination" ? "Tiêm chủng" : "Khám sức khỏe"}
+                  {history.map((c, index) => (
+                    <tr 
+                      key={c.consentId} 
+                      className={`text-gray-800 transition-colors duration-200 hover:bg-purple-50 ${
+                        index % 2 === 0 ? 'bg-white/50' : 'bg-purple-50/30'
+                      }`}
+                    >
+                      <td className="px-6 py-4 border-b border-purple-100">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-violet-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">
+                              {c.studentName.charAt(0)}
+                            </span>
+                          </div>
+                          <span className="font-semibold">{c.studentName}</span>
+                        </div>
                       </td>
-                      <td className="border px-4 py-3">#{c.referenceId}</td>
-                      <td className="border px-4 py-3 font-semibold">
+                      <td className="px-6 py-4 border-b border-purple-100">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          c.consentType === "Vaccination" 
+                            ? "bg-green-100 text-green-800" 
+                            : "bg-purple-100 text-purple-800"
+                        }`}>
+                          {c.consentType === "Vaccination" ? "💉 Tiêm chủng" : "🏥 Khám sức khỏe"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 border-b border-purple-100">
+                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded font-mono text-xs">
+                          #{c.referenceId}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 border-b border-purple-100">
                         {c.consentStatus === "Approved" ? (
-                          <span className="text-green-600">Đã đồng ý</span>
+                          <span className="flex items-center space-x-1 text-green-700 bg-green-100 px-3 py-1 rounded-full text-xs font-bold">
+                            <CheckCircle size={14} />
+                            <span>Đã đồng ý</span>
+                          </span>
                         ) : (
-                          <span className="text-red-600">Đã từ chối</span>
+                          <span className="flex items-center space-x-1 text-red-700 bg-red-100 px-3 py-1 rounded-full text-xs font-bold">
+                            <XCircle size={14} />
+                            <span>Đã từ chối</span>
+                          </span>
                         )}
                       </td>
-                      <td className="border px-4 py-3">
-                        {c.consentDate ? new Date(c.consentDate).toLocaleDateString() : "-"}
+                      <td className="px-6 py-4 border-b border-purple-100 text-sm">
+                        {c.consentDate ? new Date(c.consentDate).toLocaleDateString('vi-VN') : "-"}
                       </td>
-                      <td className="border px-4 py-3">{c.notes}</td>
+                      <td className="px-6 py-4 border-b border-purple-100">
+                        <div className="max-w-xs">
+                          <p className="text-sm text-gray-700 truncate" title={c.notes || ''}>
+                            {c.notes || "-"}
+                          </p>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
