@@ -11,6 +11,9 @@ obj/
 # VS Code
 .vscode/
 .vs/
+
+
+.vs/
 # Other
 *.log
 *.cache

@@ -39,7 +39,13 @@ namespace MedicalManagement.Services
                     Result = h.Result ?? "",
                     AbnormalFindings = h.AbnormalFindings ?? "",
                     Recommendations = h.Recommendations ?? "",
-                    Date = h.Date
+                    Date = h.Date,
+                        // ➕ Thêm các thuộc tính mới
+                    WeightKg = h.WeightKg,
+                    HeightCm = h.HeightCm,
+                    Vision = h.Vision,
+                    DentalHealth = h.DentalHealth,
+                    CardiovascularRate = h.CardiovascularRate
                 }).ToListAsync();
         }
 
@@ -56,7 +62,13 @@ namespace MedicalManagement.Services
                     Result = h.Result ?? "",
                     AbnormalFindings = h.AbnormalFindings ?? "",
                     Recommendations = h.Recommendations ?? "",
-                    Date = h.Date
+                    Date = h.Date,
+                    // ➕ Thêm các thuộc tính mới
+                    WeightKg = h.WeightKg,
+                    HeightCm = h.HeightCm,
+                    Vision = h.Vision,
+                    DentalHealth = h.DentalHealth,
+                    CardiovascularRate = h.CardiovascularRate
                 }).ToListAsync();
         }
 
@@ -71,6 +83,11 @@ namespace MedicalManagement.Services
             checkup.Result = dto.Result ?? checkup.Result;
             checkup.AbnormalFindings = dto.AbnormalFindings ?? checkup.AbnormalFindings;
             checkup.Recommendations = dto.Recommendations ?? checkup.Recommendations;
+            checkup.WeightKg = dto.WeightKg ?? checkup.WeightKg;
+            checkup.HeightCm = dto.HeightCm ?? checkup.HeightCm;
+            checkup.Vision = dto.Vision ?? checkup.Vision;
+            checkup.DentalHealth = dto.DentalHealth ?? checkup.DentalHealth;
+            checkup.CardiovascularRate = dto.CardiovascularRate ?? checkup.CardiovascularRate;
             checkup.FollowUpRequired = dto.FollowUpRequired ?? checkup.FollowUpRequired;
             checkup.Date = DateTime.Now;
 
