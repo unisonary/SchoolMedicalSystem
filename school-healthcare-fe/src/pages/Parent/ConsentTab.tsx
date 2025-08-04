@@ -8,7 +8,7 @@ interface Consent {
   consentId: number;
   consentType: string;
   referenceId: number;
-  consentStatus: string;
+  consentStatus: "Pending" | "Approved" | "Denied" | "Email_Denied";
   consentDate: string | null;
   notes: string | null;
   studentName: string;
@@ -18,9 +18,10 @@ const ConsentTab = () => {
   const location = useLocation();
   const [pending, setPending] = useState<Consent[]>([]);
   const [history, setHistory] = useState<Consent[]>([]);
-  const [noteModal, setNoteModal] = useState<{ id: number | null; visible: boolean }>({
+  const [noteModal, setNoteModal] = useState<{ id: number | null; visible: boolean; isEmailDenied?: boolean }>({
     id: null,
     visible: false,
+    isEmailDenied: false,
   });
   const [note, setNote] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -61,12 +62,12 @@ const ConsentTab = () => {
     }
   };
 
-  const handleDeny = async (consentId: number, consentType: string) => {
+  const handleDeny = async (consentId: number, consentType?: string) => {
     if (isFromGmail) {
       // Từ Gmail: Hard code lý do và từ chối trực tiếp
-      const hardCodedReason = `Phụ huynh từ chối cho con tham gia vào ${
-        consentType === "Vaccination" ? "chương trình tiêm chủng" : "khám sức khỏe định kỳ"
-      } thông qua email.`;
+      const hardCodedReason = `Tôi không đồng ý cho con tham gia vào ${
+        consentType === "Vaccination" ? "chương trình tiêm chủng" : "kế hoạch khám sức khỏe định kỳ"
+      }. (Phản hồi qua email - không có lý do chi tiết)`;
       
       try {
         await axios.post(`/parent/consents/${consentId}`, {
@@ -79,8 +80,8 @@ const ConsentTab = () => {
         toast.error("Không thể gửi từ chối.");
       }
     } else {
-      // Từ app: Hiện modal nhập lý do
-      setNoteModal({ id: consentId, visible: true });
+      // Từ app: Hiện modal nhập lý do (cho cả Pending và Email_Denied)
+      setNoteModal({ id: consentId, visible: true, isEmailDenied: false });
     }
   };
 
@@ -99,7 +100,7 @@ const ConsentTab = () => {
         notes: note,
       });
       toast.success("Đã từ chối xác nhận.");
-      setNoteModal({ id: null, visible: false });
+      setNoteModal({ id: null, visible: false, isEmailDenied: false });
       setShowConfirmModal(false);
       setNote("");
       fetchData();
@@ -138,27 +139,49 @@ const ConsentTab = () => {
             pending.map((c) => (
               <div
                 key={c.consentId}
-                className="border border-gray-200 rounded-xl p-4 flex justify-between items-start hover:bg-gray-50 transition"
+                className={`border rounded-xl p-4 flex justify-between items-start hover:bg-gray-50 transition ${
+                  c.consentStatus === "Email_Denied" 
+                    ? "border-orange-200 bg-orange-50" 
+                    : "border-gray-200"
+                }`}
               >
                 <div className="text-gray-700 space-y-1">
                   <p><strong>👦 Học sinh:</strong> {c.studentName}</p>
                   <p><strong>📋 Loại:</strong> {c.consentType === "Vaccination" ? "Tiêm chủng" : "Khám sức khỏe"}</p>
                   <p><strong>📌 Mã kế hoạch:</strong> #{c.referenceId}</p>
+                  {c.consentStatus === "Email_Denied" && (
+                    <p className="text-orange-800 text-sm font-medium">
+                      ⚠️ Đã từ chối qua email - Cần nhập lý do chi tiết
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex space-x-2 mt-1">
-                  <button
-                    onClick={() => handleApprove(c.consentId, c.consentType)}
-                    className="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-sm transition"
-                  >
-                    <CheckCircle size={16} className="mr-1" /> Đồng ý
-                  </button>
-                  <button
-                    onClick={() => handleDeny(c.consentId, c.consentType)}
-                    className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-sm transition"
-                  >
-                    <XCircle size={16} className="mr-1" /> Từ chối
-                  </button>
+                  {c.consentStatus === "Email_Denied" ? (
+                    // Chỉ hiện nút nhập lý do từ chối
+                    <button
+                      onClick={() => setNoteModal({ id: c.consentId, visible: true, isEmailDenied: true })}
+                      className="flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-sm transition"
+                    >
+                      <XCircle size={16} className="mr-1" /> Nhập lý do từ chối
+                    </button>
+                  ) : (
+                    // UI bình thường cho Pending
+                    <>
+                      <button
+                        onClick={() => handleApprove(c.consentId, c.consentType)}
+                        className="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-sm transition"
+                      >
+                        <CheckCircle size={16} className="mr-1" /> Đồng ý
+                      </button>
+                      <button
+                        onClick={() => handleDeny(c.consentId, c.consentType)}
+                        className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-sm transition"
+                      >
+                        <XCircle size={16} className="mr-1" /> Từ chối
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))
@@ -218,8 +241,13 @@ const ConsentTab = () => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              📌 Nhập lý do từ chối
+              📌 {noteModal.isEmailDenied ? "Nhập lý do từ chối chi tiết" : "Nhập lý do từ chối"}
             </h3>
+            {noteModal.isEmailDenied && (
+              <p className="text-sm text-gray-600">
+                Bạn đã từ chối qua email. Vui lòng nhập lý do chi tiết để hoàn tất.
+              </p>
+            )}
             <textarea
               className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
               rows={4}
@@ -229,7 +257,7 @@ const ConsentTab = () => {
             />
             <div className="flex justify-end space-x-2">
               <button
-                onClick={() => setNoteModal({ id: null, visible: false })}
+                onClick={() => setNoteModal({ id: null, visible: false, isEmailDenied: false })}
                 className="px-4 py-2 bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-200 rounded-lg transition font-medium"
               >
                 Hủy

@@ -36,9 +36,10 @@ namespace MedicalManagement.Controllers
 
                 string autoNote = status == "Approved"
                     ? $"Tôi đồng ý cho con tham gia vào {planTypeText}."
-                    : $"Tôi không đồng ý cho con tham gia vào {planTypeText}. (Phản hồi qua email - không có lý do chi tiết)";
+                    : $"Tôi không đồng ý cho con tham gia vào {planTypeText} (Phản hồi qua email - lý do chi tiết có thể được cập nhật qua App hoặc bởi nhà trường)";
 
-                consent.ConsentStatus = status;
+                // Nếu từ chối qua email, set status đặc biệt để hiển thị trong pending với nút từ chối
+                consent.ConsentStatus = status == "Approved" ? "Approved" : "Email_Denied";
                 consent.ConsentDate = DateTime.Now;
                 consent.Notes = autoNote;
 
