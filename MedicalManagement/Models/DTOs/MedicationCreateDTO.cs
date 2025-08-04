@@ -16,6 +16,8 @@ namespace MedicalManagement.Models.DTOs
 
         [JsonConverter(typeof(DateFormatConverter), "yyyy-MM-dd")]
         public DateTime EndDate { get; set; }
+
+        public string? PrescriptionImageUrl { get; set; }
     }
 
 
