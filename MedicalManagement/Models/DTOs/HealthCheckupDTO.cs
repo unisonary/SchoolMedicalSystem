@@ -10,6 +10,12 @@
         public string Result { get; set; }  
         public string Recommendations { get; set; } 
         public string NurseName { get; set; }
+        // ➕ Thuộc tính mới
+        public double? WeightKg { get; set; }
+        public double? HeightCm { get; set; }
+        public string? Vision { get; set; }
+        public string? DentalHealth { get; set; }
+        public int? CardiovascularRate { get; set; }
     }
 
 

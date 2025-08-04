@@ -3,6 +3,7 @@ import { Mail, Send } from "lucide-react";
 import { sendOtp } from "@/api/authApi";
 import { toast } from "react-toastify";
 
+
 const RequestOtpForm = ({ onNext }: { onNext: (email: string) => void }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

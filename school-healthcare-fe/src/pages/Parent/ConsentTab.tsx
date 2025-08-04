@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import { CheckCircle, XCircle } from "lucide-react";
@@ -14,6 +15,7 @@ interface Consent {
 }
 
 const ConsentTab = () => {
+  const location = useLocation();
   const [pending, setPending] = useState<Consent[]>([]);
   const [history, setHistory] = useState<Consent[]>([]);
   const [noteModal, setNoteModal] = useState<{ id: number | null; visible: boolean }>({
@@ -22,6 +24,10 @@ const ConsentTab = () => {
   });
   const [note, setNote] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // Kiểm tra nguồn truy cập từ URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const isFromGmail = searchParams.get('source') === 'gmail';
 
   const fetchData = async () => {
     try {
@@ -55,7 +61,30 @@ const ConsentTab = () => {
     }
   };
 
-  const handleDeny = () => {
+  const handleDeny = async (consentId: number, consentType: string) => {
+    if (isFromGmail) {
+      // Từ Gmail: Hard code lý do và từ chối trực tiếp
+      const hardCodedReason = `Phụ huynh từ chối cho con tham gia vào ${
+        consentType === "Vaccination" ? "chương trình tiêm chủng" : "khám sức khỏe định kỳ"
+      } thông qua email.`;
+      
+      try {
+        await axios.post(`/parent/consents/${consentId}`, {
+          consentStatus: "Denied",
+          notes: hardCodedReason,
+        });
+        toast.success("Đã từ chối xác nhận.");
+        fetchData();
+      } catch {
+        toast.error("Không thể gửi từ chối.");
+      }
+    } else {
+      // Từ app: Hiện modal nhập lý do
+      setNoteModal({ id: consentId, visible: true });
+    }
+  };
+
+  const handleDenyWithNote = () => {
     if (!note.trim()) {
       toast.warn("Vui lòng nhập lý do từ chối.");
       return;
@@ -81,6 +110,19 @@ const ConsentTab = () => {
 
   return (
     <div className="p-6 space-y-10">
+      {/* Banner thông báo khi truy cập từ Gmail */}
+      {isFromGmail && (
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-2 text-blue-800">
+            <span className="text-lg">📧</span>
+            <div>
+              <p className="font-semibold">Truy cập từ Gmail</p>
+              <p className="text-sm text-blue-600">Bạn đang truy cập từ email. Việc từ chối sẽ được thực hiện trực tiếp với lý do mặc định.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="text-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">📝 Xác nhận kế hoạch y tế</h2>
         <p className="text-gray-600">Phê duyệt hoặc từ chối các chương trình tiêm chủng và khám sức khỏe</p>
@@ -112,7 +154,7 @@ const ConsentTab = () => {
                     <CheckCircle size={16} className="mr-1" /> Đồng ý
                   </button>
                   <button
-                    onClick={() => setNoteModal({ id: c.consentId, visible: true })}
+                    onClick={() => handleDeny(c.consentId, c.consentType)}
                     className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-sm transition"
                   >
                     <XCircle size={16} className="mr-1" /> Từ chối
@@ -193,7 +235,7 @@ const ConsentTab = () => {
                 Hủy
               </button>
               <button
-                onClick={handleDeny}
+                onClick={handleDenyWithNote}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-semibold"
               >
                 Tiếp tục từ chối

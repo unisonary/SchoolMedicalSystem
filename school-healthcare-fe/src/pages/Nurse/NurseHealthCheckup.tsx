@@ -1,4 +1,4 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
 import { Activity, User, CheckCircle, Search, RefreshCw, Stethoscope, Eye, Ear, Smile, TrendingUp, Save, Heart } from "lucide-react";
@@ -11,6 +11,11 @@ interface HealthCheckup {
   abnormalFindings: string;
   recommendations: string;
   date: string;
+  weightKg?: number;
+  heightCm?: number;
+  vision?: string;
+  dentalHealth?: string;
+  cardiovascularRate?: number;
 }
 
 interface Plan {
@@ -27,7 +32,7 @@ const NurseHealthCheckup = () => {
   const [planNameInput, setPlanNameInput] = useState("");
   const [suggestions, setSuggestions] = useState<Plan[]>([]);
   const [selectedPlanName, setSelectedPlanName] = useState("");
-  
+
 
 
   useEffect(() => {
@@ -39,17 +44,17 @@ const NurseHealthCheckup = () => {
         toast.error("Không thể tải danh sách kế hoạch");
       }
     };
-  
+
     fetchPlans();
   }, []);
-  
+
 
   const fetchCheckups = async () => {
     if (!selectedPlanName) {
       toast.error("Vui lòng chọn kế hoạch hợp lệ");
       return;
     }
-  
+
     try {
       setLoading(true);
       const res = await axios.get(
@@ -57,11 +62,11 @@ const NurseHealthCheckup = () => {
       );
       const filtered = res.data.filter((item: any) => !item.result || item.result.trim() === "");
       setCheckups(filtered);
-  
+
       if (filtered.length === 0) {
         toast.info("Không có dữ liệu kiểm tra cần cập nhật");
       }
-  
+
       // lấy PlanId từ backend nếu cần gắn lên giao diện
       const found = suggestions.find(p => p.planName === selectedPlanName);
       if (found) setPlanId(found.planId);
@@ -71,7 +76,7 @@ const NurseHealthCheckup = () => {
       setLoading(false);
     }
   };
-  
+
 
   const handleChange = (id: number, field: string, value: string | boolean) => {
     setFormMap((prev) => ({
@@ -89,7 +94,7 @@ const NurseHealthCheckup = () => {
 
     try {
       await axios.put(`/nurse/checkups/${id}`, form);
-      
+
       toast.success(`✅ Đã cập nhật kết quả khám thành công`);
 
       // Xóa hàng đã cập nhật khỏi giao diện
@@ -100,11 +105,11 @@ const NurseHealthCheckup = () => {
       });
 
     } catch (error) {
-      
+
       toast.success("✅ Đã cập nhật thành công!");
 
       setTimeout(() => {
-        window.location.reload(); 
+        window.location.reload();
       }, 1500); // 1500ms = 1.5 giây
     }
   };
@@ -202,42 +207,42 @@ const NurseHealthCheckup = () => {
 
         <div className="p-6">
           <div className="flex items-center gap-4">
-          <div className="flex-1">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Tên kế hoạch khám sức khỏe
-          </label>
-          <input
-            type="text"
-            placeholder="Nhập tên kế hoạch (ví dụ: Khám sức khỏe tháng 7)"
-            value={planNameInput}
-            onChange={(e) => {
-              setPlanNameInput(e.target.value);
-              setSelectedPlanName(""); // clear nếu đang gõ lại
-            }}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
-          {planNameInput && (
-            <ul className="mt-1 border rounded bg-white shadow max-h-48 overflow-auto z-10 relative">
-              {suggestions
-                .filter(p =>
-                  p.planName.toLowerCase().includes(planNameInput.toLowerCase())
-                )
-                .slice(0, 5)
-                .map((plan) => (
-                  <li
-                    key={plan.planId}
-                    onClick={() => {
-                      setSelectedPlanName(plan.planName);
-                      setPlanNameInput(plan.planName);
-                    }}
-                    className="px-4 py-2 cursor-pointer hover:bg-blue-100"
-                  >
-                    {plan.planName}
-                  </li>
-                ))}
-            </ul>
-          )}
-          </div>
+            <div className="flex-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Tên kế hoạch khám sức khỏe
+              </label>
+              <input
+                type="text"
+                placeholder="Nhập tên kế hoạch (ví dụ: Khám sức khỏe tháng 7)"
+                value={planNameInput}
+                onChange={(e) => {
+                  setPlanNameInput(e.target.value);
+                  setSelectedPlanName(""); // clear nếu đang gõ lại
+                }}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              {planNameInput && (
+                <ul className="mt-1 border rounded bg-white shadow max-h-48 overflow-auto z-10 relative">
+                  {suggestions
+                    .filter(p =>
+                      p.planName.toLowerCase().includes(planNameInput.toLowerCase())
+                    )
+                    .slice(0, 5)
+                    .map((plan) => (
+                      <li
+                        key={plan.planId}
+                        onClick={() => {
+                          setSelectedPlanName(plan.planName);
+                          setPlanNameInput(plan.planName);
+                        }}
+                        className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                      >
+                        {plan.planName}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
 
             <div className="flex-shrink-0 mt-7">
               <button
@@ -294,6 +299,7 @@ const NurseHealthCheckup = () => {
                       <th className="text-left p-4 font-semibold text-gray-700">Loại khám</th>
                       <th className="text-left p-4 font-semibold text-gray-700">Kết quả</th>
                       <th className="text-left p-4 font-semibold text-gray-700">Bất thường</th>
+                      <th className="text-left p-4 font-semibold text-gray-700">Chỉ số sinh học</th>
                       <th className="text-left p-4 font-semibold text-gray-700">Khuyến nghị</th>
                       <th className="text-center p-4 font-semibold text-gray-700">Theo dõi</th>
                       <th className="text-center p-4 font-semibold text-gray-700">Thao tác</th>
@@ -360,6 +366,46 @@ const NurseHealthCheckup = () => {
                             placeholder="Khuyến nghị cho học sinh..."
                           />
                         </td>
+                        <td className="p-4">
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              type="number"
+                              placeholder="Cân nặng (kg)"
+                              value={formMap[c.checkupId]?.weightKg ?? ""}
+                              onChange={(e) => handleChange(c.checkupId, "weightKg", e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Chiều cao (cm)"
+                              value={formMap[c.checkupId]?.heightCm ?? ""}
+                              onChange={(e) => handleChange(c.checkupId, "heightCm", e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Thị lực"
+                              value={formMap[c.checkupId]?.vision ?? ""}
+                              onChange={(e) => handleChange(c.checkupId, "vision", e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Răng miệng"
+                              value={formMap[c.checkupId]?.dentalHealth ?? ""}
+                              onChange={(e) => handleChange(c.checkupId, "dentalHealth", e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Nhịp tim (bpm)"
+                              value={formMap[c.checkupId]?.cardiovascularRate ?? ""}
+                              onChange={(e) => handleChange(c.checkupId, "cardiovascularRate", e.target.value)}
+                              className="px-3 py-2 border border-gray-300 rounded-lg w-full"
+                            />
+                          </div>
+                        </td>
+
                         <td className="p-4 text-center">
                           <div className="flex flex-col items-center space-y-2">
                             <input

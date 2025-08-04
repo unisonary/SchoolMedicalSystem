@@ -12,7 +12,6 @@ obj/
 .vscode/
 .vs/
 
-
 # Other
 *.log
 *.cache
