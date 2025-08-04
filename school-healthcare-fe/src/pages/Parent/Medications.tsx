@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosInstance";
 import { toast } from "react-toastify";
-import { Pencil, Pill, Clock, CheckCircle, AlertCircle, Calendar } from "lucide-react";
+import { Pencil, Pill, Clock, CheckCircle, AlertCircle, Calendar, XCircle, FileImage } from "lucide-react";
 import Tabs from "@/components/ui/Tabs";
 import MedicationForm from "./MedicationForm";
+// import MedicationForm from "./MedicationForm"; // Đã import ở trên
 
 interface Medication {
   medicationId: number;
@@ -16,32 +17,39 @@ interface Medication {
   startDate: string;
   endDate: string;
   status: string;
+  prescriptionImageUrl?: string;
+  rejectionReason?: string;
 }
 
 interface Student {
   studentId: number;
   name: string;
   class: string;
-  dateOfBirth: string;
 }
 
 const statusLabelMap: Record<string, string> = {
-  Active: "Đang chờ xử lý",
-  Completed: "Đã xử lý"
+  PendingConfirmation: "Chờ xác nhận",
+  Approved: "Đã duyệt",
+  Administered: "Đã cho uống",
+  Rejected: "Bị từ chối"
 };
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "Active": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "Completed": return "bg-green-100 text-green-800 border-green-200";
+    case "PendingConfirmation": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    case "Approved": return "bg-blue-100 text-blue-800 border-blue-200";
+    case "Administered": return "bg-green-100 text-green-800 border-green-200";
+    case "Rejected": return "bg-red-100 text-red-800 border-red-200";
     default: return "bg-gray-100 text-gray-800 border-gray-200";
   }
 };
 
 const getStatusIcon = (status: string) => {
   switch (status) {
-    case "Active": return <Clock size={16} className="text-yellow-600" />;
-    case "Completed": return <CheckCircle size={16} className="text-green-600" />;
+    case "PendingConfirmation": return <Clock size={16} className="text-yellow-600" />;
+    case "Approved": return <CheckCircle size={16} className="text-blue-600" />;
+    case "Administered": return <CheckCircle size={16} className="text-green-600" />;
+    case "Rejected": return <XCircle size={16} className="text-red-600" />;
     default: return <AlertCircle size={16} className="text-gray-600" />;
   }
 };
@@ -65,6 +73,22 @@ const Medications = () => {
     try {
       const res = await axios.get("/parent/health/medications");
       setMedications(res.data);
+      /* * SỬA LỖI HIỂN THỊ ẢNH:
+       * Vấn đề nằm ở Backend. API "/parent/health/medications" của bạn
+       * chưa trả về trường `prescriptionImageUrl`.
+       * * HƯỚNG DẪN SỬA:
+       * 1. Mở file `MedicationService.cs` (hoặc service tương ứng).
+       * 2. Tìm đến phương thức `GetForParentAsync` (hoặc phương thức được gọi bởi API trên).
+       * 3. Trong câu lệnh `.Select(m => new MedicationReadDTO { ... })`,
+       * bạn cần đảm bảo đã ánh xạ trường ảnh như sau:
+       * * .Select(m => new MedicationReadDTO 
+       * {
+       * // ... các trường khác
+       * PrescriptionImageUrl = m.PrescriptionImageUrl // <-- THÊM DÒNG NÀY
+       * })
+       *
+       * Sau khi sửa backend, frontend sẽ tự động hiển thị đúng.
+      */
     } catch {
       toast.error("Không thể tải danh sách thuốc.");
     }
@@ -72,6 +96,7 @@ const Medications = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       await Promise.all([fetchStudents(), fetchMedications()]);
       setLoading(false);
     };
@@ -117,7 +142,6 @@ const Medications = () => {
       ),
       content: (
         <div className="space-y-8">
-          {/* Form Section */}
           <MedicationForm
             studentId={student.studentId}
             editingData={editing?.studentId === student.studentId ? editing : null}
@@ -128,7 +152,6 @@ const Medications = () => {
             clearEditing={() => setEditing(null)}
           />
 
-          {/* List Section */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <div className="bg-gradient-to-r from-green-50 to-blue-50 px-6 py-4 border-b">
               <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
@@ -155,35 +178,25 @@ const Medications = () => {
                     <thead>
                       <tr className="border-b-2 border-gray-200">
                         <th className="text-left p-4 font-semibold text-gray-700">Tên thuốc</th>
-                        <th className="text-left p-4 font-semibold text-gray-700">Liều dùng</th>
-                        <th className="text-left p-4 font-semibold text-gray-700">Tần suất</th>
-                        <th className="text-left p-4 font-semibold text-gray-700">Hướng dẫn</th>
+                        <th className="text-left p-4 font-semibold text-gray-700">Toa thuốc</th>
                         <th className="text-left p-4 font-semibold text-gray-700">Thời gian</th>
                         <th className="text-left p-4 font-semibold text-gray-700">Trạng thái</th>
                         <th className="text-center p-4 font-semibold text-gray-700">Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {studentMeds.map((m, index) => (
-                        <tr key={m.medicationId} className={`border-b hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
+                      {studentMeds.map((m) => (
+                        <tr key={m.medicationId} className="border-b hover:bg-gray-50">
+                          <td className="p-4">{m.medicationName}</td>
                           <td className="p-4">
-                            <div className="flex items-center space-x-2">
-                              <Pill className="w-4 h-4 text-green-600" />
-                              <span className="font-medium text-gray-800">{m.medicationName}</span>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-                              {m.dosage}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm">
-                              {m.frequency}
-                            </span>
-                          </td>
-                          <td className="p-4 text-gray-600 max-w-xs">
-                            {m.instructions || <span className="text-gray-400 italic">Không có</span>}
+                            {m.prescriptionImageUrl ? (
+                              <a href={m.prescriptionImageUrl} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1 text-blue-600 hover:underline">
+                                <FileImage size={16} />
+                                <span>Xem ảnh</span>
+                              </a>
+                            ) : (
+                              <span className="text-gray-400 italic">Không có</span>
+                            )}
                           </td>
                           <td className="p-4">
                             <div className="flex items-center space-x-1 text-sm text-gray-600">
@@ -198,24 +211,27 @@ const Medications = () => {
                               {getStatusIcon(m.status)}
                               <span>{statusLabelMap[m.status] || m.status}</span>
                             </div>
+                            {m.status === 'Rejected' && m.rejectionReason && (
+                               <p className="text-xs text-red-600 mt-1 italic">Lý do: {m.rejectionReason}</p>
+                            )}
                           </td>
                           <td className="p-4">
                             <div className="flex justify-center">
                               <button
                                 onClick={() => {
-                                  if (m.status === "Completed") {
-                                    toast.info("Thuốc đã cho uống xong, không thể chỉnh sửa.");
+                                  if (m.status !== "PendingConfirmation") {
+                                    toast.info("Chỉ có thể chỉnh sửa yêu cầu đang chờ xác nhận.");
                                     return;
                                   }
                                   setEditing(m);
                                 }}
                                 className={`p-2 rounded-lg transition-colors ${
-                                  m.status === "Completed" 
+                                  m.status !== "PendingConfirmation" 
                                     ? "text-gray-400 cursor-not-allowed" 
                                     : "text-blue-600 hover:bg-blue-50"
                                 }`}
-                                title={m.status === "Completed" ? "Không thể chỉnh sửa" : "Chỉnh sửa"}
-                                disabled={m.status === "Completed"}
+                                title={m.status !== "PendingConfirmation" ? "Không thể chỉnh sửa" : "Chỉnh sửa"}
+                                disabled={m.status !== "PendingConfirmation"}
                               >
                                 <Pencil size={18} />
                               </button>
