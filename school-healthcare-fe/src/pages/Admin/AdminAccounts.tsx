@@ -13,7 +13,7 @@ const positions = ["Trưởng phòng", "Phó phòng"];
 
 const AdminAccounts = () => {
   const { user } = useAuthStore();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [roleFilter, setRoleFilter] = useState("Student");
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -48,6 +48,30 @@ const AdminAccounts = () => {
   const [showParentDropdown, setShowParentDropdown] = useState(false);
   const [parentSelected, setParentSelected] = useState(false);
 
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/admin/users?role=${roleFilter}`);
+      setUsers(res.data);
+    } catch {
+      toast.error("Không thể tải danh sách người dùng");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/admin/search?query=${searchQuery}&role=${roleFilter}`);
+      setUsers(res.data);
+    } catch {
+      toast.error("Lỗi khi tìm kiếm");
+    } finally {
+        setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [roleFilter]);
@@ -69,18 +93,6 @@ const AdminAccounts = () => {
     }, 300);
     return () => clearTimeout(timeout);
   }, [parentQuery, parentSelected, createForm.role]);
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`/admin/users?role=${roleFilter}`);
-      setUsers(res.data);
-    } catch {
-      toast.error("Không thể tải danh sách người dùng");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const validateEmail = (email: string): boolean => {
     if (!email || email.trim() === '') return false;
@@ -212,15 +224,6 @@ const AdminAccounts = () => {
     }
   };
 
-  const handleSearch = async () => {
-    try {
-      const res = await axios.get(`/admin/search?query=${searchQuery}&role=${roleFilter}`);
-      setUsers(res.data);
-    } catch {
-      toast.error("Lỗi khi tìm kiếm");
-    }
-  };
-
   const handleFormChange = (field: string, value: any) => {
     setCreateForm({ ...createForm, [field]: value });
     if (formErrors[field]) {
@@ -324,7 +327,7 @@ const AdminAccounts = () => {
                     <input 
                         type="text" 
                         className="px-4 py-2 text-sm outline-none flex-1 focus:ring-2 focus:ring-blue-500" 
-                        placeholder={roleFilter === 'Parent' ? "Tìm theo username hoặc SĐT..." : "Tìm theo username..."} 
+                        placeholder={roleFilter === 'Parent' ? "Tìm theo username, tên, SĐT..." : "Tìm theo username hoặc tên..."} 
                         value={searchQuery} 
                         onChange={(e) => setSearchQuery(e.target.value)} 
                         onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -358,6 +361,7 @@ const AdminAccounts = () => {
                   <tr>
                     <th className="py-3 px-4 text-left font-semibold">ID</th>
                     <th className="py-3 px-4 text-left font-semibold">Username</th>
+                    <th className="py-3 px-4 text-left font-semibold">Họ và tên</th>
                     <th className="py-3 px-4 text-left font-semibold">Vai trò</th>
                     <th className="py-3 px-4 text-left font-semibold">Trạng thái</th>
                     {roleFilter === 'Parent' && (
@@ -367,10 +371,11 @@ const AdminAccounts = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u: any) => (
+                  {users.map((u) => (
                     <tr key={u.userId} className="border-t hover:bg-gray-50">
                       <td className="py-3 px-4 font-medium text-gray-900">{u.userId}</td>
                       <td className="py-3 px-4 text-gray-700">{u.username}</td>
+                      <td className="py-3 px-4 font-medium text-gray-800">{u.name || u.username}</td>
                       <td className="py-3 px-4"><span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">{u.role}</span></td>
                       <td className="py-3 px-4"><span className={`text-xs font-semibold px-3 py-1 rounded-full ${u.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>{u.isActive ? "Hoạt động" : "Vô hiệu hóa"}</span></td>
                       {roleFilter === 'Parent' && (
