@@ -127,35 +127,78 @@ namespace MedicalManagement.Services
 
         public async Task<IEnumerable<UserForListDTO>> GetUsersByRoleAsync(string role)
         {
-            if (role == "Parent")
+            switch (role)
             {
-                var query = from user in _context.UserAccounts
-                            join parent in _context.Parents on user.ReferenceId equals parent.ParentId
-                            where user.Role == "Parent"
-                            select new UserForListDTO
-                            {
-                                UserId = user.UserId,
-                                Username = user.Username,
-                                Role = user.Role,
-                                IsActive = user.IsActive,
-                                PhoneNumber = parent.Phone
-                            };
-                return await query.ToListAsync();
+                case "Parent":
+                    return await (from user in _context.UserAccounts
+                                  join parent in _context.Parents on user.ReferenceId equals parent.ParentId
+                                  where user.Role == "Parent"
+                                  select new UserForListDTO
+                                  {
+                                      UserId = user.UserId,
+                                      Username = user.Username,
+                                      Name = parent.Name,
+                                      Role = user.Role,
+                                      IsActive = user.IsActive,
+                                      PhoneNumber = parent.Phone
+                                  }).ToListAsync();
+
+                case "Student":
+                    return await (from user in _context.UserAccounts
+                                  join student in _context.Students on user.ReferenceId equals student.StudentId
+                                  where user.Role == "Student"
+                                  select new UserForListDTO
+                                  {
+                                      UserId = user.UserId,
+                                      Username = user.Username,
+                                      Name = student.Name,
+                                      Role = user.Role,
+                                      IsActive = user.IsActive
+                                  }).ToListAsync();
+
+                case "Nurse":
+                    return await (from user in _context.UserAccounts
+                                  join nurse in _context.SchoolNurses on user.ReferenceId equals nurse.NurseId
+                                  where user.Role == "Nurse"
+                                  select new UserForListDTO
+                                  {
+                                      UserId = user.UserId,
+                                      Username = user.Username,
+                                      Name = nurse.Name,
+                                      Role = user.Role,
+                                      IsActive = user.IsActive
+                                  }).ToListAsync();
+
+                case "Manager":
+                    return await (from user in _context.UserAccounts
+                                  join manager in _context.Managers on user.ReferenceId equals manager.ManagerId
+                                  where user.Role == "Manager"
+                                  select new UserForListDTO
+                                  {
+                                      UserId = user.UserId,
+                                      Username = user.Username,
+                                      Name = manager.Name,
+                                      Role = user.Role,
+                                      IsActive = user.IsActive
+                                  }).ToListAsync();
+
+                case "Admin":
+                    return await (from user in _context.UserAccounts
+                                  join admin in _context.Admins on user.ReferenceId equals admin.AdminId
+                                  where user.Role == "Admin"
+                                  select new UserForListDTO
+                                  {
+                                      UserId = user.UserId,
+                                      Username = user.Username,
+                                      Name = admin.Name,
+                                      Role = user.Role,
+                                      IsActive = user.IsActive
+                                  }).ToListAsync();
+
+                default:
+                    return new List<UserForListDTO>();
             }
-            else
-            {
-                return await _context.UserAccounts
-                    .Where(u => u.Role == role)
-                    .Select(u => new UserForListDTO
-                    {
-                        UserId = u.UserId,
-                        Username = u.Username,
-                        Role = u.Role,
-                        IsActive = u.IsActive,
-                        PhoneNumber = null
-                    }).ToListAsync();
-            }
-        }   
+        }
 
         public async Task<bool> ResetPasswordAsync(ResetUserPasswordDTO dto)
         {
@@ -201,36 +244,96 @@ namespace MedicalManagement.Services
                 return await GetUsersByRoleAsync(role);
             }
 
-            if (role == "Parent")
+            var normalizedQuery = query.ToLower();
+
+            switch (role)
             {
-                var parentQuery = from user in _context.UserAccounts
-                                  join parent in _context.Parents on user.ReferenceId equals parent.ParentId
-                                  where user.Role == "Parent" && (user.Username.Contains(query) || parent.Phone.Contains(query))
-                                  select new UserForListDTO
-                                  {
-                                      UserId = user.UserId,
-                                      Username = user.Username,
-                                      Role = user.Role,
-                                      IsActive = user.IsActive,
-                                      PhoneNumber = parent.Phone
-                                  };
-                return await parentQuery.ToListAsync();
-            }
-            else
-            {
-                return await _context.UserAccounts
-                    .Where(u => u.Role == role && u.Username.Contains(query))
-                    .Select(u => new UserForListDTO
-                    {
-                        UserId = u.UserId,
-                        Username = u.Username,
-                        Role = u.Role,
-                        IsActive = u.IsActive,
-                        PhoneNumber = null
-                    }).ToListAsync();
+                case "Parent":
+                    var parentQuery = from user in _context.UserAccounts
+                                      join parent in _context.Parents on user.ReferenceId equals parent.ParentId
+                                      where user.Role == "Parent" &&
+                                            (user.Username.ToLower().Contains(normalizedQuery) ||
+                                             parent.Name.ToLower().Contains(normalizedQuery) ||
+                                             parent.Phone.Contains(query))
+                                      select new UserForListDTO
+                                      {
+                                          UserId = user.UserId,
+                                          Username = user.Username,
+                                          Name = parent.Name,
+                                          Role = user.Role,
+                                          IsActive = user.IsActive,
+                                          PhoneNumber = parent.Phone
+                                      };
+                    return await parentQuery.ToListAsync();
+
+                case "Student":
+                    var studentQuery = from user in _context.UserAccounts
+                                       join student in _context.Students on user.ReferenceId equals student.StudentId
+                                       where user.Role == "Student" &&
+                                             (user.Username.ToLower().Contains(normalizedQuery) ||
+                                              student.Name.ToLower().Contains(normalizedQuery))
+                                       select new UserForListDTO
+                                       {
+                                           UserId = user.UserId,
+                                           Username = user.Username,
+                                           Name = student.Name,
+                                           Role = user.Role,
+                                           IsActive = user.IsActive
+                                       };
+                    return await studentQuery.ToListAsync();
+
+                case "Nurse":
+                    var nurseQuery = from user in _context.UserAccounts
+                                     join nurse in _context.SchoolNurses on user.ReferenceId equals nurse.NurseId
+                                     where user.Role == "Nurse" &&
+                                           (user.Username.ToLower().Contains(normalizedQuery) ||
+                                            nurse.Name.ToLower().Contains(normalizedQuery))
+                                     select new UserForListDTO
+                                     {
+                                         UserId = user.UserId,
+                                         Username = user.Username,
+                                         Name = nurse.Name,
+                                         Role = user.Role,
+                                         IsActive = user.IsActive
+                                     };
+                    return await nurseQuery.ToListAsync();
+
+                case "Manager":
+                    var managerQuery = from user in _context.UserAccounts
+                                       join manager in _context.Managers on user.ReferenceId equals manager.ManagerId
+                                       where user.Role == "Manager" &&
+                                             (user.Username.ToLower().Contains(normalizedQuery) ||
+                                              manager.Name.ToLower().Contains(normalizedQuery))
+                                       select new UserForListDTO
+                                       {
+                                           UserId = user.UserId,
+                                           Username = user.Username,
+                                           Name = manager.Name,
+                                           Role = user.Role,
+                                           IsActive = user.IsActive
+                                       };
+                    return await managerQuery.ToListAsync();
+
+                case "Admin":
+                    var adminQuery = from user in _context.UserAccounts
+                                     join admin in _context.Admins on user.ReferenceId equals admin.AdminId
+                                     where user.Role == "Admin" &&
+                                           (user.Username.ToLower().Contains(normalizedQuery) ||
+                                            admin.Name.ToLower().Contains(normalizedQuery))
+                                     select new UserForListDTO
+                                     {
+                                         UserId = user.UserId,
+                                         Username = user.Username,
+                                         Name = admin.Name,
+                                         Role = user.Role,
+                                         IsActive = user.IsActive
+                                     };
+                    return await adminQuery.ToListAsync();
+
+                default:
+                    return new List<UserForListDTO>();
             }
         }
-
         public async Task<List<string>> ImportUsersFromExcelWithClosedXmlAsync(IFormFile file, int createdByAdminId)
         {
             var result = new List<string>();
