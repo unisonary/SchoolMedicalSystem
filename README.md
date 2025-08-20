@@ -84,13 +84,4 @@ Bearer <your-JWT-token>
 - Cường (Backend ASP.NET Core)
 - [Friend's name] (Frontend ReactJS)
 
----
 
-## 📬 Contact
-
-📧 Email: `cuongndse181836@fpt.edu.vn`  
-🏫 University: FPT, PRN212 Project
-
----
-
-> 📌 This is an academic project for learning purposes. Contributions are welcome!
